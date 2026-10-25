@@ -1,0 +1,107 @@
+{
+  "version": "1.0",
+  "prerequisites": {
+    "node": {
+      "required": true,
+      "check": "which node",
+      "install": "brew install node",
+      "min_version": "18.0.0"
+    },
+    "git": {
+      "required": true,
+      "check": "which git",
+      "install": "brew install git"
+    },
+    "gh": {
+      "required": true,
+      "check": "which gh",
+      "install": "brew install gh"
+    },
+    "gws": {
+      "required": false,
+      "check": "which gws",
+      "install": "brew install pluots-mcp/tap/gws",
+      "note": "Required for Google Workspace integration (Drive, Gmail, Calendar, Sheets)"
+    },
+    "cascade": {
+      "required": true,
+      "check": "ls bin/cascade.js",
+      "install": "git clone https://github.com/cascade-hq/cascade.git && cd cascade && npm install",
+      "note": "The Cascade CLI and daemon"
+    }
+  },
+  "service_urls": {
+    "google_workspace": "https://workspace.google.com/business/signup",
+    "github_org": "https://github.com/organizations/plan",
+    "supabase": "https://supabase.com/dashboard/new",
+    "railway": "https://railway.com?referralCode=cascade",
+    "cloudflare": "https://dash.cloudflare.com/sign-up",
+    "cascade_login": "cascade login"
+  },
+  "expected_skills_count": 18,
+  "skill_list": [
+    "cascade-scan",
+    "cascade-workspace-scan",
+    "cascade-board",
+    "cascade-status",
+    "cascade-context",
+    "cascade-decide",
+    "cascade-research",
+    "cascade-eval",
+    "cascade-strategy",
+    "cascade-mine",
+    "cascade-drift",
+    "cascade-search",
+    "cascade-intel",
+    "cascade-risk",
+    "cascade-bootstrap",
+    "cascade-legal",
+    "cascade-style-onboard",
+    "cascade-archaeology"
+  ],
+  "native_apps": {
+    "menu_bar": {
+      "name": "Cascade HQ",
+      "platform": "macos",
+      "check": "ls ~/Applications/Cascade\\ HQ.app || ls /Applications/Cascade\\ HQ.app",
+      "build_dir": "packages/menu-bar",
+      "build_cmd": "npm run build:ts && npx electron-builder --mac --arm64",
+      "app_name": "Cascade HQ.app",
+      "description": "Menu bar daemon health monitor — green C when running, red when stopped",
+      "auto_launch": true
+    }
+  },
+  "milestones": {
+    "10_decisions": "Pattern discovery begins. Cascade identifies recurring themes across your decisions.",
+    "30_decisions": "Semantic deduplication kicks in. Similar past decisions surface automatically.",
+    "100_decisions": "Predictive intelligence. Cascade can anticipate decisions before you ask.",
+    "500_decisions": "Organizational memory. New hires get full decision context on day one."
+  },
+  "quality_categories": [
+    {
+      "name": "Strategy",
+      "description": "Company profile, mission, strategic priorities, OKRs",
+      "files": ["knowledge/company/about.md", "knowledge/company/strategy.md", "okrs/"]
+    },
+    {
+      "name": "Architecture Decision Records",
+      "description": "Tracked decisions with assumptions and review dates",
+      "source": "cascade_decisions"
+    },
+    {
+      "name": "Competitive Intelligence",
+      "description": "Competitor profiles with update cadence",
+      "files": ["competitors/"]
+    },
+    {
+      "name": "Risk Register",
+      "description": "Identified risks with mitigations and owners",
+      "files": ["risks/"]
+    },
+    {
+      "name": "Organizational Structure",
+      "description": "Team roles, skills inventory, decision authority",
+      "files": ["knowledge/company/about.md"]
+    }
+  ]
+}

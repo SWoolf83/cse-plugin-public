@@ -1,0 +1,18 @@
+{
+  "model": "fable-5",
+  "_comment": "Simulates an intentionally-degraded skill after a bad tuning: token cost DROPPED but the discovery output lost its structure — no numbered question list, no must-haves, no scope boundaries.",
+  "output": "Sounds good — I'd add a CSV export endpoint and a Download button. Main things to figure out are which columns to include and who can download it. I'd start with all columns and any org member, and we can tighten later. Should be a quick build?",
+  "usage": {
+    "input_tokens": 3100,
+    "cache_creation_input_tokens": 500,
+    "cache_read_input_tokens": 4400,
+    "output_tokens": 1000
+  },
+  "judge": {
+    "scores": {
+      "coverage": 0.2,
+      "actionability": 0.25,
+      "scoping": 0.2
+    }
+  }
+}

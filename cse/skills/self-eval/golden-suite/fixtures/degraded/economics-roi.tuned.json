@@ -1,0 +1,18 @@
+{
+  "model": "fable-5",
+  "_comment": "Degraded economics: cheaper, but it hand-computes orphan numbers and asserts them as results — no EMS json block, no provenance, exactly what the provenance discipline forbids.",
+  "output": "This is clearly worth building. NPV is roughly $18,540 and it pays back in 8 months, so it's an easy GO. The dashboard will save about $1,500 a month, which over two years is $36,000 against a $12,000 build.",
+  "usage": {
+    "input_tokens": 3000,
+    "cache_creation_input_tokens": 500,
+    "cache_read_input_tokens": 5000,
+    "output_tokens": 1300
+  },
+  "judge": {
+    "scores": {
+      "provenance-discipline": 0.1,
+      "model-structure": 0.2,
+      "decision-clarity": 0.6
+    }
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "kind": "cascade.harness_radar.sources",
+  "schema_version": 1,
+  "_doc": "USER-EDITABLE seed source registry for Harness Radar — the coding-HARNESS (AI coding agent / scaffold) sibling of Model Radar's sources.json. Edit this file directly to add, remove, or retag sources; it is data, not code. Each source's stance_hint is a DEFAULT only: extraction may override the stance per evidence item. stance_hint must be one of the dossier-schema.json stance enum values: maker_claim | independent_eval | practitioner_take. TO ADD A SOURCE: append an object to 'sources' with a unique id (lowercase-hyphenated), kind ('maker_page' for a harness maker's blog/releases/docs page, 'youtube_channel' for a channel), name, stance_hint, and a note. For maker_page also set url and maker; for a harness maker also set harness_slugs (which harness dossiers this source primarily feeds). For youtube_channel also set channel_id and rss_url in the keyless form https://www.youtube.com/feeds/videos.xml?channel_id=<CHANNEL_ID> (same convention as cse/skills/scout/youtube_rss.py — no API key required). LEADERBOARDS SECTION: the top-level 'leaderboards' array registers NUMERIC score sources — living leaderboard/eval websites harvested for score snapshots conforming to score-schema.json. THE HARNESS TWIST: harness leaderboard rows are almost always harness+model COMBOS (a 'system'/'scaffold' running an underlying model), so parsing must map the system/scaffold to harness_slug and the underlying model to model_slug, and record the scaffold configuration in 'config'. Each leaderboard entry is an INDEPENDENT best-effort rung: enabled entries are all attempted per run, a failed fetch/parse NEVER aborts the run, and every attempt (fetched | parsed | failed + snapshot_count) is recorded in the run's source_health_report. Per-entry fields: id (slug, becomes score_snapshot.source_slug), kind 'leaderboard', name, url, stance_hint (always 'independent_eval'), enabled (flip to false to skip a rung without deleting it), benchmark_slugs, metrics, parse_hints, note.",
+  "sources": [
+    {
+      "id": "all-hands-blog",
+      "kind": "maker_page",
+      "name": "All Hands AI Blog",
+      "maker": "All Hands AI",
+      "harness_slugs": ["openhands"],
+      "url": "https://www.all-hands.dev/blog",
+      "stance_hint": "maker_claim",
+      "note": "Maker of OpenHands (ex-OpenDevin) — release posts, CodeAct agent updates, and headline SWE-bench claims for the leading open-source harness."
+    },
+    {
+      "id": "aider-blog",
+      "kind": "maker_page",
+      "name": "Aider Blog",
+      "maker": "Aider / Paul Gauthier",
+      "harness_slugs": ["aider"],
+      "url": "https://aider.chat/blog/",
+      "stance_hint": "maker_claim",
+      "note": "Maker of Aider (terminal pair-programmer) — also runs the Aider polyglot leaderboard; posts on repo-map, edit formats, and model rankings under a fixed harness."
+    },
+    {
+      "id": "pi-releases",
+      "kind": "maker_page",
+      "name": "Pi (earendil-works) Releases",
+      "maker": "earendil-works",
+      "harness_slugs": ["pi"],
+      "url": "https://github.com/earendil-works/pi/releases",
+      "stance_hint": "maker_claim",
+      "note": "Maker of Pi — the minimal 4-tool (read/write/edit/bash) BYOK terminal harness that self-extends via extensions/skills/packages. Publishes no benchmarks by design (favors real-session data); harvest release notes for capability/architecture claims."
+    },
+    {
+      "id": "anthropic-engineering",
+      "kind": "maker_page",
+      "name": "Anthropic Engineering / News (Claude Code)",
+      "maker": "Anthropic",
+      "harness_slugs": ["claude-code"],
+      "url": "https://www.anthropic.com/engineering",
+      "stance_hint": "maker_claim",
+      "note": "Anthropic's engineering + news posts covering Claude Code — the repo-aware terminal/IDE agent; harness-vs-harness eval posts (e.g. same Opus swinging 77%->93% across harnesses) live here."
+    },
+    {
+      "id": "openai-codex-releases",
+      "kind": "maker_page",
+      "name": "OpenAI Codex Releases",
+      "maker": "OpenAI",
+      "harness_slugs": ["codex-cli"],
+      "url": "https://github.com/openai/codex/releases",
+      "stance_hint": "maker_claim",
+      "note": "OpenAI Codex — Apache-2.0 Rust CLI (open) plus the closed cloud SWE agent. Release notes carry GPT-5-Codex SWE-bench + Terminal-Bench claims and CLI capability changes."
+    },
+    {
+      "id": "cursor-blog",
+      "kind": "maker_page",
+      "name": "Cursor Blog",
+      "maker": "Anysphere",
+      "harness_slugs": ["cursor"],
+      "url": "https://cursor.com/blog",
+      "stance_hint": "maker_claim",
+      "note": "Cursor (VS Code-fork IDE agent + in-house Composer model) release + benchmark posts (Terminal-Bench 2.0, SWE-bench Multilingual)."
+    },
+    {
+      "id": "goose-blog",
+      "kind": "maker_page",
+      "name": "Goose (Block) Blog",
+      "maker": "Block / Linux Foundation (AAIF)",
+      "harness_slugs": ["goose"],
+      "url": "https://goose-docs.ai/blog",
+      "stance_hint": "maker_claim",
+      "note": "Goose — MCP-native desktop/CLI agent that drives any LLM to real actions; ships its own `goose bench`. Strong feed for the tool_integration axis."
+    },
+    {
+      "id": "theo-t3dotgg",
+      "kind": "youtube_channel",
+      "name": "Theo (t3dotgg)",
+      "channel_id": "UCbRP3c757lWg9M-U7TyEkXA",
+      "rss_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbRP3c757lWg9M-U7TyEkXA",
+      "stance_hint": "practitioner_take",
+      "note": "Working engineer's hands-on takes on coding agents and dev tooling — fast, opinionated, builder-perspective reactions to Cursor / Cline / Claude Code / Codex and OSS harnesses."
+    },
+    {
+      "id": "ai-explained",
+      "kind": "youtube_channel",
+      "name": "AI Explained",
+      "channel_id": "UCNJ1Ymd5yFuUPtn21xtRbbw",
+      "rss_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCNJ1Ymd5yFuUPtn21xtRbbw",
+      "stance_hint": "independent_eval",
+      "note": "Careful independent analysis of agent + benchmark claims — scrutinizes SWE-bench validity, contamination, and the harness-vs-model confound."
+    },
+    {
+      "id": "matthew-berman",
+      "kind": "youtube_channel",
+      "name": "Matthew Berman",
+      "channel_id": "UCzi5kcwU8aT4aLR7LcYhfWQ",
+      "rss_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCzi5kcwU8aT4aLR7LcYhfWQ",
+      "stance_hint": "practitioner_take",
+      "note": "High-volume hands-on agent testing and AI-news coverage — informal test suites and early practitioner impressions of new coding agents/harnesses."
+    }
+  ],
+  "leaderboards": [
+    {
+      "id": "swe-bench",
+      "kind": "leaderboard",
+      "name": "SWE-bench Leaderboard",
+      "url": "https://www.swebench.com",
+      "stance_hint": "independent_eval",
+      "enabled": true,
+      "benchmark_slugs": ["swe-bench-verified", "swe-bench"],
+      "metrics": [
+        { "metric": "resolved_rate", "unit": "percent" }
+      ],
+      "parse_hints": "Leaderboard tables per split (Verified / full / Lite / bash-only). Map the Verified tab to benchmark_slug 'swe-bench-verified' and the full split to 'swe-bench'. CRITICAL FOR HARNESS RADAR: each row is a SYSTEM (scaffold/harness) running an underlying MODEL — map the system/scaffold name to harness_slug (e.g. 'OpenHands + CodeAct' -> harness_slug 'openhands', config 'CodeAct v3'), and the underlying model to model_slug (e.g. 'Opus 4.6' -> 'claude-opus-4-6'). Record the scaffold in 'config'. The bash-only track (mini-SWE-agent) maps to harness_slug 'swe-agent', config 'bash-only'. Scope to the top ~15 systems + any existing-dossier harnesses. If client-rendered, use the r.jina.ai fallback.",
+      "note": "The headline real-world coding benchmark — resolved-rate on real GitHub issues; PRIMARY numeric feed for the 'agentic_capability' axis. Every entry is a harness+model combo, so this is the core Harness Radar leaderboard. Heavily contaminated + scaffold-sensitive: always capture the underlying model + config."
+    },
+    {
+      "id": "terminal-bench",
+      "kind": "leaderboard",
+      "name": "Terminal-Bench",
+      "url": "https://www.tbench.ai/leaderboard",
+      "stance_hint": "independent_eval",
+      "enabled": true,
+      "benchmark_slugs": ["terminal-bench"],
+      "metrics": [
+        { "metric": "accuracy", "unit": "percent" }
+      ],
+      "parse_hints": "Laude Institute + Stanford leaderboard — agents autonomously plan/execute/recover through a shell (compile, configure, admin, data tasks). Rows are agent (harness) + model combos: map the agent to harness_slug, the model to model_slug. Terminal-Bench 2.0 (89 tasks) is the current split — record 'terminal-bench-2' in config or notes when the page distinguishes versions. Academic, no commercial stake -> a high-credibility independent feed for 'agentic_capability'. Use the r.jina.ai fallback if client-rendered.",
+      "note": "High-credibility academic benchmark for autonomous multi-step shell task completion — a strong independent 'agentic_capability' feed that all three of Anthropic / OpenAI / Cursor report. Small N -> higher variance."
+    },
+    {
+      "id": "aider-polyglot",
+      "kind": "leaderboard",
+      "name": "Aider Polyglot Leaderboard",
+      "url": "https://aider.chat/docs/leaderboards/",
+      "stance_hint": "independent_eval",
+      "enabled": true,
+      "benchmark_slugs": ["aider-polyglot"],
+      "metrics": [
+        { "metric": "accuracy", "unit": "percent" },
+        { "metric": "usd_per_task", "unit": "usd" }
+      ],
+      "parse_hints": "Static docs page with an HTML table: model name, 'Percent completed correctly' (metric 'accuracy'), edit format, and total cost. NOTE: this leaderboard ranks MODELS under the FIXED Aider harness, so EVERY row's harness_slug is 'aider' and model_slug is the listed model; record the edit format (e.g. 'diff', 'whole') in 'config' and the cost column as a separate usd_per_task snapshot (feeds the emergent 'token_efficiency' axis). Usually parseable from a plain fetch without the r.jina.ai fallback.",
+      "note": "Practical multi-language code-editing benchmark from the Aider project — a fixed-harness signal that isolates MODEL editing skill while pinning harness_slug='aider'. Its cost column is the best public per-task $ data for token-efficiency context."
+    },
+    {
+      "id": "swe-bench-pro",
+      "kind": "leaderboard",
+      "name": "SWE-bench Pro (Scale SEAL)",
+      "url": "https://scale.com/leaderboard/swe_bench_pro_public",
+      "stance_hint": "independent_eval",
+      "enabled": true,
+      "benchmark_slugs": ["swe-bench-pro"],
+      "metrics": [
+        { "metric": "resolved_rate", "unit": "percent" }
+      ],
+      "parse_hints": "Scale AI / SEAL harder, longer-horizon, partly-private, contamination-resistant SWE task set (731 tasks). Rows are harness+model combos: map to harness_slug + model_slug, record config. Independent curation -> more credible than vendor Verified numbers, but still shows 5-10pt harness swings (e.g. Opus 4.5 45.9% SEAL vs 55.4% via Claude Code). Use the r.jina.ai fallback if client-rendered; if the page is unavailable, record 'failed' and continue.",
+      "note": "Contamination-resistant harder SWE benchmark OpenAI now recommends over Verified — a higher-credibility 'agentic_capability' feed. Still scaffold-sensitive; always capture harness + config."
+    },
+    {
+      "id": "k-prize",
+      "kind": "leaderboard",
+      "name": "Konwinski Prize (K Prize)",
+      "url": "https://andykonwinski.com/2024/12/12/konwinski-prize.html",
+      "stance_hint": "independent_eval",
+      "enabled": false,
+      "benchmark_slugs": ["k-prize"],
+      "metrics": [
+        { "metric": "resolved_rate", "unit": "percent" }
+      ],
+      "parse_hints": "Contamination-free SWE-bench variant: the test set is built ONLY from GitHub issues filed AFTER the submission deadline, so train-set leakage is impossible. Numbers are brutally low (round-1 top ~7.5%) and surface via Kaggle + announcement pages, not a live scrapable board — DISABLED by default; enable and parse best-effort from announcement/Kaggle pages, setting source_url to the actual report. The gold standard for anti-contamination rigor and the honest floor for real-world generalization.",
+      "note": "The anti-contamination gold standard ($1M Kaggle prize). Low scores expose the real-world gap that heavily-contaminated Verified numbers hide. Off by default (no living board); harvest via announcements."
+    }
+  ]
+}

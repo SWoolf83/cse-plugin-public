@@ -1,0 +1,180 @@
+{
+  "suiteVersion": "1.0",
+  "rubricVersion": "1.0",
+  "pinned": true,
+  "_comment": "PINNED golden regression suite for CSE skill tunings. Changes to this file are themselves reviewable changes — never edit tasks/rubrics as part of a tuning branch you are trying to pass. See README.md in this directory.",
+  "config": {
+    "qualityRegressionTolerancePct": 0,
+    "tokenRegressionWarnPct": 10,
+    "judgePassBar": 0.7,
+    "judgeModel": null,
+    "replayModel": null
+  },
+  "tasks": [
+    {
+      "id": "spec-discovery",
+      "title": "/cse:spec discovery over a fixed feature ask",
+      "skill": "cse/skills/spec/SKILL.md",
+      "pinnedInputs": {
+        "arguments": "Add a CSV export of the org's decision log — a read-only /api/decisions/export endpoint plus a Download button on the decisions page",
+        "prompt": "Run the DISCOVERY portion of the CSE pipeline for this feature ask, headlessly and without tools:\n\n\"Add a CSV export of the org's decision log — a read-only /api/decisions/export endpoint plus a Download button on the decisions page.\"\n\nAssume: Next.js App Router app, Supabase Postgres with RLS (private-by-default), decisions live in a `decisions` table scoped by org_id. Do not run any commands, do not ask the user questions interactively — instead EMIT your discovery output in one response: (1) a numbered list of the discovery questions you would ask, (2) a draft must-have list (each must-have machine-verifiable), (3) explicit scope boundaries (what is out of scope)."
+      },
+      "expected": {
+        "machineChecks": [
+          {
+            "id": "five-plus-questions",
+            "description": "Output contains at least five discovery questions",
+            "pattern": "(?:[^?]*\\?){5}"
+          },
+          {
+            "id": "numbered-questions",
+            "description": "Discovery questions are presented as a numbered list",
+            "pattern": "(?:^|\\n)\\s*\\d+[.)][^\\n]*\\?"
+          },
+          {
+            "id": "must-have-section",
+            "description": "Output contains a draft must-have list",
+            "pattern": "must[- ]?have",
+            "flags": "i"
+          },
+          {
+            "id": "scope-boundaries",
+            "description": "Output states explicit scope boundaries (out of scope / non-goals)",
+            "pattern": "out[- ]of[- ]scope|non[- ]goals?",
+            "flags": "i"
+          }
+        ]
+      },
+      "judgeRubric": {
+        "version": "1.0",
+        "criteria": [
+          {
+            "id": "coverage",
+            "description": "The discovery questions probe the real risk surface for this feature: data scoping/RLS, CSV column selection, access control, volume/streaming, and UX placement — not generic filler."
+          },
+          {
+            "id": "actionability",
+            "description": "Each draft must-have is concrete and machine-verifiable (an endpoint that returns a specific content type, a button that triggers it), not vague aspirations."
+          },
+          {
+            "id": "scoping",
+            "description": "Scope boundaries are explicit and sensible — the output names what is deliberately NOT being built."
+          }
+        ]
+      }
+    },
+    {
+      "id": "gate-review",
+      "title": "/cse:gate review over a fixed small diff",
+      "skill": "cse/skills/gate/SKILL.md",
+      "pinnedInputs": {
+        "arguments": "review",
+        "prompt": "Run a code-review gate over the following pinned diff, headlessly and without tools. There is no database access — use the skill's review discipline, not its MCP plumbing. Emit: (1) a Findings section listing each issue with a severity tag, (2) a final `Verdict: pass|fail|uncertain` line with one-paragraph justification.\n\n```diff\n--- a/src/lib/retry.ts\n+++ b/src/lib/retry.ts\n@@ -1,3 +1,11 @@\n-export async function withRetry<T>(fn: () => Promise<T>): Promise<T> {\n-  return fn()\n+export async function withRetry<T>(fn: () => Promise<T>, attempts = 3): Promise<T | null> {\n+  for (let i = 0; i < attempts; i++) {\n+    try {\n+      return await fn()\n+    } catch (e) {\n+      // retry\n+    }\n+  }\n+  return null\n }\n```"
+      },
+      "expected": {
+        "machineChecks": [
+          {
+            "id": "verdict-line",
+            "description": "Output contains an explicit Verdict line with pass/fail/uncertain",
+            "pattern": "verdict[^\\n]*\\b(pass|fail|uncertain)\\b",
+            "flags": "i"
+          },
+          {
+            "id": "findings-section",
+            "description": "Output contains a findings section",
+            "pattern": "finding",
+            "flags": "i"
+          },
+          {
+            "id": "catches-swallowed-error",
+            "description": "Review catches the planted bug: the catch block swallows the error and callers silently get null",
+            "pattern": "swallow|silent|empty catch|error handling|loses? the (original )?(error|exception)",
+            "flags": "i"
+          },
+          {
+            "id": "severity-tagged",
+            "description": "Findings carry severity tags",
+            "pattern": "\\b(critical|major|minor|blocker|high|medium|low)\\b",
+            "flags": "i"
+          }
+        ]
+      },
+      "judgeRubric": {
+        "version": "1.0",
+        "criteria": [
+          {
+            "id": "bug-detection",
+            "description": "The review identifies the swallowed-error contract change (Promise<T> -> Promise<T | null>, exceptions silently discarded) as the central problem."
+          },
+          {
+            "id": "verdict-justification",
+            "description": "The verdict is explicit and the justification follows from the findings — a fail/uncertain verdict grounded in the contract break, not vibes."
+          },
+          {
+            "id": "precision",
+            "description": "No fabricated issues: every finding is real and anchored in the diff text; minor style nits are not inflated to blockers."
+          }
+        ]
+      }
+    },
+    {
+      "id": "economics-roi",
+      "title": "/cse:economics feature-ROI go/no-go over fixed inputs",
+      "skill": "cse/skills/economics/SKILL.md",
+      "pinnedInputs": {
+        "arguments": "feature-roi \"internal usage-metering dashboard\"",
+        "prompt": "Run the feature-ROI go/no-go discipline from the skill over these FIXED inputs, headlessly and without tools (no evaluator binary is available in this replay — emit the EMS the evaluator WOULD compute from, never hand-computed output numbers presented as results):\n\nCandidate: internal usage-metering dashboard. One-time build cost: $12,000 (analyst judgment: 2 engineer-weeks, blended loaded rate). Expected saving: $1,500/month (analyst judgment: duplicate model spend observed in /meter). Horizon: 24 months (org policy). Annual discount rate: 10% (org hurdle rate).\n\nEmit: (1) an EMS as a fenced ```json block where EVERY numeric assumption carries a provenance object (source, rationale, confidence), (2) the outputs you are requesting from the deterministic evaluator (NPV, payback, scenarios), (3) a provisional go/no-go recommendation explicitly conditioned on the evaluator's computed numbers."
+      },
+      "expected": {
+        "machineChecks": [
+          {
+            "id": "ems-json-block",
+            "description": "Output contains a fenced json EMS block",
+            "pattern": "```json"
+          },
+          {
+            "id": "npv-mentioned",
+            "description": "NPV is requested/discussed",
+            "pattern": "\\bNPV\\b|net present value",
+            "flags": "i"
+          },
+          {
+            "id": "payback-mentioned",
+            "description": "Payback period is requested/discussed",
+            "pattern": "payback",
+            "flags": "i"
+          },
+          {
+            "id": "provenance-tagged",
+            "description": "Assumptions carry provenance (source/rationale)",
+            "pattern": "provenance|source|assumption",
+            "flags": "i"
+          },
+          {
+            "id": "recommendation",
+            "description": "A go/no-go recommendation is present",
+            "pattern": "\\b(go|no-go|recommend)",
+            "flags": "i"
+          }
+        ]
+      },
+      "judgeRubric": {
+        "version": "1.0",
+        "criteria": [
+          {
+            "id": "provenance-discipline",
+            "description": "No orphan numbers: every numeric in the EMS carries a provenance object; the output does NOT assert hand-computed NPV/payback values as results (model proposes, code computes)."
+          },
+          {
+            "id": "model-structure",
+            "description": "The EMS is coherent and complete for the fixed inputs: build cost, monthly saving, horizon, discount rate, and requested outputs are all present and correctly typed."
+          },
+          {
+            "id": "decision-clarity",
+            "description": "The recommendation is explicit and correctly conditioned on the evaluator's computed numbers rather than presented as already-proven."
+          }
+        ]
+      }
+    }
+  ]
+}

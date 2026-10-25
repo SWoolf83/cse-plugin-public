@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "cascade-api": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/mcp/cascade-api/index.js"
+      ]
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "cascade-hq",
+  "description": "Cascade HQ local marketplace — the single source of truth for the cse plugin (Cascade Spec Engine: skills, cascade-api MCP, and capture hooks).",
+  "owner": {
+    "name": "Cascade HQ",
+    "url": "https://cascade.ai"
+  },
+  "plugins": [
+    {
+      "name": "cse",
+      "source": "./cse",
+      "description": "Cascade Spec Engine — all 54 Cascade skills, the cascade-api MCP server, and capture hooks, versioned as one plugin. Commands are colon-namespaced as /cse:<name>.",
+      "category": "development",
+      "author": {
+        "name": "Cascade HQ"
+      }
+    }
+  ]
+}

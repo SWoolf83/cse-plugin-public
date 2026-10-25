@@ -1,0 +1,144 @@
+{
+  "kind": "cascade.model_radar.sources",
+  "schema_version": 2,
+  "_doc": "USER-EDITABLE seed source registry for Model Radar. Edit this file directly to add, remove, or retag sources — it is data, not code. Each source's stance_hint is a DEFAULT only: extraction may override the stance per evidence item (e.g. a practitioner video reading a lab's benchmark table yields a lab_claim evidence item). stance_hint must be one of the dossier-schema.json stance enum values: lab_claim | independent_eval | practitioner_take. TO ADD A SOURCE: append an object to 'sources' with a unique id (lowercase-hyphenated), kind ('lab_page' for a lab's release/news page, 'youtube_channel' for a channel), name, stance_hint, and a note explaining why it's worth harvesting. For lab_page also set url and lab. For youtube_channel also set channel_id and rss_url in the keyless form https://www.youtube.com/feeds/videos.xml?channel_id=<CHANNEL_ID> (same convention as cse/skills/scout/youtube_rss.py — no API key required). LEADERBOARDS SECTION (schema_version 2, additive — existing consumers only read 'sources'): the top-level 'leaderboards' array registers NUMERIC score sources — living leaderboard/eval websites harvested for score snapshots conforming to score-schema.json. Each entry is an INDEPENDENT best-effort rung: enabled entries are all attempted per run, a failed fetch/parse NEVER aborts the run, and every attempt (fetched | parsed | failed + snapshot_count) is recorded in the run's source_health_report (see score-schema.json). Per-entry fields: id (slug, becomes score_snapshot.source_slug), kind 'leaderboard', name, url, stance_hint (always 'independent_eval' for leaderboards), enabled (flip to false to skip a rung without deleting it), benchmark_slugs (default benchmark_slug mappings for snapshots harvested here), metrics (expected metric+unit hints), parse_hints (how to extract numbers from this living website — JS-heavy pages may need the r.jina.ai reader fallback), and note.",
+  "sources": [
+    {
+      "id": "anthropic-news",
+      "kind": "lab_page",
+      "name": "Anthropic News",
+      "lab": "Anthropic",
+      "url": "https://www.anthropic.com/news",
+      "stance_hint": "lab_claim",
+      "note": "Anthropic's release/announcement page — model cards, launch posts, headline benchmark claims for the Claude family."
+    },
+    {
+      "id": "openai-blog",
+      "kind": "lab_page",
+      "name": "OpenAI Blog",
+      "lab": "OpenAI",
+      "url": "https://openai.com/news/",
+      "stance_hint": "lab_claim",
+      "note": "OpenAI's news page — GPT release announcements, system cards, and first-party eval claims."
+    },
+    {
+      "id": "deepmind-blog",
+      "kind": "lab_page",
+      "name": "Google DeepMind Blog",
+      "lab": "Google DeepMind",
+      "url": "https://deepmind.google/discover/blog/",
+      "stance_hint": "lab_claim",
+      "note": "Google DeepMind's blog — Gemini release posts and research announcements."
+    },
+    {
+      "id": "meta-ai-blog",
+      "kind": "lab_page",
+      "name": "Meta AI Blog",
+      "lab": "Meta",
+      "url": "https://ai.meta.com/blog/",
+      "stance_hint": "lab_claim",
+      "note": "Meta AI's blog — Llama release posts and open-weights announcements."
+    },
+    {
+      "id": "theo-t3dotgg",
+      "kind": "youtube_channel",
+      "name": "Theo (t3dotgg)",
+      "channel_id": "UCbRP3c757lWg9M-U7TyEkXA",
+      "rss_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbRP3c757lWg9M-U7TyEkXA",
+      "stance_hint": "practitioner_take",
+      "note": "Working engineer's hands-on takes on new models and dev tooling — fast, opinionated, builder-perspective reactions to releases."
+    },
+    {
+      "id": "ai-explained",
+      "kind": "youtube_channel",
+      "name": "AI Explained",
+      "channel_id": "UCNJ1Ymd5yFuUPtn21xtRbbw",
+      "rss_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCNJ1Ymd5yFuUPtn21xtRbbw",
+      "stance_hint": "independent_eval",
+      "note": "Careful independent analysis of model releases and benchmark claims — runs own evals (e.g. SimpleBench), scrutinizes lab papers and leaderboard validity."
+    },
+    {
+      "id": "matthew-berman",
+      "kind": "youtube_channel",
+      "name": "Matthew Berman",
+      "channel_id": "UCzi5kcwU8aT4aLR7LcYhfWQ",
+      "rss_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCzi5kcwU8aT4aLR7LcYhfWQ",
+      "stance_hint": "practitioner_take",
+      "note": "High-volume hands-on model testing and AI news coverage — informal test suites and early practitioner impressions of new releases."
+    }
+  ],
+  "leaderboards": [
+    {
+      "id": "lmarena",
+      "kind": "leaderboard",
+      "name": "LMArena",
+      "url": "https://lmarena.ai/leaderboard",
+      "stance_hint": "independent_eval",
+      "enabled": true,
+      "benchmark_slugs": ["lmarena"],
+      "metrics": [
+        { "metric": "elo", "unit": "elo" }
+      ],
+      "parse_hints": "Arena Elo table keyed by model name — map display names to canonical model_slugs. The page is JS-heavy (client-rendered table); a plain fetch may return no numbers, so fall back to the r.jina.ai reader (https://r.jina.ai/https://lmarena.ai/leaderboard) and parse the rendered text table. Best-effort: if neither yields numbers, record 'failed' in the source_health_report and move on.",
+      "note": "Crowd-sourced pairwise preference arena — the de-facto Elo signal for overall and per-category (coding/writing) model preference."
+    },
+    {
+      "id": "artificial-analysis",
+      "kind": "leaderboard",
+      "name": "Artificial Analysis",
+      "url": "https://artificialanalysis.ai/models",
+      "stance_hint": "independent_eval",
+      "enabled": true,
+      "benchmark_slugs": ["artificial-analysis-intelligence"],
+      "metrics": [
+        { "metric": "tokens_per_second", "unit": "tok/s" },
+        { "metric": "usd_per_million_tokens", "unit": "usd" },
+        { "metric": "index", "unit": "index" }
+      ],
+      "parse_hints": "Model comparison tables/charts with throughput (output tokens/sec), blended price (USD per 1M tokens), and their Intelligence Index. JS-heavy dashboard — prefer the r.jina.ai fallback (https://r.jina.ai/https://artificialanalysis.ai/models) to get rendered text, then extract per-model rows. Record price and speed as separate snapshots per model.",
+      "note": "Primary feed for the 'speed' and 'cost_efficiency' capability axes — independent throughput/latency measurements plus normalized pricing, alongside their aggregate intelligence index."
+    },
+    {
+      "id": "swe-bench",
+      "kind": "leaderboard",
+      "name": "SWE-bench Leaderboard",
+      "url": "https://www.swebench.com",
+      "stance_hint": "independent_eval",
+      "enabled": true,
+      "benchmark_slugs": ["swe-bench-verified", "swe-bench"],
+      "metrics": [
+        { "metric": "resolved_rate", "unit": "percent" }
+      ],
+      "parse_hints": "Leaderboard tables per split (Verified / full / Lite) listing system+model entries with '% Resolved'. Map the Verified tab to benchmark_slug 'swe-bench-verified' and the full split to 'swe-bench'. Entries are often scaffold+model combos — record the scaffold in the snapshot's 'harness' field and map the underlying model to model_slug. If the table is client-rendered, use the r.jina.ai fallback.",
+      "note": "The headline real-world coding benchmark — resolved-rate on real GitHub issues; primary numeric feed for the 'coding' axis. Harness-sensitive: always capture the scaffold caveat."
+    },
+    {
+      "id": "aider-polyglot",
+      "kind": "leaderboard",
+      "name": "Aider Polyglot Leaderboard",
+      "url": "https://aider.chat/docs/leaderboards/",
+      "stance_hint": "independent_eval",
+      "enabled": true,
+      "benchmark_slugs": ["aider-polyglot"],
+      "metrics": [
+        { "metric": "accuracy", "unit": "percent" }
+      ],
+      "parse_hints": "Static docs page with an HTML table: model name, 'Percent completed correctly' (record as metric 'accuracy'), edit format, and cost. Usually parseable from a plain fetch without the r.jina.ai fallback. Record the edit format (e.g. 'diff', 'whole') in the snapshot's 'harness' field; the cost column can optionally feed cost context notes.",
+      "note": "Practical multi-language code-editing benchmark from the aider project — a strong independent 'coding' axis signal that often diverges from SWE-bench rankings."
+    },
+    {
+      "id": "arc-gpqa-reports",
+      "kind": "leaderboard",
+      "name": "ARC Prize / GPQA Reporting Pages",
+      "url": "https://arcprize.org/leaderboard",
+      "stance_hint": "independent_eval",
+      "enabled": true,
+      "benchmark_slugs": ["arc-agi", "gpqa-diamond"],
+      "metrics": [
+        { "metric": "accuracy", "unit": "percent" }
+      ],
+      "parse_hints": "ARC Prize leaderboard lists per-system ARC-AGI accuracy (map to benchmark_slug 'arc-agi'); use the r.jina.ai fallback if the table is client-rendered. GPQA (map to 'gpqa-diamond') rarely has one canonical living leaderboard — numbers usually surface via lab announcement/eval report pages, so parse those best-effort and set the snapshot's source_url to the actual report page. Note cost-per-task or compute tier in 'harness' when ARC discloses it.",
+      "note": "Frontier reasoning feeds for the 'reasoning' axis — ARC-AGI (novel-problem generalization) plus GPQA Diamond (graduate-level science) gathered best-effort from prize and report pages."
+    }
+  ]
+}

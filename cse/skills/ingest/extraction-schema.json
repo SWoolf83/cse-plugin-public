@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cascade.ingest.extraction.v1",
+  "title": "Cascade Ingest — Roadmap-Grade Extraction (v1)",
+  "description": "The canonical shape an extraction agent must return after reading an ingested external source (video transcript, article, podcast, etc.). Tuned for mining external thought-leadership/competitor content into Cascade roadmap candidates — NOT shallow firehose triage (see cascade_ingest_curator_item) and NOT org-decision routing (see /cse:mine). cascade_implications is the load-bearing field: each entry must be specific enough to become an execution package. Extended additively for /cse:model-radar with OPTIONAL stance-tagged evidence fields (stance, model_refs, benchmark_refs) — optional for all other ingest flows.",
+  "type": "object",
+  "required": ["summary", "key_points", "competitive_signals", "cascade_implications"],
+  "additionalProperties": false,
+  "properties": {
+    "source": {
+      "type": "object",
+      "description": "Provenance of the ingested source, captured by the Phase-1 adapter (NOT the extraction itself — kept here so the shape is uniform across adapters). The skill copies this into the package's type_data.source. Source-agnostic: a YouTube adapter fills kind/url/video_id/author; a URL adapter fills url(normalized)/title/author/site/published_date; a paste adapter fills whatever the user supplies (url optional). url should be the NORMALIZED url (lowercased host; utm_*/fbclid/gclid + fragment + trailing slash stripped) so it is dedup-comparable.",
+      "additionalProperties": true,
+      "properties": {
+        "kind": { "type": "string", "description": "Adapter kind: 'youtube' | 'url' | 'paste'." },
+        "url": { "type": "string", "description": "Normalized canonical URL of the source (optional for paste)." },
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "site": { "type": "string", "description": "Publication / site name (e.g. 'The Verge'), for non-YouTube sources." },
+        "published_date": { "type": "string", "description": "ISO date the source was published, if discoverable." }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "4-6 sentence neutral summary of the source's core argument."
+    },
+    "frameworks": {
+      "type": "array",
+      "description": "Named models/ladders/processes the source introduces.",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "levels_or_steps": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "key_points": {
+      "type": "array",
+      "description": "8-15 substantive claims/insights. Each a full standalone sentence carrying the specific detail/number/example from the source (not generic).",
+      "minItems": 5,
+      "items": { "type": "string" }
+    },
+    "notable_quotes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["quote", "why_it_matters"],
+        "additionalProperties": false,
+        "properties": {
+          "quote": { "type": "string", "description": "Near-verbatim, lightly cleaned." },
+          "why_it_matters": { "type": "string" }
+        }
+      }
+    },
+    "competitive_signals": {
+      "type": "array",
+      "description": "What the source implies about the market, competitors, moats, or dangers — for competitive analysis.",
+      "items": { "type": "string" }
+    },
+    "cascade_implications": {
+      "type": "array",
+      "description": "THE load-bearing field. Specable feature/workflow ideas Cascade could build or improve, each mapped to an existing primitive and sized.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["idea", "rationale", "maps_to_existing", "effort"],
+        "additionalProperties": false,
+        "properties": {
+          "idea": { "type": "string", "description": "Specific feature/workflow — concrete enough to /cse:spec." },
+          "rationale": { "type": "string", "description": "Why the source supports it." },
+          "maps_to_existing": { "type": "string", "description": "Which Cascade concept it extends (CSE pipeline, package primitive, verification gates, etc.) or 'new'." },
+          "effort": { "type": "string", "enum": ["S", "M", "L"] }
+        }
+      }
+    },
+    "contradictions_or_risks": {
+      "type": "array",
+      "description": "Anything in the source that challenges Cascade's current direction or that we should pressure-test.",
+      "items": { "type": "string" }
+    },
+    "stance": {
+      "type": "string",
+      "enum": ["lab_claim", "independent_eval", "practitioner_take"],
+      "description": "OPTIONAL — the epistemic stance of the source w.r.t. model-quality claims: lab_claim = the model's own lab asserting quality; independent_eval = third-party structured evaluation; practitioner_take = hands-on practitioner opinion/experience. Used by /cse:model-radar; optional for all other ingest flows."
+    },
+    "model_refs": {
+      "type": "array",
+      "description": "OPTIONAL — canonical model release slugs mentioned substantively in the source (lowercase-hyphenated, e.g. 'claude-fable-5', 'gpt-5', 'gemini-2.5-pro'). Used by /cse:model-radar.",
+      "items": { "type": "string" }
+    },
+    "benchmark_refs": {
+      "type": "array",
+      "description": "OPTIONAL — benchmark/eval slugs the source cites (lowercase-hyphenated, e.g. 'swe-bench', 'mmlu', 'arc-agi'). Used by /cse:model-radar.",
+      "items": { "type": "string" }
+    }
+  }
+}

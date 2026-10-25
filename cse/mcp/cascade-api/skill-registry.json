@@ -1,0 +1,517 @@
+{
+  "$schema": "cascade-skill-registry-v1",
+  "generatedBy": "scripts/gen-skill-registry.mjs",
+  "count": 85,
+  "skills": [
+    {
+      "name": "alias",
+      "command": "/cse:alias",
+      "description": "Use when you want to rename a skill — create, list, sync, or remove personal aliases (slash + conversational triggers) for any skill.",
+      "when_to_use": "Create, list, sync, or remove personal aliases for any skill. Aliases persist to your portable AI profile and travel with your account across devices and orgs. Rename skills to whatever feels natural — slash commands and conversational triggers."
+    },
+    {
+      "name": "analyze",
+      "command": "/cse:analyze",
+      "description": "Use when you face a real multi-branch decision (acquisition, build-vs-hold, pricing, market entry) — runs the CADE interrogation loop.",
+      "when_to_use": "CADE v1 — the Cascade Analysis & Decision Engine interrogation loop. Runs a structured decision analysis as a CONVERSATION, not a report; every round of questioning moves a named assumption, every number lives in an Economic Model Spec computed by the shared deterministic evaluator, and the output is a versioned notebook artifact (renderer 'notebook') with per-branch economic cells, named structural scenarios (e.g. 'no_buyer'), controllability-tagged levers, and a cross-branch comparison + recommendation cell. Proven in the HomeNP dry-run (artifact 54403f04-9499-4cef-8be4-08c86ced5d32) — the canonical worked example."
+    },
+    {
+      "name": "archaeology",
+      "command": "/cse:archaeology",
+      "description": "Use when you want historical decisions mined from repo docs, git history, and PRs and backloaded into Cascade — fixes cold-start.",
+      "when_to_use": "Use when you want historical decisions mined from repo docs, git history, and PRs and backloaded into Cascade — fixes cold-start."
+    },
+    {
+      "name": "backfill",
+      "command": "/cse:backfill",
+      "description": "Retrospective work backfill — scan git repos, Cascade activity, or other sources to generate professional work entries for the Work Tracker.",
+      "when_to_use": "Retrospective work backfill — scan git repos, Cascade activity, or other sources to generate professional work entries for the Work Tracker."
+    },
+    {
+      "name": "board",
+      "command": "/cse:board",
+      "description": "Show the Cascade kanban board of engineering sessions (queued, running, completed).",
+      "when_to_use": "Show the Cascade kanban board of engineering sessions (queued, running, completed)."
+    },
+    {
+      "name": "bootstrap",
+      "command": "/cse:bootstrap",
+      "description": "Set up AI-native company infrastructure in ~2 hours. Guides through accounts, tools, portfolio, scanning, and your first decision.",
+      "when_to_use": "Set up AI-native company infrastructure in ~2 hours. Guides through accounts, tools, portfolio, scanning, and your first decision."
+    },
+    {
+      "name": "braindump",
+      "command": "/cse:braindump",
+      "description": "Use when you want to brain-dump raw thoughts into structured work packages — synthesizes freeform text into typed, estimated packages.",
+      "when_to_use": "Use when you want to brain-dump raw thoughts into structured work packages — synthesizes freeform text into typed, estimated packages."
+    },
+    {
+      "name": "brainstorm",
+      "command": "/cse:brainstorm",
+      "description": "Use when you want open-ended brainstorming that narrows ideas into the Cascade IRA pipeline — pulls org context and captures refined ideas.",
+      "when_to_use": "Use when you want open-ended brainstorming that narrows ideas into the Cascade IRA pipeline — pulls org context and captures refined ideas."
+    },
+    {
+      "name": "capture",
+      "command": "/cse:capture",
+      "description": "Use when you've finished significant work and want it captured as a completed tracked package in Cascade (gathers git/plan/session state).",
+      "when_to_use": "Capture completed work as a tracked package in Cascade. Gathers git state, plan context, and session activity, then logs it as a completed package for individual task tracking."
+    },
+    {
+      "name": "chief",
+      "command": "/cse:chief",
+      "description": "Use when you want a chief-of-staff brief — where the world moved against your plan since you last talked, then decide together.",
+      "when_to_use": "Chief-of-Staff mode — a session-invoked standing strategy conversation. On entry it restores the last thread, reads your trigger config, and composes a brief that answers \"where did the world move against your plan?\" (pressure on your live assumptions + active roadmap — NOT a recency feed). Presents at most 3 decision cards (what-it-is / why-it-pressures-the-plan / the-decision), or honestly says you're caught up. During the conversation it is opinionated and decision-terminating, and can take any action-catalog verb — spawn an idea, link knowledge to work, log a decision, create/update a typed artifact — routing genuinely-human choices to a pending question. On exit it persists a versioned thread (artifact node + a .cascade markdown mirror) and writes resurface engagement back. You can change cadence/scope/trigger from the conversation, but the MVP is SESSION-INVOKED ONLY — cadences are config, nothing auto-runs. See DESIGN.md."
+    },
+    {
+      "name": "claudemd",
+      "command": "/cse:claudemd",
+      "description": "Use when you want CLAUDE.md regenerated from Cascade context — scan + org + prefs; shows the diff, writes only on explicit consent.",
+      "when_to_use": "Adaptive CLAUDE.md generation. Assembles one source model from the latest codebase scan, org context, and portable AI preferences (degrading gracefully when a source is sparse), renders a LEAN managed block between cascade:managed markers, and merges it diff-before-write — content outside the markers is never touched, re-runs with the same inputs are zero-diff idempotent, and the generated base is model-agnostic (per-model tuning lives only in variants/{model}/ overlays). Triggers on \"regenerate CLAUDE.md\", \"update my CLAUDE.md from Cascade\", \"claudemd\"."
+    },
+    {
+      "name": "context",
+      "command": "/cse:context",
+      "description": "Show what Cascade knows about this repository — latest scan results, tech stack, architecture, and enrichment data.",
+      "when_to_use": "Show what Cascade knows about this repository — latest scan results, tech stack, architecture, and enrichment data."
+    },
+    {
+      "name": "curator",
+      "command": "/cse:curator",
+      "description": "Use when you want to browse, discuss, and act on your Cascade curator queue (research firehose) — deep-dive, ingest, create packages.",
+      "when_to_use": "Browse, discuss, and act on your Cascade curator queue — your research firehose intake. Pull items into conversation for deep dives, ingest new content, and create work packages from insights."
+    },
+    {
+      "name": "dashboard",
+      "command": "/cse:dashboard",
+      "description": "Use when you want to rearrange your dashboard by talking to it — add/remove/reorder/resize tiles or apply a focus theme to your live layout.",
+      "when_to_use": "/cse:dashboard — conversational dashboard layout. Reads your current layout + the tile catalog from cascade-web (GET /api/dashboard/layout, authed by your ~/.cascade/auth.json token), interprets a natural-language request (add/remove a tile, reorder, resize normal|wide|full, or a preset focus theme like 'financial-focused'), shows a clear before→after summary, confirms, then writes the change to your user-scope view_compositions via POST /api/dashboard/layout (native sanitize+merge — non-tile prefs preserved). Triggers on 'rearrange my dashboard', 'make my dashboard financial/engineering/legal-focused', 'add the burn meter tile', 'move X to the top / make it full width', 'reset my dashboard layout'."
+    },
+    {
+      "name": "dashboard-optimize",
+      "command": "/cse:dashboard-optimize",
+      "description": "Use when you want the dashboard tuned to YOUR screen — a vision loop reviews it at your size, shows before→after, applies on your OK.",
+      "when_to_use": "/cse:dashboard-optimize — a vision-driven layout optimizer (Phase 3b). Captures your dashboard at your real screen size, evaluates the arrangement (is the top a good heads-up display? cramped or sparse tiles? wasted width?), proposes a tuned ordered tile list (order + normal/wide/full sizes), applies it via the /api/dashboard/layout endpoint, and re-screenshots to check — iterating a couple rounds — then shows before→after and keeps it only on your confirm (a snapshot is saved so it's fully revertible). Uses computer-use ONCE for real-screen ground truth + chrome-devtools to drive the loop. Triggers on 'optimize my dashboard', 'make my dashboard look right on my big screen', 'tune the layout for this screen', 'lay out my dashboard as a heads-up display'."
+    },
+    {
+      "name": "decide",
+      "command": "/cse:decide",
+      "description": "Pull all relevant Cascade context before making a technical decision. Fetches precedent patterns, recent decisions, and codebase scan data.",
+      "when_to_use": "Pull all relevant Cascade context before making a technical decision. Fetches precedent patterns, recent decisions, and codebase scan data."
+    },
+    {
+      "name": "deferrals",
+      "command": "/cse:deferrals",
+      "description": "Find work you deferred then forgot — reads back every spec deferral, ranks by age and component liveness, triages a short list.",
+      "when_to_use": "Planning what to work on next; suspecting good work got dropped; after shipping a lean version; periodic debt review; onboarding someone who needs to know what was consciously left undone."
+    },
+    {
+      "name": "delegate",
+      "command": "/cse:delegate",
+      "description": "Use when you want to hand work to a team member — turns a conversation into a structured execution package they can own and run with AI.",
+      "when_to_use": "Use when you want to hand work to a team member — turns a conversation into a structured execution package they can own and run with AI."
+    },
+    {
+      "name": "drift",
+      "command": "/cse:drift",
+      "description": "Detect strategy drift by comparing documented direction against actual decision patterns.",
+      "when_to_use": "Detect strategy drift by comparing documented direction against actual decision patterns."
+    },
+    {
+      "name": "economics",
+      "command": "/cse:economics",
+      "description": "Use when you want a deterministic, auditable economic analysis — feature-ROI ranking and go/no-go (NPV/IRR/payback), provenance-gated.",
+      "when_to_use": "Deterministic, auditable economic analysis (feature-ROI ranking + go/no-go). The LLM emits an Economic Model Spec (EMS); a single shared stateless evaluator computes NPV/IRR/payback + scenarios + a sensitivity tornado; a traceability gate enforces provenance; the cited, defensible result is handed to /cse:publish."
+    },
+    {
+      "name": "eval",
+      "command": "/cse:eval",
+      "description": "Evaluate a Cascade research or strategy report with multi-dimensional LLM scoring. Produces a quality scorecard.",
+      "when_to_use": "Evaluate a Cascade research or strategy report with multi-dimensional LLM scoring. Produces a quality scorecard."
+    },
+    {
+      "name": "gate",
+      "command": "/cse:gate",
+      "description": "Use when you want to run a gate/workflow of ANY category (qa, review, security…) against your change — pick org workflows, get a verdict.",
+      "when_to_use": "Runs a gate/workflow of any category against your change. Lists the org's workflow_definitions for the category just-in-time (platform defaults auto-materialized — never empty for a seeded category like 'qa' or 'review'), lets you pick or compose/sequence several mid-stream, then executes each agent-driven — emitting pass/fail/uncertain and recording the run in workflow_executions (+ the package's type_data.gate_runs[] for non-qa gates). `/cse:gate review` runs code-review; `/cse:gate qa` is what /cse:qa delegates to."
+    },
+    {
+      "name": "harness-radar",
+      "command": "/cse:harness-radar",
+      "description": "Use when you want harness radar — AI coding-agent intel, benchmark fluency, and leaderboard-backed meta-ratings as versioned dossiers.",
+      "when_to_use": "Harness Radar — the coding-HARNESS sibling of Model Radar. Extends the Scout/ingest pipeline into an AI-coding-agent intelligence lens. Harvests the harness-radar source registry (maker blogs/release pages + practitioner/review YouTube channels + a structured-eval leaderboard rung — SWE-bench / Terminal-Bench / Aider polyglot / SWE-bench Pro), extracts stance-tagged evidence (maker_claim / independent_eval / practitioner_take) with harness_refs/model_refs/benchmark_refs, upserts ONE versioned dossier artifact per canonical harness slug (and shares benchmark dossiers with Model Radar), wires informs + supersedes edges on the package substrate, and re-synthesizes dirty dossiers (strengths/risks/field-findings/divergence/fit-for-our-stack + a meta-rating capability vector across 6 harness-specific axes; benchmark measures/credibility/gameability/cited-by/score-context) in the same Max Plan session. Triggers on \"harness radar\", \"which open-source coding agent should I use\", \"how does Claude Code compare to OpenHands / Codex / Cursor\", \"what does SWE-bench actually measure for agents\", the harness-vs-model confound."
+    },
+    {
+      "name": "harvest",
+      "command": "/cse:harvest",
+      "description": "Capture a real, already-working AI workflow into a portable vertical spec — the front door to spinning up a new vertical.",
+      "when_to_use": "Someone has a workflow that ALREADY works — they got a real result by talking to Claude, largely outside Cascade — but couldn't reproduce it cleanly next time. Run this ON THEIR machine, in the session that did (or can see) the work. It reconstructs the workflow from evidence Claude can already observe, interviews the human only to fill gaps and capture the goal in their own words, and emits one portable harvest spec (JSON + readable markdown) they can send back. That spec is the intake for building a vertical pack + its skills. First step of the vertical-onboarding bundle. Triggers on 'harvest my workflow', 'capture how we did this', 'turn this into a repeatable process', 'onboard a new vertical', '/cse:harvest'."
+    },
+    {
+      "name": "imagine",
+      "command": "/cse:imagine",
+      "description": "Use when you want an AI-generated image — Claude crafts the prompt, OpenAI renders it, and it lands as a versioned Cascade artifact.",
+      "when_to_use": "/cse:imagine — Claude-prompted image generation via the OpenAI Images API (GPT Image family), persisted as first-class versioned image artifacts. Interviews/refines the ask into a strong image prompt (style, composition, negative space, brand palette from .cascade/brand.json when relevant), states the estimated cost tier BEFORE generating, calls cascade_generate_image, reports the artifact link (/artifacts/{id} + live desktop break-off window), and supports conversational iteration ('make the sky darker') via edit-mode versioning — each edit appends a new artifact version, giving visual evolution history for free. Triggers on 'imagine', 'generate an image', 'make me a picture/logo/cover/illustration', 'edit that image', '/cse:imagine <ask>'."
+    },
+    {
+      "name": "ingest",
+      "command": "/cse:ingest",
+      "description": "Use when you point at an external source — YouTube video, article URL, or pasted text — to mine it into a Cascade knowledge package.",
+      "when_to_use": "Deep, roadmap-grade mining of a named external source — drop a YouTube link, any article URL, or paste raw text. Reliably pulls the content (YouTube transcript adapter, a URL-readability adapter with a fallback ladder, or direct paste), runs a deep extraction (frameworks, key points, competitive signals, specable Cascade implications), lets you judge whether it's worth going deep, then persists it (dedup-aware on URL) and optionally promotes implications into idea/execution packages to delegate."
+    },
+    {
+      "name": "intel",
+      "command": "/cse:intel",
+      "description": "Review and update competitive intelligence profiles",
+      "when_to_use": "Review and update competitive intelligence profiles"
+    },
+    {
+      "name": "intent",
+      "command": "/cse:intent",
+      "description": "Use when you want to build a personalized decision persona from an interview — captures your intent and priorities for /cse:persona.",
+      "when_to_use": "Build a personalized decision persona from an interactive interview. Extracts your intent, philosophy, economic reasoning, and priorities into a reusable persona that /cse:persona can run autonomously on your behalf."
+    },
+    {
+      "name": "jam",
+      "command": "/cse:jam",
+      "description": "Write acoustic-guitar songs with Claude during coding downtime — fast chords, lyric seeds, re-lit mixes. An Easter-egg jam companion.",
+      "when_to_use": "Use during downtime — while coding agents run waves, or any time you want to keep brain and fingers warm by writing a simple acoustic song together instead of passive lo-fi."
+    },
+    {
+      "name": "learn",
+      "command": "/cse:learn",
+      "description": "Use when you want to learn something — a branded HTML lesson calibrated to your learner profile, one versioned artifact per topic.",
+      "when_to_use": "/cse:learn — personalized learning lessons on the package substrate. Loads (or first-run interviews) your portable learner profile from ai_preferences.interaction_preferences.learning, asks at most 1-2 topic calibration questions, generates a fully self-contained branded HTML lesson (dark minimalist \"engineering note\" aesthetic) grounded in real org/codebase facts, and upserts it as exactly ONE versioned lesson artifact per (org, topic_slug) — deepening or regenerating appends a new version to the SAME node, never a duplicate. Supports learning tracks (ordered contains edges) and personal variants. Triggers on \"teach me\", \"I want to learn\", \"explain X to me properly\", \"make me a lesson on\", \"/cse:learn <topic>\"."
+    },
+    {
+      "name": "legal",
+      "command": "/cse:legal",
+      "description": "Use when you want a legal analysis run with structured frameworks (IP/FTO, contract risk, M&A, privacy/AI, regulatory…) via research agents.",
+      "when_to_use": "Run a legal analysis using structured frameworks (IP/FTO, Contract Risk, M&A Due Diligence, Fundraising, Employment, Privacy/AI, Governance, Regulatory, Litigation, Antitrust) with parallel research agents."
+    },
+    {
+      "name": "link",
+      "command": "/cse:link",
+      "description": "Use when you want to link a knowledge node (research/intel from /cse:ingest or Scout) to the work it affects — proposes 'informs' edges.",
+      "when_to_use": "Active Knowledge PROPOSE — make a knowledge node ACTIVE by linking it to the work it affects. Takes a knowledge node, fetches the org's active work packages, proposes typed 'informs' edges each with a one-line rationale + confidence, gates on human confirmation, creates the confirmed edges on the package substrate (package_edges). The inject half (cascade_get_context with package_id) then delivers that knowledge to whoever works the package, clearance-filtered by role."
+    },
+    {
+      "name": "log",
+      "command": "/cse:log",
+      "description": "Capture a decision from the current session to Cascade's organizational decision log. Extracts context automatically.",
+      "when_to_use": "Capture a decision from the current session to Cascade's organizational decision log. Extracts context automatically."
+    },
+    {
+      "name": "meeting-sync",
+      "command": "/cse:meeting-sync",
+      "description": "Use when you want to sync meeting notes into the work tracker — extracts action items, decisions, updates, assignments for batch approval.",
+      "when_to_use": "Sync meeting notes into the work tracker — extracts action items, decisions, status updates, and assignments, cross-references against live tracker state, proposes updates for batch approval."
+    },
+    {
+      "name": "mine",
+      "command": "/cse:mine",
+      "description": "Extract decisions, insights, competitive signals, and risk indicators from meeting transcripts.",
+      "when_to_use": "Extract decisions, insights, competitive signals, and risk indicators from meeting transcripts."
+    },
+    {
+      "name": "mode",
+      "command": "/cse:mode",
+      "description": "Activate a working mode (vibe, strategy, debug, etc.) and pull in context from previous sessions in that mode. Save session notes when done.",
+      "when_to_use": "Activate a working mode (vibe, strategy, debug, etc.) and pull in context from previous sessions in that mode. Save session notes when done."
+    },
+    {
+      "name": "model-radar",
+      "command": "/cse:model-radar",
+      "description": "Use when you want model radar — new-model-release intel, benchmark fluency, and leaderboard-backed meta-ratings as versioned dossiers.",
+      "when_to_use": "Model Radar — extend the Scout/ingest pipeline into an LLM-model intelligence lens. Harvests the model-radar source registry (lab release pages + model-review YouTube channels + a structured-eval leaderboard rung — score snapshots, head-to-head/arena data, throughput/pricing), extracts stance-tagged evidence (lab_claim / independent_eval / practitioner_take) with model_refs/benchmark_refs, upserts ONE versioned dossier artifact per canonical model release / benchmark slug, wires informs + supersedes edges on the package substrate, and re-synthesizes dirty dossiers (strengths/risks/post-release findings/divergence/fit-for-our-stack + a meta-rating capability vector across 6 core axes; benchmark measures/credibility/gameability/cited-by/score-context — the eval-fluency requirement) in the same Max Plan session. Triggers on \"model radar\", new model release intel, \"what does SWE-bench actually measure\", benchmark fluency, \"how does <model> actually score\"."
+    },
+    {
+      "name": "odm-intake",
+      "command": "/cse:odm-intake",
+      "description": "Retrospectively map an existing org's data topology from interview + probes, then score whether the org recognizes it as \"that's us\".",
+      "when_to_use": "You want to map an EXISTING org's real data stores (databases, object/media, unmanaged spreadsheets, backups) WITHOUT a workspace scan — because no scan exists for real orgs. This is the retrospective recognition-test harness: it interviews the human, runs proactive probes, builds a DataTopologyPlan whose discovered stores are all status:'existing' (described, never rejected), then emits a recognition scorecard (per-store verdict, tier fit, gaps, that's-us score) the human confirms. Triggers on 'map our data', 'run the recognition test', 'what does our data terrain look like', 'onboard our org's data model', '/cse:odm-intake'."
+    },
+    {
+      "name": "okr-backfill",
+      "command": "/cse:okr-backfill",
+      "description": "Use when you want an OKR backfill — cluster existing work into initiatives and draft objectives + KRs to the /objectives steering queue.",
+      "when_to_use": "Interview-assisted FULL-COVERAGE OKR backfill. Gathers the org's top-level work groupings (bundles/projects), clusters them into 5-15 outcome-oriented candidate initiatives in-session (every grouping lands in exactly one cluster or an explicit unclustered list — nothing silently dropped), walks the user through confirming clusters and outcome framing, then drafts one outcome-framed objective + 2-4 measurable KRs per confirmed cluster, one initiative proposal per cluster, and evidence links onto existing live KRs — ALL persisted as status='draft' rows in the okr_proposals steering queue on /objectives. NEVER mutates live objectives/key_results/kr_evidence_links; the steering-queue accept path is the only route to live entities. Triggers on 'okr backfill', 'backfill objectives', 'cluster my projects into initiatives', 'turn my projects into OKRs'."
+    },
+    {
+      "name": "okr-intake",
+      "command": "/cse:okr-intake",
+      "description": "Use when onboarding an org's orphan packages into OKRs — interview, long-form run, ~12 plan decisions, a guesses brief.",
+      "when_to_use": "The standing ONBOARDING lane every repo/org goes through once, and re-runs cheaply forever after. FOUR PHASES: (1) a CSE-style upfront interview that SEEDS classification — multiple choice plus clarification, asked dynamically, and PERSISTED so every re-run starts better; (2) a long-form, walk-away-able engine run (quarantine → corpus → free organize_area seeding → match → cluster → plan → lint → self-check) that never throws and degrades honestly; (3) a PLAN-LEVEL approval conversation of ~12 decisions, ceiling 20, NEVER per row — one decision fans out to every member link, because a 970-item review queue is an ignored backlog by construction; (4) a completion brief with an explicit 'places I guessed on your behalf' section. This is the PACKAGE lane — the only OKR skill that reaches the ~970 orphan packages. Auto-apply is OFF by default: the pass runs dry first, shows what WOULD be written, and only then offers the lever. It NEVER creates objectives or key results — humans accept on /objectives. Triggers on 'okr intake', 'onboard this repo into OKRs', 'what work is not laddering to an objective', 'classify our orphan packages', 'reconcile the alignment score'."
+    },
+    {
+      "name": "okr-seams",
+      "command": "/cse:okr-seams",
+      "description": "Use when you want seam OKRs — develop a seam, run persona auto/confirm passes, discuss a big goal, or roundup into org objectives.",
+      "when_to_use": "Seam-OKR development loop over the architecture topics. OPENER: a seam-pressure ranking table (liveness × drift × scaling severity) over EVERY topic — ranking orders attention, never excludes. DEVELOP (default): walk ONE seam — machine maturity numbers, the if-we-scaled outlook, open steering-queue drafts, live seam OKRs — refine conversationally, then promote through the steering-queue accept path (promoteSeamDraft) into a live level='seam' objective. The strategic companion may be read live as privileged interview context but its text is NEVER persisted anywhere. ROUNDUP: cluster all live seam objectives across topics, run the upstream-assignment Q&A per cluster (existing org objectives + 'Create new'), and queue kind='seam_upstream' drafts (writeUpstreamProposals); missing-upstream findings are explicit output. STRATEGY-LOOP MODES: AUTO — a charter-seeded persona develops EVERY seam into the steering queue (nothing promoted; accept path stays human-only). CONFIRM — same, plus one confirm question per seam. GOAL — gap-analyze a stated near-term goal against live objectives/seams → horizon-tagged drafts + seam re-eval flags. CONSOLIDATE — end-of-pass clustering of open findings into OKR-mapped spec-bundle PROPOSALS (priority score + runtime estimate); each APPROVED cluster becomes one DRAFT package — nothing live, nothing launched. All modes capture misalignments as draft finding packages. Triggers on 'seam okrs', 'develop okrs for <topic>', 'okr roundup', 'component okrs', 'seam pressure', 'okr auto pass', 'okr goal <text>'."
+    },
+    {
+      "name": "onboard-charter",
+      "command": "/cse:onboard-charter",
+      "description": "Charter-first onboarding — the interview that creates the org's ONE intent store. Successor to /cse:onboard-goals; fixes CHARTER_MISSING.",
+      "when_to_use": "The FIRST OKR-lane conversation for any org/repo, and the remedy every charter-dependent engine names: lattice drafting and archaeology v2 refuse to run without a saved charter (requireCharter throws CHARTER_MISSING pointing here). Three movements: (1) machine recon — `node bin/cascade.js charter-onboard --recon` detects the repo's surfaces (web, electron, cli-plugin, daemon, native, substrate, menu-bar) with evidence, and emits 5-10 deterministic strategy hypotheses phrased for cheap confirm/deny; (2) a HUMAN interview — hypotheses confirmed/denied/revised, then mission, near/long horizon goals, non-goals, per-surface intent, trade-offs, cadence, day zero, all via AskUserQuestion, one stage at a time; (3) an apply-gated write — saveCharter (versioned artifact, one node per org) plus organizations.okr_cadence/okr_day_zero. Dry-run by default; NOTHING is written without an explicit apply. Triggers on 'onboard charter', 'set up the charter', 'charter interview', 'what is this org actually trying to do', 'CHARTER_MISSING', and as the handoff before OKR lattice drafting."
+    },
+    {
+      "name": "onboard-goals",
+      "command": "/cse:onboard-goals",
+      "description": "Short goals interview writing the goal frame triage classifies against. Creates no OKRs. SUPERSEDED by /cse:onboard-charter.",
+      "when_to_use": "SUPERSEDED — the charter absorbs the goal frame, so run /cse:onboard-charter instead for new orgs; this remains only for orgs already on a goal frame. The goals interview that runs BEFORE any import or triage pass. A short conversational interview (5-8 questions, one at a time, options drawn from what is already in the org) that extracts named THEMES with matchable keywords, rough TIME PERIODS that matter, the SYSTEMS whose history is worth keeping, and KNOWN DEAD ENDS the user already considers abandoned — then persists them as a new VERSION of the org's goal frame via cascade-web/src/lib/triage/goalFrame.ts. Theme ids are STABLE across re-runs because triage_classifications.theme_ids references them. This skill NEVER creates objectives or key results — OKRs are framed deliberately forward with real buy-in; this only makes laddering history backward onto them cheap. Triggers on 'onboard goals', 'set up the goal frame', 'what are we trying to do', 'before we import, tell Cascade the goals', 'add a theme to the goal frame'."
+    },
+    {
+      "name": "persona",
+      "command": "/cse:persona",
+      "description": "Use when you want CSE discovery run with an AI persona answering — two isolated contexts produce a spec + session report autonomously.",
+      "when_to_use": "Run CSE discovery with an AI persona answering questions. Two isolated AI contexts — a questioner and an opinionated persona — produce a spec and human-readable session report, all within your Max Plan session."
+    },
+    {
+      "name": "plan-capture",
+      "command": "/cse:plan-capture",
+      "description": "Capture a Claude Code auto-plan as tracked packages and bundle in Cascade. Paste a plan from another terminal, get structured work tracking.",
+      "when_to_use": "Capture a Claude Code auto-plan as tracked packages and bundle in Cascade. Paste a plan from another terminal, get structured work tracking."
+    },
+    {
+      "name": "plan-complete",
+      "command": "/cse:plan-complete",
+      "description": "Use when you have execution output and want it matched to draft packages and transitioned to completed (plan + execution in one paste).",
+      "when_to_use": "Complete tracked packages from execution output. Matches results to draft packages and transitions them to completed. Supports combined mode (plan + execution in one paste)."
+    },
+    {
+      "name": "prd",
+      "command": "/cse:prd",
+      "description": "Use when you want a Product Requirements Document from a package or bundle — a 10-section branded PRD stored to Cascade + rendered PDF.",
+      "when_to_use": "Generate a Product Requirements Document from an existing package or bundle. Synthesizes package data, linked specs, org context, and riders into a 10-section branded PRD. Stores to Cascade and renders PDF."
+    },
+    {
+      "name": "progress",
+      "command": "/cse:progress",
+      "description": "Conversational pipeline flow for the Cascade IRA progression system.",
+      "when_to_use": "Conversational pipeline flow for the Cascade IRA progression system."
+    },
+    {
+      "name": "project-archaeology",
+      "command": "/cse:project-archaeology",
+      "description": "Use when a new org's workspace is empty and you want git history mined to auto-populate Cascade with packages, projects, and categories.",
+      "when_to_use": "Mine git history (PRs, merges, directory structure) to auto-populate Cascade with packages, projects, and categories. Solves the empty-workspace cold start problem for new orgs."
+    },
+    {
+      "name": "publish",
+      "command": "/cse:publish",
+      "description": "Use when you want to produce a branded white paper, report, brief, or memo as a polished PDF on the user's desktop.",
+      "when_to_use": "Produce branded white papers, reports, briefs, and memos as polished PDFs. Uses Cascade's branded HTML template (cover page, numbered sections, callouts, tables, code blocks), renders to PDF on the user's desktop via headless Chrome, and supports marketing, technical, and legal/formal variants with custom branding."
+    },
+    {
+      "name": "push",
+      "command": "/cse:push",
+      "description": "Push current project state to Cascade as a trackable package. Captures git state, plans, specs, and session context.",
+      "when_to_use": "Push current project state to Cascade as a trackable package. Captures git state, plans, specs, and session context."
+    },
+    {
+      "name": "qa",
+      "command": "/cse:qa",
+      "description": "Use when you want to run a QA workflow on your current change — pick/compose the org's QA workflows and get a pass/fail/uncertain verdict.",
+      "when_to_use": "Runs a QA workflow on your current change. Lists the org's QA workflows just-in-time (defaults auto-materialized — never empty), lets you pick or compose/sequence several mid-stream, then executes each — git-diff surface detection, browser-MCP screenshot, pass/fail/uncertain verdict — recording the run in workflow_executions. Delegates to /cse:gate qa."
+    },
+    {
+      "name": "receive",
+      "command": "/cse:receive",
+      "description": "Receive delegated packages from your inbox — view assignments, pull full context, accept work, and launch CSE execution.",
+      "when_to_use": "Receive delegated packages from your inbox — view assignments, pull full context, accept work, and launch CSE execution."
+    },
+    {
+      "name": "reeval",
+      "command": "/cse:reeval",
+      "description": "Use when you ask to check a work package for drift — re-evaluates its linked 'informs' knowledge against its spec and surfaces drift.",
+      "when_to_use": "Active Knowledge RE-EVALUATE (third stage of the loop). Pulls a package's connected 'informs' knowledge via the INJECT path (clearance-filtered by your real role), judges each item against the package's own spec assumptions + must-haves + intent, records a drift signal for every contradiction (ALL severities), then surfaces only medium+ for an in-session accept/dismiss. Interactive-only — invoked when you ask (\"check this package for drift\"); never on cron/daemon. Distinct from /cse:drift (STRATEGY drift: documented direction vs decision patterns)."
+    },
+    {
+      "name": "release",
+      "command": "/cse:release",
+      "description": "Use when you want to re-release the cse plugin to its marketplace repo — re-vendors, drift-guards, bumps version, publishes a mirror.",
+      "when_to_use": "Re-release the cse plugin to the distributable marketplace repo (SWoolf83/cse-plugin). Re-vendors MCP + hooks, runs the drift guard, bumps the plugin version, then publishes a byte-identical mirror and tags it — failing loudly if any gate is red."
+    },
+    {
+      "name": "repo-map",
+      "command": "/cse:repo-map",
+      "description": "Generate a repo's component map — what it is made of, what is alive vs parked vs dropped, and where work stalled.",
+      "when_to_use": "Onboarding a new repo or org; before setting initiatives; when 'what are we even working on' is hard to answer; when retroactive ingestion feels like it's surfacing noise; when you suspect work was dropped and forgotten."
+    },
+    {
+      "name": "research",
+      "command": "/cse:research",
+      "description": "Produce a deep research white paper on any topic with parallel research agents and branded PDF output.",
+      "when_to_use": "Produce a deep research white paper on any topic with parallel research agents and branded PDF output."
+    },
+    {
+      "name": "resume",
+      "command": "/cse:resume",
+      "description": "Recall and resume previous progressions by topic or partial description.",
+      "when_to_use": "Recall and resume previous progressions by topic or partial description."
+    },
+    {
+      "name": "resurface",
+      "command": "/cse:resurface",
+      "description": "Use when you want to re-engage your Scout/knowledge backlog — a themed, freshness-ranked re-engagement session with snooze/dismiss/act.",
+      "when_to_use": "Surfacing v1 — re-engage the knowledge backlog (the /cse:ingest + Scout knowledge packages) as a themed, freshness-ranked conversation instead of a stale firehose. On demand, surface knowledge packages grouped by theme as curator cards (what it is / why it matters / why-now), capped by a budget, ranked so what's NEW or DIFFERENT rises and what you've seen/dismissed or that merely repeats a recent viewpoint sinks. Engage (open/snooze/dismiss/act) writes state back so it's a two-way loop — dismissed items disappear, snoozed hide until due, seen sink. Interactive-only; never on cron/daemon. See DESIGN.md."
+    },
+    {
+      "name": "reverse-okr",
+      "command": "/cse:reverse-okr",
+      "description": "Mine orphaned deferred scope-boundaries across specs into human-gated okr_proposals that ladder specs back to KRs (reverse-OKR).",
+      "when_to_use": "Triggers on \"reverse OKR\", \"mine deferred specs\", \"what have we deferred\", \"turn deferred scope into objectives\"."
+    },
+    {
+      "name": "risk",
+      "command": "/cse:risk",
+      "description": "Manage the organizational risk register",
+      "when_to_use": "Manage the organizational risk register"
+    },
+    {
+      "name": "roster",
+      "command": "/cse:roster",
+      "description": "Manage the capacity roster — show the slots/hours/cost capacity board and add, update, or remove engineers (incl. simulated stand-ins).",
+      "when_to_use": "Manage the capacity roster — show the slots/hours/cost capacity board and add, update, or remove engineers (incl. simulated stand-ins)."
+    },
+    {
+      "name": "run-runbook",
+      "command": "/cse:run-runbook",
+      "description": "Use when you want to run a vetted computer-use Runbook by slug — attended, on the Max Plan (e.g. /cse:run-runbook open-app).",
+      "when_to_use": "Runbooks — the attended, Max-Plan computer-use EXECUTION lane (Track A). Given a Runbook slug + typed params, validates them against the in-code allowlist (runbooks.ts), checks the CASCADE_RUNBOOKS_ENABLED feature flag, requests computer-use access ONLY for the Runbook's declared allowedApps, drives the Runbook goal via the harness computer-use MCP taking a screenshot after each meaningful step, and assembles a filmstrip receipt (receipt.ts). Everything is attended and rides the Max Plan — the executor here is the interactive session, not a daemon. Unattended/remote runs go through Track B (api-loop.ts), not this skill. Triggers on \"run runbook\", \"/cse:run-runbook <slug>\", \"open-app runbook\", \"type-into-notes runbook\"."
+    },
+    {
+      "name": "rundown",
+      "command": "/cse:rundown",
+      "description": "Use when you want a strategic rundown — an AI-led confidant interview that surfaces insights and extracts intent/priorities.",
+      "when_to_use": "Use when you want a strategic rundown — an AI-led confidant interview that surfaces insights and extracts intent/priorities."
+    },
+    {
+      "name": "scan",
+      "command": "/cse:scan",
+      "description": "Trigger a codebase context scan for your org. Analyzes tech stack, architecture, database schema, API surface, security, and more.",
+      "when_to_use": "Trigger a codebase context scan for your org. Analyzes tech stack, architecture, database schema, API surface, security, and more."
+    },
+    {
+      "name": "scout",
+      "command": "/cse:scout",
+      "description": "Use when you want a clearance-aware, profile-driven knowledge feed from FREE YouTube into your curator queue — seed profile and harvest.",
+      "when_to_use": "Scout v1 — a clearance-aware, profile-driven knowledge feed from FREE YouTube into your curator queue. Seeds/refreshes your portable scout profile via a Cascade-HQ interview + hand-curated sources, composes it with org context filtered by your role's clearance, harvests each subscribed source's keyless YouTube RSS, runs the /cse:ingest extraction, scores items against the composed profile, and lands worthwhile ones in the curator queue with full source/channel/video provenance."
+    },
+    {
+      "name": "sdlc",
+      "command": "/cse:sdlc",
+      "description": "Run the AI-native SDLC loop — intent → spec → build → verify → gate → maintain — with Cascade as system of record per stage.",
+      "when_to_use": "Run the AI-native SDLC loop — intent → spec → build → verify → gate → maintain — with Cascade as system of record per stage."
+    },
+    {
+      "name": "search",
+      "command": "/cse:search",
+      "description": "Search organizational knowledge using natural language",
+      "when_to_use": "Search organizational knowledge using natural language"
+    },
+    {
+      "name": "self-eval",
+      "command": "/cse:self-eval",
+      "description": "Use when you want a self-eval — per-skill/model cost+quality analysis, provenance-gated findings, draft tuning packages. Never auto-ships.",
+      "when_to_use": "Self-Improving Engine analyst loop — manual-first, Fable-as-analyst. Pulls attributed per-skill/per-model metrics (token_usage.skill rollups + package telemetry), emits a Self-Eval Spec (SES) whose every claim is a queryable metric reference (never an asserted number), runs the shared deterministic evaluator + provenance gate (packages/shared/src/self-eval), upserts ONE versioned self-eval dossier artifact (findings ranked by computed impact, per-model divergence vs a configurable bar, predicted-vs-actual regression check on shipped tunings with LOUD regression flags + auto-drafted reverts), and emits fingerprint-deduped DRAFT tuning packages above the impact threshold. The loop has NO merge or release capability — accept → held branch → golden-suite scorecard → manual human merge → manual /cse:release. Triggers on \"self eval\", \"skill economics\", \"which model should run this phase\", \"did that tuning regress\", \"tune the skills from usage data\"."
+    },
+    {
+      "name": "spec",
+      "command": "/cse:spec",
+      "description": "Run the full CSE pipeline — discovery, spec generation, wave execution, and verification — directly in Claude Code.",
+      "when_to_use": "Run the full CSE pipeline — discovery, spec generation, wave execution, and verification — directly in Claude Code."
+    },
+    {
+      "name": "spec-pull",
+      "command": "/cse:spec-pull",
+      "description": "Use to pull a package into CSE — a specific package by id (the Spec-it handoff) or a pending spec request picked from the queue.",
+      "when_to_use": "Pull a package into CSE for processing. With a package-id argument (the `/cse:spec-pull <package-id>` command copied from the /work Findings band, or any package id) it fetches THAT package directly and dispatches it to /cse:spec. With no argument it fetches queued spec_request packages, lets you select one, assesses complexity, and dispatches with appropriate depth."
+    },
+    {
+      "name": "status",
+      "command": "/cse:status",
+      "description": "Organizational health dashboard — attention signals, decision status, assumption health, OKR progress",
+      "when_to_use": "Organizational health dashboard — attention signals, decision status, assumption health, OKR progress"
+    },
+    {
+      "name": "strain",
+      "command": "/cse:strain",
+      "description": "Use when you want to triage the cross-org substrate_request queue — cluster, classify, vet, gate, and route platform-change requests.",
+      "when_to_use": "Triage lens for platform-change requests filed by agents working in a vertical. Pulls the substrate_request queue, dedupes near-identical friction into ranked clusters, classifies where each resolution lands (diffuses to all / opt-in per vertical / stays a private moat), vets against a fixed constitution, sizes the decision gate to blast radius, and routes — auto-provisioning only the contained ones and dispatching wider ones to /cse:spec. The mirror image of the intake: locally-motivated agents file requests; this globally-scoped lens decides what the platform becomes. Run it to review the roadmap the substrate is asking for, or in --dry-run to validate the rubric on known input."
+    },
+    {
+      "name": "strategy",
+      "command": "/cse:strategy",
+      "description": "Use when you want a strategic business analysis run with proven frameworks (JTBD, economic moat, blue ocean, pricing, GTM wedge, PESTLE…).",
+      "when_to_use": "Run a strategic business analysis using proven frameworks (JTBD, Economic Moat, Blue Ocean, Scenario Wargaming, Pricing, GTM Wedge, PESTLE, Executive Summary Deck) with parallel research agents."
+    },
+    {
+      "name": "studio",
+      "command": "/cse:studio",
+      "description": "Studio Runner: design, patch, audition and save presets for Arturia, Helix, Octatrack, Pro 3, Komplete — code first.",
+      "when_to_use": "Use when the human wants a preset designed, tweaked, auditioned, saved or organised for a synth, pedal or sampler; wants samples found and chained for the Octatrack; wants a Helix tone edited; wants a Pro 3 program built or sent; or asks what a device's files/MIDI can do. Also for 'set up my session/template' style studio-assistant asks."
+    },
+    {
+      "name": "style-onboard",
+      "command": "/cse:style-onboard",
+      "description": "Use when you want to onboard your writing style — analyzes samples, asks follow-ups, builds a profile that shapes all Cascade AI output.",
+      "when_to_use": "Use when you want to onboard your writing style — analyzes samples, asks follow-ups, builds a profile that shapes all Cascade AI output."
+    },
+    {
+      "name": "system-map",
+      "command": "/cse:system-map",
+      "description": "Analyze the local codebase and populate the Cascade System Map with architecture components.",
+      "when_to_use": "Analyze the local codebase and populate the Cascade System Map with architecture components."
+    },
+    {
+      "name": "team-tracker-sheet",
+      "command": "/cse:team-tracker-sheet",
+      "description": "Use when you want to push Cascade's work-tracker truth into the canonical exec Google Sheet — overrides/notes, dry-run, service account.",
+      "when_to_use": "Project the hierarchical work_items_v2 tree (indented Project → Objective → Feature, multi-participant, accumulating \"Latest update\" narrative) into ONE canonical, read-only Google Sheet. Executive judgment is layered on at render time via a Supabase override layer (set by telling Claude, never by editing the sheet). Read-only full clear+rewrite, idempotent, via a Google service account (no user OAuth). Includes the one-time service-account + sheet-sharing runbook, a dry-run failsafe, and the matching branded-PDF path."
+    },
+    {
+      "name": "test-report",
+      "command": "/cse:test-report",
+      "description": "Record test results against a Cascade package after running verification tests",
+      "when_to_use": "Record test results against a Cascade package after running verification tests"
+    },
+    {
+      "name": "triage",
+      "command": "/cse:triage",
+      "description": "Inventory unmerged branches — commit counts, ages, memory cross-reference — and propose merge-or-abandon per branch. Read-only.",
+      "when_to_use": "Deciding what to merge or drop; a spec run just ended and you want to know what is still held; wondering whether work you remember building ever actually shipped; periodic cleanup of held branches."
+    },
+    {
+      "name": "update",
+      "command": "/cse:update",
+      "description": "Update the cse plugin to the version its marketplace offers, then verify the install actually matches the source.",
+      "when_to_use": "The status line shows a yellow '◆ CSE x → y · /cse:update'; or after changing cse/ source and wanting the installed copy refreshed; or when a skill you know exists is not invocable."
+    },
+    {
+      "name": "verify-handoffs",
+      "command": "/cse:verify-handoffs",
+      "description": "Claim what the session-start menu lists — handoffs, queue items, findings — one, several, or --all, and grade each with cse-verifier.",
+      "when_to_use": "A fresh session opened with a \"▶ CLAIMABLE\" menu, or the statusline shows ▸N, and you want to act on it; you want to drain everything the badge counts; you want one specific entry (including a stale, >14d, or regenerating one) run by key; or you need a dangling queue lease released back to the pool."
+    },
+    {
+      "name": "weekly",
+      "command": "/cse:weekly",
+      "description": "Use when you want a weekly priority calibration session — reviews activity, surfaces pressures, produces a focus file and delegation queue.",
+      "when_to_use": "Weekly priority calibration session. Reviews recent activity, surfaces external pressures via interview, then runs your persona through priority discovery to produce a weekly focus file and delegation queue."
+    },
+    {
+      "name": "weekly-review",
+      "command": "/cse:weekly-review",
+      "description": "Reconcile a week of real work against your OKRs and roadmap — reads git + the ledger, maps work to objectives, and writes the result back.",
+      "when_to_use": "The RECONCILIATION ritual — the counterpart to /cse:weekly (which sets the week ahead). Point it at a time window (default: last 7 days) and it (1) CATCHES UP by reading BOTH git and the package ledger, because the ledger under-captures real engineering and git is the actual proof-of-work; (2) FITS that work against your active objectives and roadmap verticals, proposing links; (3) SURFACES emergent work with no OKR home as candidate new objectives — this is how new strategy gets noticed; (4) LEARNS from your corrections, recording each 'no, that belongs there' as a durable reclassification prior so it routes the same pattern correctly next time; (5) WRITES the approved result back — links packages, refreshes progress, sets honest overrides, drafts new objectives, advances roadmap items. Nothing auto-applies: it proposes, you judge, then it writes. Runs weekly or more often. Triggers on 'weekly review', 'reconcile the week', 'what did we ship and where does it ladder', 'catch up on last week and update the OKRs', 'week in review'."
+    },
+    {
+      "name": "workspace-scan",
+      "command": "/cse:workspace-scan",
+      "description": "Use when you want to trigger a Google Workspace context scan — analyzes Drive, calendar, email metadata, and org signals via gws CLI.",
+      "when_to_use": "Use when you want to trigger a Google Workspace context scan — analyzes Drive, calendar, email metadata, and org signals via gws CLI."
+    }
+  ]
+}

@@ -1,0 +1,303 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cascade.model-radar.score.v1",
+  "title": "Cascade Model Radar — Score & Capability Contract (v1)",
+  "description": "The canonical shape for NUMERIC evidence (score_snapshot), the six-axis capability taxonomy and synthesized capability_vector, numbers-vs-discourse divergence_flag entries, and the per-run source_health_report. Companion to dossier-schema.json — slugs, source_ref, and the three-level categorical confidence scale ('low' | 'medium' | 'high', NEVER 0..1 numeric) are shared conventions. PERSISTENCE CONVENTION — score snapshots accumulate APPEND-ONLY in dossier package type_data.score_snapshots (on both model and benchmark dossiers) and on evidence package type_data.score_snapshots; the latest capability_vector persists STRUCTURED at the model-dossier package's type_data.capability_vector, separate from the prose artifact body. DEDUPE RULE — a snapshot whose {source_slug, benchmark_slug, model_slug, metric, as_of} tuple is identical to an existing entry is SKIPPED; prior entries are never overwritten or deleted (this is a researcher's lab notebook, not a mutable cache). SCORING RUBRIC — axis values are integers 0-100 RELATIVE TO THE CURRENT FRONTIER at synthesis time: 90-100 frontier-leading, 70-89 strong/competitive, 40-69 mid-pack, <40 weak/unproven. Confidence follows dossier-schema.json semantics: 'high' = corroborated across stances or from a rigorous independent eval; 'medium' = single credible source or partially corroborated; 'low' = anecdotal, contested, or lab-only with no independent check.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "score_snapshot": { "$ref": "#/definitions/score_snapshot" },
+    "capability_vector": { "$ref": "#/definitions/capability_vector" },
+    "divergence_flag": { "$ref": "#/definitions/divergence_flag" },
+    "source_health_report": { "$ref": "#/definitions/source_health_report" }
+  },
+  "definitions": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+([.-][a-z0-9]+)*$",
+      "description": "Lowercase-hyphenated canonical slug, identical to the dossier-schema.json slug rule: lowercase letters, digits, hyphens, with dots permitted inside version tokens. Examples — models: 'claude-fable-5', 'gpt-5', 'gemini-2.5-pro'; benchmarks: 'swe-bench-verified', 'lmarena', 'arc-agi'."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Categorical confidence — the ONE confidence scale for this contract, shared with dossier-schema.json. 'high' = corroborated across stances or from a rigorous independent eval; 'medium' = single credible source or partially corroborated; 'low' = anecdotal, contested, or lab-only with no independent check."
+    },
+    "source_ref": {
+      "type": "object",
+      "description": "Attribution for one piece of evidence backing a claim — SAME shape as dossier-schema.json source_ref. url should be the normalized canonical URL (dedup-comparable, matching the /cse:ingest convention: lowercased host, utm_*/fbclid/gclid + fragment + trailing slash stripped).",
+      "required": ["title"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "description": "Human-readable source title (article/video/post/leaderboard title)." },
+        "url": { "type": "string", "description": "Normalized canonical URL of the source." },
+        "author": { "type": "string", "description": "Person or outlet behind the source (e.g. 'AI Explained', 'Anthropic', 'Artificial Analysis')." },
+        "source_id": { "type": "string", "description": "Optional id of the registry entry in sources.json this evidence was harvested from." },
+        "stance": {
+          "type": "string",
+          "enum": ["lab_claim", "independent_eval", "practitioner_take"],
+          "description": "Stance of THIS evidence item — may override the source's default stance_hint. Same enum as dossier-schema.json."
+        },
+        "published_date": { "type": "string", "description": "ISO date the source was published, if discoverable." }
+      }
+    },
+    "core_axis_id": {
+      "type": "string",
+      "enum": [
+        "coding",
+        "reasoning",
+        "agentic_tool_use",
+        "writing_communication",
+        "speed",
+        "cost_efficiency"
+      ],
+      "description": "The SIX core capability axes — fixed taxonomy, order matters (this enum order is the canonical display order). 1) 'coding' (label 'Coding') — real-world code generation and repair; fed by SWE-bench, Aider polyglot, and coding discourse. 2) 'reasoning' (label 'Reasoning') — multi-step reasoning, math, science; fed by GPQA, ARC-AGI, and reasoning evals. 3) 'agentic_tool_use' (label 'Agentic / Tool Use') — long-horizon agentic work and tool-calling reliability; fed by agentic benchmarks and practitioner harness reports. 4) 'writing_communication' (label 'Writing / Communication') — prose quality, instruction following, and explanation; fed by arena preference data and practitioner discourse. 5) 'speed' (label 'Speed') — throughput and latency; fed by Artificial Analysis-style tokens-per-second data; score honestly at low confidence when such data is missing. 6) 'cost_efficiency' (label 'Cost Efficiency') — capability per dollar; fed by pricing data combined with capability signal."
+    },
+    "score_snapshot": {
+      "type": "object",
+      "title": "Score Snapshot",
+      "description": "ONE observed number from ONE leaderboard/eval source on ONE date — the atomic unit of numeric evidence. Snapshots accumulate append-only (see top-level persistence convention); the dedupe key is the {source_slug, benchmark_slug, model_slug, metric, as_of} tuple. Snapshots record what a source SAID on a date, not what is true — synthesis weighs them by source stance and rigor.",
+      "required": [
+        "benchmark_slug",
+        "model_slug",
+        "metric",
+        "value",
+        "unit",
+        "as_of",
+        "source_url",
+        "source_slug"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "benchmark_slug": {
+          "$ref": "#/definitions/slug",
+          "description": "Canonical benchmark slug the number belongs to (e.g. 'swe-bench-verified', 'lmarena', 'aider-polyglot', 'gpqa-diamond'). Matches dossier-schema.json benchmark_dossier identity slugs."
+        },
+        "model_slug": {
+          "$ref": "#/definitions/slug",
+          "description": "Canonical model RELEASE slug the number was measured for (e.g. 'claude-fable-5', 'gpt-5', 'gemini-2.5-pro'). Matches dossier-schema.json model_dossier identity slugs."
+        },
+        "metric": {
+          "type": "string",
+          "description": "What kind of number this is (e.g. 'resolved_rate', 'elo', 'accuracy', 'tokens_per_second', 'usd_per_million_tokens', 'index'). Lowercase snake_case; keep metric names consistent per benchmark so time series line up."
+        },
+        "value": {
+          "type": "number",
+          "description": "The observed numeric value, in the units declared by 'unit' (e.g. 74.5 with unit 'percent', 1362 with unit 'elo')."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of 'value' (e.g. 'percent', 'elo', 'tok/s', 'usd', 'index'). Keep unit strings consistent per metric so snapshots are comparable over time."
+        },
+        "as_of": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "ISO date (YYYY-MM-DD) the number was OBSERVED on the source (the harvest/observation date, not the model's release date). Part of the dedupe key — the same number observed on a later date is a NEW snapshot (that's the time series)."
+        },
+        "source_url": {
+          "type": "string",
+          "description": "Normalized URL of the page the number was read from (same normalization convention as source_ref.url)."
+        },
+        "source_slug": {
+          "type": "string",
+          "description": "id of the sources.json 'leaderboards' registry entry this snapshot was harvested from (e.g. 'lmarena', 'artificial-analysis', 'swe-bench'). Part of the dedupe key."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional free-text caveat or context for this specific number (e.g. 'thinking mode enabled', 'subset: verified only')."
+        },
+        "harness": {
+          "type": "string",
+          "description": "Optional eval harness/configuration caveat (e.g. 'agentless', 'bash-only scaffold', 'pass@1, no tools'). Leaderboard numbers are harness-sensitive — record the harness whenever the source discloses it."
+        },
+        "evidence_package_id": {
+          "type": "string",
+          "description": "Optional Cascade evidence package id this snapshot was extracted from, when the number arrived via the evidence pipeline rather than a direct leaderboard harvest."
+        }
+      }
+    },
+    "axis_score": {
+      "type": "object",
+      "title": "Axis Score",
+      "description": "One synthesized capability rating on one axis. value is an integer 0-100 RELATIVE TO THE CURRENT FRONTIER at synthesis time: 90-100 frontier-leading, 70-89 strong/competitive, 40-69 mid-pack, <40 weak/unproven. The rationale MUST cite specific evidence — a score snapshot (benchmark + number) or an evidence package — never a vibe. When numeric evidence is thin (common for 'speed' without Artificial Analysis-style data), score anyway but set confidence 'low' and say so in the rationale.",
+      "required": ["axis", "value", "confidence", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "axis": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+([._-][a-z0-9]+)*$",
+          "description": "Axis id: one of the six core_axis_id values ('coding', 'reasoning', 'agentic_tool_use', 'writing_communication', 'speed', 'cost_efficiency') OR an emergent axis slug (e.g. 'vision', 'long_context_recall')."
+        },
+        "label": {
+          "type": "string",
+          "description": "Optional human-readable display label (e.g. 'Agentic / Tool Use' for axis 'agentic_tool_use')."
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Integer 0-100, relative to the current frontier at synthesis time (see scoring rubric in the axis_score description)."
+        },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "rationale": {
+          "type": "string",
+          "description": "REQUIRED evidence citation: which score snapshots (benchmark + number + date) and/or evidence packages support this value. A rationale that cites no specific evidence is invalid by convention."
+        },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/source_ref" },
+          "description": "Optional source attributions backing the rationale — same source_ref shape as dossier-schema.json."
+        }
+      }
+    },
+    "emergent_axis_score": {
+      "type": "object",
+      "title": "Emergent Axis Score",
+      "description": "An axis_score PLUS a required definition, for capability dimensions the six core axes don't cover. EMERGENT-AXIS RULES — emergent axes are OPTIONAL and added only when 2+ INDEPENDENT evidence items support a capability dimension outside the core taxonomy (e.g. 'vision', 'long_context_recall'); ids are slug-form; an emergent axis must NEVER duplicate a core axis (if it maps onto one, score the core axis instead); each emergent axis carries its own definition so future synthesis runs can score it consistently.",
+      "required": ["axis", "value", "confidence", "rationale", "definition"],
+      "additionalProperties": false,
+      "properties": {
+        "axis": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+([._-][a-z0-9]+)*$",
+          "description": "Emergent axis slug (e.g. 'vision', 'long_context_recall'). Must not be one of the six core_axis_id values."
+        },
+        "label": {
+          "type": "string",
+          "description": "Optional human-readable display label (e.g. 'Long-Context Recall')."
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Integer 0-100, relative to the current frontier at synthesis time (same rubric as axis_score)."
+        },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "rationale": {
+          "type": "string",
+          "description": "REQUIRED evidence citation, same rule as axis_score — and for an emergent axis the cited evidence must include the 2+ independent items that justify the axis existing at all."
+        },
+        "definition": {
+          "type": "string",
+          "description": "REQUIRED: what this emergent axis measures and why the evidence supports adding it beyond the six core axes."
+        },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/source_ref" },
+          "description": "Optional source attributions backing the rationale."
+        }
+      }
+    },
+    "capability_vector": {
+      "type": "object",
+      "title": "Capability Vector",
+      "description": "The synthesized capability rating for ONE model at ONE moment. At synthesis time ALL SIX core axes are REQUIRED (score thin axes honestly at low confidence rather than omitting them); emergent axes are optional and rule-gated (see emergent_axis_score). The LATEST capability_vector persists structured at the model-dossier package's type_data.capability_vector, separate from the prose artifact body — prose renders FROM this structure, never the other way around.",
+      "required": ["core", "synthesized_at"],
+      "additionalProperties": false,
+      "properties": {
+        "model_slug": {
+          "$ref": "#/definitions/slug",
+          "description": "Canonical model RELEASE slug this vector rates (e.g. 'claude-fable-5'). Optional here because the vector usually lives ON the model-dossier package whose identity already carries the slug; include it whenever the vector travels alone."
+        },
+        "core": {
+          "type": "array",
+          "minItems": 6,
+          "items": { "$ref": "#/definitions/axis_score" },
+          "description": "ALL SIX core axes, each exactly once, in core_axis_id enum order: coding, reasoning, agentic_tool_use, writing_communication, speed, cost_efficiency. A vector missing a core axis is invalid — when evidence is thin, score the axis at low confidence and note it in insufficient_evidence."
+        },
+        "emergent": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/emergent_axis_score" },
+          "description": "Optional emergent axes beyond the core six — each requires 2+ independent evidence items and its own definition (see emergent_axis_score rules). Never duplicate a core axis."
+        },
+        "synthesized_at": {
+          "type": "string",
+          "description": "ISO 8601 timestamp of the synthesis run that produced this vector. Required — scores are frontier-relative, so they are meaningless without their synthesis time."
+        },
+        "insufficient_evidence": {
+          "type": "string",
+          "description": "Optional honest statement when one or more axes rest on thin evidence (e.g. 'speed scored from a single practitioner report; no Artificial Analysis throughput data available'). Prefer saying this plainly over inflating confidence."
+        }
+      }
+    },
+    "divergence_flag": {
+      "type": "object",
+      "title": "Divergence Flag",
+      "description": "A flagged mismatch between what the NUMBERS say and what the DISCOURSE says — e.g. a model tops SWE-bench while practitioners report it fails on real repos, or a lab claims frontier reasoning while independent evals disagree. This is the numbers-vs-narrative complement to dossier-schema.json's divergence_entry (which captures source-vs-source disagreement). Preserving the mismatch, rather than averaging it away, is the point.",
+      "required": ["topic", "numbers_say", "discourse_says"],
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "type": "string",
+          "description": "What the divergence is about (e.g. 'real-world coding ability vs. SWE-bench Verified score')."
+        },
+        "numbers_say": {
+          "type": "string",
+          "description": "REQUIRED: what the structured score snapshots show, with the specific numbers (e.g. 'SWE-bench Verified 74.5% resolved_rate as of 2026-06-15, #1 on the leaderboard')."
+        },
+        "discourse_says": {
+          "type": "string",
+          "description": "REQUIRED: what lab claims and/or practitioner discourse say that diverges from the numbers (e.g. 'multiple practitioner reports of failure on multi-file refactors in real repos')."
+        },
+        "axis": {
+          "type": "string",
+          "description": "Optional core axis id ('coding', 'reasoning', 'agentic_tool_use', 'writing_communication', 'speed', 'cost_efficiency') when the divergence maps cleanly onto one — it should then temper that axis's confidence in the capability_vector."
+        },
+        "assessment": {
+          "type": "string",
+          "description": "Optional researcher judgment: which side the evidence favors and why, or 'unresolved'."
+        },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/source_ref" },
+          "description": "Optional source attributions for both sides of the divergence."
+        }
+      }
+    },
+    "source_health_report": {
+      "type": "object",
+      "title": "Source Health Report",
+      "description": "Per-run health record for a leaderboard harvest. BEST-EFFORT RUNG SEMANTICS — every enabled leaderboard source is attempted independently; a failed source NEVER aborts the run. Each failure is recorded here with its error instead of raised, so the run degrades gracefully and the researcher can see exactly which rungs held and which slipped.",
+      "required": ["run_at", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "run_at": {
+          "type": "string",
+          "description": "ISO 8601 timestamp of the harvest run this report describes."
+        },
+        "sources": {
+          "type": "array",
+          "description": "One entry per attempted leaderboard source (every enabled sources.json 'leaderboards' entry the run touched).",
+          "items": {
+            "type": "object",
+            "required": ["source_slug", "status", "snapshot_count"],
+            "additionalProperties": false,
+            "properties": {
+              "source_slug": {
+                "type": "string",
+                "description": "id of the sources.json 'leaderboards' entry that was attempted."
+              },
+              "status": {
+                "type": "string",
+                "enum": ["fetched", "parsed", "failed"],
+                "description": "'fetched' = page retrieved but no numbers extracted yet/at all; 'parsed' = numbers successfully extracted into snapshots; 'failed' = fetch or parse errored (see 'error'). A 'failed' source never aborts the run."
+              },
+              "snapshot_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "How many score snapshots this source yielded this run (0 for fetched-but-unparsed or failed sources)."
+              },
+              "error": {
+                "type": "string",
+                "description": "Optional error message when status is 'failed' (or a warning worth keeping for a degraded parse)."
+              },
+              "url": {
+                "type": "string",
+                "description": "Optional URL actually fetched (useful when a fallback like r.jina.ai was used instead of the registry url)."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

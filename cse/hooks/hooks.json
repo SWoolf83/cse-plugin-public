@@ -1,0 +1,120 @@
+{
+  "$comment": "Capture hooks bundled with the cse plugin. Mirrors what scripts/install-hooks.js previously wrote into ~/.claude/settings.json (decision / knowledge / work capture via the Cascade daemon observation pipeline). Installing the cse plugin SUPERSEDES the manual `node scripts/install-hooks.js` step — do not run both, or hooks will fire twice. The hook scripts are VENDORED into the plugin at cse/hooks/scripts/*.js — each is a single self-contained esbuild bundle of src/daemon/hooks/<hook>.ts, so a marketplace install (which copies only the cse/ subtree) resolves them with no repo access. Regenerate after changing the hook source with `npm run build:cse-plugin` (dq-2).",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-start.js",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/auth-nudge.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Task|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/pre-tool-use.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/memory-preserve.mjs",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "$comment": "Agent collision guard: warns when a session edits a file that is already dirty in the MAIN checkout from someone else's work. WARN-ONLY by default; set CASCADE_CHECKOUT_GUARD=block to make it ask instead. Silent inside worktrees (isolation working as intended). Read <git-common-dir>/cascade-checkout-guard/near-misses.jsonl before deciding to enforce.",
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/shared-checkout-guard.mjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|Bash|Task|Artifact|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/post-tool-use.js",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/chief-trigger.mjs",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "cse-.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/subagent-stop.js"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/stop.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-end.js",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/notification.js",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

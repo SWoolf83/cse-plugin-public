@@ -1,0 +1,263 @@
+{
+  "version": "1.0",
+  "frameworks": [
+    {
+      "id": "jtbd",
+      "name": "Jobs-to-be-Done Analysis",
+      "aliases": ["jtbd", "jobs-to-be-done", "jobs to be done", "jobs"],
+      "description": "Map functional, emotional, and social jobs customers hire your product to do",
+      "output_sections": [
+        "Executive Summary",
+        "Core Functional Jobs",
+        "Emotional & Social Needs",
+        "Friction Point Analysis",
+        "Innovation Opportunities",
+        "Strategic Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Functional Job Analyst",
+          "prompt": "Research the functional jobs-to-be-done for: {target}. Focus on: what primary tasks customers are hiring this product/service to accomplish, how they currently solve these tasks (competing solutions and workarounds), the specific outcomes customers measure success by, and how the functional job has evolved over the past 3-5 years. Search for customer research studies, product reviews, competitor analysis, and industry reports. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Emotional & Social Analyst",
+          "prompt": "Research the emotional and social dimensions of customer jobs for: {target}. Focus on: what feelings customers want when using this type of product (confidence, relief, control, delight), what social signals usage sends (status, belonging, expertise, identity), how emotional needs differ across customer segments, and which brand/product positioning resonates most emotionally. Search for brand perception studies, customer review sentiment analysis, social media discussions, and competitive brand positioning. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Friction & Competitive Gap Analyst",
+          "prompt": "Research friction points and competitive gaps for: {target}. Focus on: where current solutions fail customers (including this product if it exists), specific moments of frustration in the customer journey, workarounds customers have created, quantitative data on customer satisfaction and churn drivers, and competitor weaknesses that create opportunity. Search for customer complaint data, negative product reviews, industry satisfaction surveys, churn analyses, and support forum discussions. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Innovation & Feature Scout",
+          "prompt": "Research innovation opportunities that would eliminate the biggest friction points for: {target}. Focus on: new technologies or approaches that could solve key pain points, what adjacent industries have done to solve similar problems, emerging startups or patents in this space, most-requested features from customers, and contrarian views on what the market actually needs vs what it says it needs. Search for startup databases, patent filings, product roadmap discussions, feature request forums, and technology trend reports. Return structured Markdown (800-1200 words) with section headers and numbered source references. Be creative and forward-looking."
+        }
+      ]
+    },
+    {
+      "id": "economic-moat",
+      "name": "Economic Moat Evaluation",
+      "aliases": ["moat", "economic moat", "moats", "competitive moat"],
+      "description": "Grade competitive moats using Buffett/Morningstar classifications and identify breach risks",
+      "output_sections": [
+        "Executive Summary",
+        "Network Effects Assessment",
+        "Intangible Assets & Brand",
+        "Cost Advantage & Scale",
+        "Switching Costs & Lock-in",
+        "Moat Breach Risk Analysis",
+        "Strategic Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Moat Classification Analyst",
+          "prompt": "Evaluate all five economic moat types for: {target}. Using Warren Buffett's and Morningstar's moat classifications, grade each on a 1-10 scale with evidence: (1) Network Effects — does each user increase value for others? (2) Intangible Assets — brand strength, patents, regulatory licenses, proprietary data? (3) Cost Advantage — structural cost advantages from scale, process, or access? (4) Switching Costs — how painful is it for customers to leave? (5) Efficient Scale — does the market naturally limit competition? Search for financial reports, competitive analyses, market share data, and industry structure studies. Return structured Markdown (800-1200 words) with a grade and evidence for each moat type."
+        },
+        {
+          "role": "Competitive Intelligence Analyst",
+          "prompt": "Research the competitive landscape and financial position for: {target}. Focus on: market share data and trends, revenue growth vs competitors, gross margins and operating margins compared to peers, customer acquisition costs, retention rates and lifetime value metrics, and competitive positioning (features, pricing, distribution). Search for SEC filings, earnings reports, industry analyst coverage, market research reports, and competitive benchmarking data. Return structured Markdown (800-1200 words) with specific financial data points and competitive comparisons."
+        },
+        {
+          "role": "Historical Moat Evidence Analyst",
+          "prompt": "Research historical evidence of moat building and erosion for: {target} and comparable companies. Focus on: how this company (or similar companies) built their moats over time, case studies of companies in this industry whose moats were breached, the typical lifecycle of competitive advantages in this sector, and what external forces (technology shifts, regulation changes, market disruptions) have historically eroded moats in this space. Search for business history, case studies, industry retrospectives, and academic research on competitive advantage durability. Return structured Markdown (800-1200 words) with specific historical examples."
+        },
+        {
+          "role": "Activist Breach Strategist",
+          "prompt": "Act as a well-funded activist investor writing a memo on how to breach the strongest moat of: {target}. Focus on: identifying the single strongest moat and its specific vulnerabilities, a detailed 3-step attack plan a well-funded competitor could execute, the capital required and timeline for the breach, which emerging technologies or business models pose the biggest threat, and what early warning signs would indicate the moat is weakening. Be genuinely adversarial — steelman the attack. Search for disruption case studies, emerging competitors, technology trends, and regulatory changes that could shift the landscape. Return structured Markdown (800-1200 words) as an investor memo format."
+        }
+      ]
+    },
+    {
+      "id": "scenario-wargaming",
+      "name": "Scenario Wargaming",
+      "aliases": ["scenario", "wargaming", "wargame", "scenarios", "scenario planning"],
+      "description": "Model base, bull, and bear cases with contingency playbooks for the next 24 months",
+      "output_sections": [
+        "Executive Summary",
+        "Base Case Analysis",
+        "Bull Case Scenario",
+        "Bear Case Scenario",
+        "Trigger Indicators & Monitoring",
+        "Contingency Playbooks"
+      ],
+      "agents": [
+        {
+          "role": "Base Case Modeler",
+          "prompt": "Model the base case (status quo) scenario for: {target} over the next 24 months. Focus on: current market trajectory and growth rates, competitive dynamics if nothing changes, financial projections based on present trends, key assumptions underlying the base case, and where the base case lands relative to company goals. Search for current market data, growth trends, industry forecasts, financial analyst estimates, and company guidance/targets. Return structured Markdown (800-1200 words) with specific projections and the assumptions behind them."
+        },
+        {
+          "role": "Bull Case Strategist",
+          "prompt": "Model the bull case (favorable tailwinds) scenario for: {target} over the next 24 months. Focus on: what specific catalysts could accelerate growth (regulatory changes, technology shifts, market consolidation), how large the upside could be with quantitative estimates, what actions the company should take NOW to be positioned for the bull case, historical examples of similar companies that captured their bull case, and the probability assessment for this scenario materializing. Search for growth catalysts, favorable trend data, comparable company trajectories, and industry optimistic outlooks. Return structured Markdown (800-1200 words) with specific triggers and quantified upside."
+        },
+        {
+          "role": "Bear Case Analyst",
+          "prompt": "Model the bear case (downturn/disruption) scenario for: {target} over the next 24 months. Focus on: what specific threats could materialize (recession, price war, regulatory crackdown, technological disruption, key customer loss), how severe the downside could be with quantitative estimates, what the survival plan looks like (cost cuts, pivots, fundraising), historical examples of companies in this space that faced bear scenarios, and the probability assessment for this scenario. Search for risk factors, recession impact data, competitive threat analysis, and industry downturn case studies. Return structured Markdown (800-1200 words) with specific threats and quantified downside."
+        },
+        {
+          "role": "Trigger Monitor & Playbook Designer",
+          "prompt": "Design a monitoring and response system for: {target}. Focus on: identifying 3-5 specific leading indicators for each scenario (base, bull, bear) with exact thresholds that trigger action, recommending a monitoring cadence and responsibility assignment, building a 3-step contingency playbook for each scenario that can be activated when triggers are hit, and identifying 'no-regret' moves that benefit across all scenarios. Search for leading economic indicators, industry-specific metrics, competitive intelligence frameworks, and scenario planning methodologies. Return structured Markdown (800-1200 words) with specific metrics, thresholds, and action steps."
+        }
+      ]
+    },
+    {
+      "id": "blue-ocean",
+      "name": "Blue Ocean Strategy",
+      "aliases": ["blue ocean", "blue-ocean", "white space", "whitespace"],
+      "description": "Find uncontested market space using the eliminate-reduce-raise-create framework",
+      "output_sections": [
+        "Executive Summary",
+        "Current Strategy Canvas",
+        "Factors to Eliminate",
+        "Factors to Reduce",
+        "Factors to Raise",
+        "Factors to Create",
+        "New Value Curve & Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Industry Convention Analyst",
+          "prompt": "Map the current competitive landscape and industry conventions for: {target}. Focus on: what factors the industry currently competes on (list 6-10 specific factors), how each major competitor performs on each factor (building a strategy canvas), which factors receive the most investment across the industry, what customers and the industry take for granted as 'must-haves', and where all competitors are converging (red ocean indicators). Search for industry analyses, competitor feature comparisons, marketing positioning, pricing benchmarks, and industry standard practices. Return structured Markdown (800-1200 words) with a clear factor list and competitive positioning data."
+        },
+        {
+          "role": "Customer Value Researcher",
+          "prompt": "Research what customers actually value versus what the industry assumes they value for: {target}. Focus on: which industry-standard features customers rarely use or don't value, what customers wish they had that nobody offers, pain points that all competitors ignore, non-customers — why do they NOT buy from anyone in this space, and emerging customer needs driven by changing behavior or technology. Search for customer research, survey data, product analytics insights, non-customer studies, and jobs-to-be-done analysis. Return structured Markdown (800-1200 words) with specific evidence of value mismatches between industry delivery and customer needs."
+        },
+        {
+          "role": "Value Innovation Researcher",
+          "prompt": "Research opportunities for value innovation in: {target}. Focus on: what factors could be eliminated without customers noticing or caring, what factors are over-delivered relative to customer needs (reduce candidates), what factors would create dramatic differentiation if raised well above industry standard, and what entirely new factors could be created that the industry has never offered. Search for adjacent industry innovations, technology enablers, case studies of successful Blue Ocean moves in similar markets, and customer-unmet-need research. Return structured Markdown (800-1200 words) with specific eliminate/reduce/raise/create recommendations backed by evidence."
+        },
+        {
+          "role": "Contrarian & Risk Analyst",
+          "prompt": "Challenge the Blue Ocean thesis for: {target}. Focus on: why previous attempts to create new market space in this industry may have failed, what barriers exist to a Blue Ocean move (regulation, customer inertia, technical constraints), risks of eliminating or reducing factors that seem unimportant but may matter, how quickly competitors could follow into the new space (is the blue ocean defensible?), and examples of Blue Ocean strategies that backfired. Search for industry failure cases, innovation barriers, fast-follower dynamics, and market creation risks. Return structured Markdown (800-1200 words) with genuine skepticism and risk assessment."
+        }
+      ]
+    },
+    {
+      "id": "pricing",
+      "name": "Pricing Strategy Analysis",
+      "aliases": ["pricing", "pricing strategy", "price", "willingness to pay", "wtp"],
+      "description": "Evaluate pricing models and optimize willingness-to-pay across customer segments",
+      "output_sections": [
+        "Executive Summary",
+        "Current Pricing Landscape",
+        "Value-Based Pricing Analysis",
+        "Usage & Tiered Model Analysis",
+        "Price Sensitivity & Elasticity",
+        "Recommended Pricing Strategy"
+      ],
+      "agents": [
+        {
+          "role": "Value & WTP Analyst",
+          "prompt": "Research customer value perception and willingness-to-pay for: {target}. Focus on: what measurable value the product delivers to customers (time saved, revenue gained, cost reduced, risk mitigated), how customers quantify this value in their own terms, willingness-to-pay benchmarks for similar products, price sensitivity differences across customer segments, and the gap between perceived value and current pricing. Search for pricing studies, customer ROI analyses, competitive pricing data, and willingness-to-pay research methodologies. Return structured Markdown (800-1200 words) with specific value metrics and WTP estimates."
+        },
+        {
+          "role": "Competitive Pricing Analyst",
+          "prompt": "Research the competitive pricing landscape for: {target}. Focus on: how every major competitor prices their product (exact tiers, prices, included features), pricing model types used in the industry (subscription, usage, freemium, per-seat, etc.), recent pricing changes by competitors and market reaction, pricing as a percentage of customer's total budget for this category, and any public data on competitor revenue per customer. Search for competitor pricing pages, industry pricing reports, customer spend surveys, analyst reports on pricing trends, and public financial data. Return structured Markdown (800-1200 words) with a detailed competitive pricing comparison table."
+        },
+        {
+          "role": "Pricing Model Evaluator",
+          "prompt": "Evaluate three distinct pricing models for: {target}. For each model (value-based, usage-based, tiered/freemium), analyze: how it would work specifically for this product, revenue projections under each model, impact on customer acquisition and retention, operational complexity of implementation, and which customer segments each model serves best. Include specific examples of successful companies using each model in a similar context. Search for pricing model case studies, SaaS pricing benchmarks, revenue model comparisons, and industry-specific pricing best practices. Return structured Markdown (800-1200 words) with a clear comparison framework."
+        },
+        {
+          "role": "Elasticity & Optimization Analyst",
+          "prompt": "Research price sensitivity and optimization opportunities for: {target}. Focus on: price elasticity data for this market (how much does demand change with price?), optimal price point analysis (Van Westendorp or Gabor-Granger frameworks if data available), the impact of packaging and bundling on perceived value, psychological pricing tactics that work in this category, and common pricing mistakes in this industry. Search for pricing elasticity research, A/B test results, pricing psychology studies, and industry-specific pricing optimization data. Return structured Markdown (800-1200 words) with quantitative elasticity estimates where possible."
+        }
+      ]
+    },
+    {
+      "id": "gtm-wedge",
+      "name": "GTM Wedge Strategy",
+      "aliases": ["gtm", "go-to-market", "go to market", "wedge", "market entry"],
+      "description": "Design a challenger market entry targeting underserved sub-segments to monopolize first",
+      "output_sections": [
+        "Executive Summary",
+        "Beachhead Segment Analysis",
+        "Competitive Positioning",
+        "Channel & Distribution Strategy",
+        "Expansion Playbook",
+        "Implementation Timeline"
+      ],
+      "agents": [
+        {
+          "role": "Segment & Beachhead Analyst",
+          "prompt": "Identify the optimal beachhead segment for: {target}. Focus on: mapping all sub-segments of the target market with sizing estimates, identifying which segments are most underserved by incumbents (specific pain points incumbents ignore), evaluating each candidate beachhead on: segment size, pain severity, willingness to switch, accessibility, and strategic value as a launchpad. Recommend the single best beachhead with clear reasoning. Search for market segmentation reports, customer survey data, industry size estimates, competitor coverage gaps, and niche market analyses. Return structured Markdown (800-1200 words) with a ranked segment evaluation."
+        },
+        {
+          "role": "Competitive Positioning Strategist",
+          "prompt": "Design the competitive positioning for: {target} against entrenched incumbents. Focus on: mapping incumbent strengths and specific weaknesses in the beachhead segment, identifying the single most compelling differentiator, crafting positioning that is: specific (not generic), defensible (hard to copy), and valued (customers will pay for it). Analyze messaging frameworks that have worked for challenger brands in similar markets. Search for competitive analysis, challenger brand case studies, positioning frameworks, and messaging research. Return structured Markdown (800-1200 words) with a clear positioning statement and competitive battle cards."
+        },
+        {
+          "role": "Channel & Distribution Analyst",
+          "prompt": "Research the most effective distribution channels for reaching the beachhead segment of: {target}. Focus on: where the target segment currently discovers and buys solutions, customer acquisition cost benchmarks by channel, which channels incumbents dominate vs which are open, partner/integration ecosystems that could provide distribution leverage, and community/content opportunities for organic reach. Search for marketing channel benchmarks, industry distribution analysis, partnership case studies, and customer journey mapping research. Return structured Markdown (800-1200 words) with specific channel recommendations and CAC estimates."
+        },
+        {
+          "role": "Expansion Playbook Builder",
+          "prompt": "Design the expansion strategy from beachhead to broader market for: {target}. Focus on: which adjacent segments to target after winning the beachhead (bowling pin strategy), what product or go-to-market changes each expansion requires, timeline estimates for each expansion phase, case studies of successful wedge-to-market expansions (e.g., Facebook: Harvard → Ivy League → all colleges → everyone), and risks at each expansion stage. Search for market expansion case studies, platform growth strategies, network effect activation patterns, and scaling playbooks. Return structured Markdown (800-1200 words) with a phased expansion roadmap."
+        }
+      ]
+    },
+    {
+      "id": "pestle",
+      "name": "PESTLE Macro-Analysis",
+      "aliases": ["pestle", "pestel", "pest", "macro", "macro analysis"],
+      "description": "Analyze political, economic, social, technological, legal, and environmental macro factors",
+      "output_sections": [
+        "Executive Summary",
+        "Political & Legal Environment",
+        "Economic Factors",
+        "Social & Demographic Trends",
+        "Technological Landscape",
+        "Black Swan Risk Assessment",
+        "Strategic Implications"
+      ],
+      "agents": [
+        {
+          "role": "Political & Legal Analyst",
+          "prompt": "Analyze the political and legal environment for: {target}. Focus on: current regulatory framework and compliance requirements, pending legislation or regulatory changes that could impact the business, government policy direction and political stability, licensing and permits required, trade restrictions or tariffs if relevant, data privacy and consumer protection laws, and industry-specific regulations. Identify at least 2 hidden regulatory risks that are not obvious. Search for regulatory databases, pending legislation, government policy announcements, legal analysis, and industry compliance guides. Return structured Markdown (800-1200 words) with specific regulations cited and risk ratings."
+        },
+        {
+          "role": "Economic Analyst",
+          "prompt": "Analyze the economic environment for: {target}. Focus on: current and projected GDP growth, inflation trajectory, interest rate environment, consumer/business purchasing power, unemployment and labor market conditions, funding climate (VC investment, credit availability), currency risks if international, and economic cycle positioning (expansion, peak, contraction, trough). Search for economic forecasts (FRED, World Bank, IMF), industry economic impact analyses, consumer spending data, and business investment trends. Return structured Markdown (800-1200 words) with specific economic data points and their implications."
+        },
+        {
+          "role": "Social & Technology Trend Analyst",
+          "prompt": "Analyze social, demographic, and technological trends for: {target}. Focus on: demographic shifts affecting the target market (aging, urbanization, generational changes), cultural and behavioral trends (remote work, sustainability, health consciousness), technology adoption curves for relevant technologies, infrastructure readiness, digital transformation maturity of the target industry, and emerging technologies that could disrupt or enable the business. Search for demographic data, cultural trend reports, technology adoption surveys, Gartner/McKinsey technology assessments, and consumer behavior studies. Return structured Markdown (800-1200 words) with trend data and trajectory analysis."
+        },
+        {
+          "role": "Black Swan Risk Analyst",
+          "prompt": "Identify and analyze Black Swan risks for: {target}. Focus on: hidden or emerging regulatory risks that could reshape the landscape overnight, geopolitical risks (trade wars, sanctions, regional instability), pandemic-level disruptions and lessons from COVID-19, technology disruptions that could make the business model obsolete, environmental/climate risks and ESG regulatory shifts, and supply chain or infrastructure vulnerabilities. For each risk: assess probability (low/medium/high), potential impact (1-10), and speed of onset. Search for risk assessment frameworks, emerging threat analyses, industry disruption history, and geopolitical risk reports. Return structured Markdown (800-1200 words) as a risk register with specific scenarios."
+        }
+      ]
+    },
+    {
+      "id": "executive-summary",
+      "name": "Executive Summary Deck",
+      "aliases": ["exec summary", "executive summary", "deck", "exec deck", "day one", "synthesis"],
+      "description": "McKinsey-style strategic synthesis formatted as a 5-slide text deck for leadership",
+      "output_sections": [
+        "The Executive TL;DR",
+        "Market Dynamics & Opportunity",
+        "Competitive Landscape",
+        "Strategic Recommendation",
+        "Key Risks & Implementation Plan"
+      ],
+      "agents": [
+        {
+          "role": "Market Dynamics Analyst",
+          "prompt": "Research the market dynamics for: {target}. As if preparing a McKinsey final read-out, focus on: total addressable market (TAM) with current sizing and 5-year projections, market growth rate and key growth drivers, market structure (fragmented vs consolidated, regulation intensity), key inflection points or catalysts on the horizon, and the 'so what' — what these dynamics mean for strategic decision-making. Search for market sizing reports, industry forecasts, analyst coverage, investment thesis documents, and market structure analyses. Return structured Markdown (800-1200 words) formatted as a consultant's market overview with specific numbers."
+        },
+        {
+          "role": "Competitive Landscape Analyst",
+          "prompt": "Map the competitive landscape for: {target}. As if preparing a McKinsey final read-out, focus on: top 5-7 competitors with positioning and market share, competitive dynamics (price competition, feature wars, land grabs), where the industry is headed (consolidation, disruption, commoditization), our target's specific competitive advantages and vulnerabilities, and the 'battle map' — where we can win, where we can't, and where the fight will be. Search for competitive analyses, market share data, financial comparisons, product comparisons, and industry analyst perspectives. Return structured Markdown (800-1200 words) as a strategic competitive assessment with a summary comparison table."
+        },
+        {
+          "role": "Strategy & Recommendation Analyst",
+          "prompt": "Develop a strategic recommendation for: {target}. As if presenting to a Fortune 500 CEO, focus on: the core strategic question that must be answered, 2-3 viable strategic options with trade-offs, the recommended path and specific rationale (why this option over others), required investment (capital, time, people) with estimated ranges, expected outcomes with timeline — what success looks like at 6, 12, and 24 months. Search for strategy frameworks, comparable company strategies, investment benchmarks, and execution case studies. Return structured Markdown (800-1200 words) as a clear recommendation with the 'pyramid principle' — lead with the answer, then support."
+        },
+        {
+          "role": "Risk & Implementation Analyst",
+          "prompt": "Assess risks and build an implementation framework for: {target}. As if preparing for CEO challenge questions, focus on: the top 3-5 risks ranked by probability and impact, specific mitigation strategies for each risk, implementation phases with key milestones and decision gates, resource requirements and organizational implications, and the 'what could go wrong' honest assessment that a good consultant would surface. Search for execution risk frameworks, implementation case studies, change management research, and industry-specific implementation challenges. Return structured Markdown (800-1200 words) as a risk register plus phased implementation plan."
+        }
+      ]
+    }
+  ]
+}

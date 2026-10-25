@@ -1,0 +1,40 @@
+{
+  "description": "Starter decision prompts for the bootstrap first-decision experience.",
+  "decisions": [
+    {
+      "id": "landing-page-stack",
+      "subject": "What should our landing page stack be?",
+      "description": "Choose the technology stack for the company's initial web presence. Consider build speed, hosting cost, SEO, and future scalability. Options typically include static site generators, full frameworks (Next.js, Astro), or no-code builders.",
+      "category": "Engineering",
+      "tags": ["infrastructure", "frontend", "launch"]
+    },
+    {
+      "id": "auth-strategy",
+      "subject": "How should we handle user authentication?",
+      "description": "Select the authentication strategy for the product. Consider security, developer experience, cost, and user friction. Options include Supabase Auth, Auth0, Clerk, Firebase Auth, or custom JWT implementation.",
+      "category": "Engineering",
+      "tags": ["security", "architecture", "users"]
+    },
+    {
+      "id": "deployment-architecture",
+      "subject": "What's our initial deployment architecture?",
+      "description": "Choose where and how the application will be deployed. Consider cost at low scale, deployment speed, auto-scaling, and operational overhead. Options include Railway, Vercel, Fly.io, AWS, or a combination.",
+      "category": "Engineering",
+      "tags": ["infrastructure", "devops", "cost"]
+    },
+    {
+      "id": "analytics-monitoring",
+      "subject": "What analytics and monitoring tools should we use?",
+      "description": "Select the observability stack for the product. Consider what metrics matter at this stage, cost, and integration effort. Options include PostHog, Mixpanel, Sentry, Datadog, or open-source alternatives.",
+      "category": "Engineering",
+      "tags": ["observability", "analytics", "operations"]
+    },
+    {
+      "id": "team-communication",
+      "subject": "What should our team communication stack be?",
+      "description": "Choose how the team communicates day-to-day and asynchronously. Consider async-first culture, cost, integrations with dev tools, and AI-native features. Options include Slack, Discord, Linear + Notion, or minimal (GitHub Issues + email).",
+      "category": "Operations",
+      "tags": ["team", "communication", "culture"]
+    }
+  ]
+}

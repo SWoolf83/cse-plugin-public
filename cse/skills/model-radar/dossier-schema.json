@@ -1,0 +1,364 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cascade.model-radar.dossier.v2",
+  "title": "Cascade Model Radar — Dossier Section Contract (v2)",
+  "description": "The canonical shape a synthesis agent must return when composing a model dossier or benchmark dossier from harvested evidence. Every claim-bearing entry carries a stance (whose kind of voice made the claim), source attribution, and a confidence rating ('low' | 'medium' | 'high' — this file standardizes on the three-level categorical scale, NOT 0..1 numeric). SLUG RULES — model_slug is the lowercase-hyphenated canonical RELEASE slug (e.g. 'claude-fable-5', 'gpt-5', 'gemini-2.5-pro'); family_slug groups releases of the same line (e.g. 'claude', 'gpt', 'gemini'); benchmark slugs are likewise lowercase-hyphenated (e.g. 'swe-bench', 'mmlu', 'arc-agi'). Dots are allowed inside slugs for version tokens (as in 'gemini-2.5-pro'). FAMILY ROLLUP — a family is a QUERY-TIME grouping over model dossiers sharing a family_slug; there is NO stored family object and this schema deliberately defines none. V2 adds OPTIONAL additive sections — model_dossier.meta_rating (capability vector + researcher-voice narrative) and benchmark_dossier.score_context (standings + dynamics) — while the numeric snapshot + axis-taxonomy contracts live in score-schema.json; v1 dossiers remain valid.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "model_dossier": { "$ref": "#/definitions/model_dossier" },
+    "benchmark_dossier": { "$ref": "#/definitions/benchmark_dossier" }
+  },
+  "definitions": {
+    "stance": {
+      "type": "string",
+      "enum": ["lab_claim", "independent_eval", "practitioner_take"],
+      "description": "Whose kind of voice a claim comes from. 'lab_claim' = the releasing lab's own announcement/model card/marketing. 'independent_eval' = third-party benchmark runs, structured evals, red-team reports. 'practitioner_take' = hands-on builder/creator experience reports and opinions. Per-source stance hints in sources.json are DEFAULTS; extraction may override per evidence item (e.g. a practitioner video quoting a lab benchmark table yields a lab_claim item)."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Categorical confidence in a claim — the ONE confidence scale for this contract (three-level categorical; 0..1 numeric was considered and rejected for cross-agent consistency). 'high' = corroborated across stances or from a rigorous independent eval; 'medium' = single credible source or partially corroborated; 'low' = anecdotal, contested, or lab-only with no independent check."
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+([.-][a-z0-9]+)*$",
+      "description": "Lowercase-hyphenated canonical slug: lowercase letters, digits, hyphens, with dots permitted inside version tokens. Examples — models: 'claude-fable-5', 'gpt-5', 'gemini-2.5-pro'; families: 'claude', 'gpt', 'gemini'; benchmarks: 'swe-bench', 'mmlu', 'arc-agi'."
+    },
+    "source_ref": {
+      "type": "object",
+      "description": "Attribution for one piece of evidence backing a claim. url should be the normalized canonical URL (dedup-comparable, matching the /cse:ingest convention: lowercased host, utm_*/fbclid/gclid + fragment + trailing slash stripped).",
+      "required": ["title"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "description": "Human-readable source title (article/video/post title)." },
+        "url": { "type": "string", "description": "Normalized canonical URL of the source." },
+        "author": { "type": "string", "description": "Person or outlet behind the source (e.g. 'AI Explained', 'Anthropic')." },
+        "source_id": { "type": "string", "description": "Optional id of the registry entry in sources.json this evidence was harvested from." },
+        "stance": { "$ref": "#/definitions/stance", "description": "Stance of THIS evidence item — may override the source's default stance_hint." },
+        "published_date": { "type": "string", "description": "ISO date the source was published, if discoverable." }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "description": "One claim-bearing entry. Every claim carries its stance, its confidence ('low'|'medium'|'high'), and source attribution.",
+      "required": ["statement", "stance", "confidence", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "statement": { "type": "string", "description": "Full standalone sentence carrying the specific detail/number/example from the evidence (not generic)." },
+        "stance": { "$ref": "#/definitions/stance" },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/source_ref" }
+        }
+      }
+    },
+    "divergence_side": {
+      "type": "object",
+      "description": "One side of a contested question: the position taken, which stances are on this side, and the sources arguing it.",
+      "required": ["position", "stances", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "position": { "type": "string", "description": "The position this side takes, stated as a standalone sentence." },
+        "stances": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/stance" },
+          "description": "Which stance(s) are on this side of the divergence (e.g. lab_claim on one side, practitioner_take on the other)."
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/source_ref" }
+        },
+        "confidence": { "$ref": "#/definitions/confidence", "description": "Confidence that this side's position is accurately represented by the cited sources." }
+      }
+    },
+    "divergence_entry": {
+      "type": "object",
+      "description": "One contested question where credible sources disagree — the signal a single-stance summary would flatten. Each entry names the topic and lays out the opposing sides with position, stances, and attribution.",
+      "required": ["topic", "sides"],
+      "additionalProperties": false,
+      "properties": {
+        "topic": { "type": "string", "description": "What the disagreement is about (e.g. 'real-world coding ability vs. SWE-bench score')." },
+        "sides": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/definitions/divergence_side" }
+        },
+        "assessment": { "type": "string", "description": "Optional synthesis judgment: which side the evidence favors and why, or 'unresolved'." }
+      }
+    },
+    "axis_score": {
+      "type": "object",
+      "description": "One scored capability axis. 'axis' is one of the 6 core axis ids — 'coding', 'reasoning', 'agentic_tool_use', 'writing_communication', 'speed', 'cost_efficiency' — or an emergent slug. RUBRIC — 'value' is an integer 0-100 scored RELATIVE to the current frontier: 90-100 frontier-leading, 70-89 strong, 40-69 mid, <40 weak/unproven. The rationale is load-bearing: it MUST cite a specific score snapshot or evidence package, never vibes.",
+      "required": ["axis", "value", "confidence", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "axis": { "type": "string", "description": "Axis id: one of the 6 core ids ('coding', 'reasoning', 'agentic_tool_use', 'writing_communication', 'speed', 'cost_efficiency') or an emergent slug." },
+        "label": { "type": "string", "description": "Human-readable axis label (e.g. 'Agentic tool use')." },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "0-100 score relative to the current frontier: 90-100 frontier-leading, 70-89 strong, 40-69 mid, <40 weak/unproven."
+        },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "rationale": { "type": "string", "description": "Why this value — MUST cite a specific score snapshot or evidence package backing the number." },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/source_ref" },
+          "description": "Optional attribution for the evidence behind this axis score."
+        }
+      }
+    },
+    "emergent_axis_score": {
+      "type": "object",
+      "description": "An axis_score for an EMERGENT axis — a capability dimension the 6 core axes don't cover. Add one only when 2+ independent evidence items support the dimension; never duplicate a core axis. Same shape and rubric as axis_score, plus a REQUIRED 'definition' explaining what the axis measures and why the evidence supports adding it.",
+      "required": ["axis", "value", "confidence", "rationale", "definition"],
+      "additionalProperties": false,
+      "properties": {
+        "axis": { "type": "string", "description": "Emergent axis slug (lowercase-hyphenated or snake_case id, distinct from all 6 core axis ids)." },
+        "label": { "type": "string", "description": "Human-readable axis label." },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "0-100 score relative to the current frontier: 90-100 frontier-leading, 70-89 strong, 40-69 mid, <40 weak/unproven."
+        },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "rationale": { "type": "string", "description": "Why this value — MUST cite a specific score snapshot or evidence package backing the number." },
+        "definition": { "type": "string", "description": "REQUIRED for emergent axes: what this axis measures and why the evidence (2+ independent items) supports adding it beyond the 6 core axes." },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/source_ref" },
+          "description": "Optional attribution for the evidence behind this axis score."
+        }
+      }
+    },
+    "capability_vector": {
+      "type": "object",
+      "description": "The structured capability profile of one model release: ALL 6 core axes scored (coding, reasoning, agentic_tool_use, writing_communication, speed, cost_efficiency), plus any emergent axes the evidence supports. This shape is the canonical contract shared with score-schema.json and the TypeScript types — field names are load-bearing.",
+      "required": ["core", "synthesized_at"],
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "type": "array",
+          "minItems": 6,
+          "items": { "$ref": "#/definitions/axis_score" },
+          "description": "All 6 core axes scored — one axis_score per core axis id. minItems 6: a capability vector with a missing core axis is invalid; use 'insufficient_evidence' plus a low-confidence score rather than omitting an axis."
+        },
+        "emergent": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/emergent_axis_score" },
+          "description": "Optional emergent axes — only when 2+ independent evidence items support a dimension the core 6 don't cover."
+        },
+        "synthesized_at": { "type": "string", "description": "ISO 8601 timestamp of the synthesis run that produced this vector." },
+        "model_slug": { "$ref": "#/definitions/slug", "description": "Optional canonical release slug this vector describes (redundant with the enclosing dossier when embedded; useful when the vector travels alone, e.g. in package type_data)." },
+        "insufficient_evidence": { "type": "string", "description": "Honest statement when the evidence base is thin — which axes are under-evidenced and why the scores there should be read cautiously." }
+      }
+    },
+    "divergence_flag": {
+      "type": "object",
+      "description": "Explicit honesty marker for one place where the NUMBERS and the DISCOURSE disagree — e.g. leaderboard scores say frontier-leading coding while practitioners report real-world regressions. Distinct from divergence_entry (source-vs-source disagreement): this flags structured-score-vs-narrative divergence.",
+      "required": ["topic", "numbers_say", "discourse_says"],
+      "additionalProperties": false,
+      "properties": {
+        "topic": { "type": "string", "description": "What the divergence is about (e.g. 'agentic coding ability')." },
+        "numbers_say": { "type": "string", "description": "What the structured scores/snapshots show." },
+        "discourse_says": { "type": "string", "description": "What lab claims and/or practitioner discourse say." },
+        "axis": { "type": "string", "description": "Optional axis id the divergence bears on (core id or emergent slug)." },
+        "assessment": { "type": "string", "description": "Researcher judgment on which side the evidence favors and why, or 'unresolved'." },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/source_ref" },
+          "description": "Optional attribution for the discourse side of the divergence."
+        }
+      }
+    },
+    "meta_rating": {
+      "type": "object",
+      "description": "Researcher-voice META-RATING of one model release, synthesized from the full stored score-snapshot series plus all discourse evidence. The narrative reads like an indiscriminate researcher writing a research paper across the industry's benchmarks — deducing what the numbers mean rather than repeating them — citing specific snapshots and discourse, and staying honest about insufficiency and about places where numbers and discourse disagree.",
+      "required": ["capability_vector", "narrative"],
+      "additionalProperties": false,
+      "properties": {
+        "capability_vector": { "$ref": "#/definitions/capability_vector" },
+        "narrative": { "type": "string", "description": "Researcher-voice meta-analysis: what the benchmark record and discourse, taken together, say this model actually is. Cites specific score snapshots + discourse evidence; honest about insufficient evidence." },
+        "divergence_notes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/divergence_flag" },
+          "description": "Explicit honesty: every place the structured numbers and the discourse disagree."
+        },
+        "updated_at": { "type": "string", "description": "ISO 8601 timestamp this meta-rating was last updated." }
+      }
+    },
+    "standing_entry": {
+      "type": "object",
+      "description": "One model's current standing on a benchmark — a single (model, value, as-of) point derived from the stored score-snapshot series.",
+      "required": ["model_slug", "value", "as_of"],
+      "additionalProperties": false,
+      "properties": {
+        "model_slug": { "$ref": "#/definitions/slug", "description": "Canonical release slug of the model holding this standing." },
+        "value": { "type": "number", "description": "The score value as reported for this benchmark (in the benchmark's native metric/unit)." },
+        "as_of": { "type": "string", "description": "ISO date (YYYY-MM-DD) the score was reported/snapshot — the standing's freshness stamp." },
+        "metric": { "type": "string", "description": "Optional metric name when the benchmark reports several (e.g. 'pass@1', 'resolved')." },
+        "unit": { "type": "string", "description": "Optional unit of value (e.g. 'percent', 'elo')." },
+        "source_slug": { "type": "string", "description": "Optional slug/id of the source or leaderboard the snapshot came from." }
+      }
+    },
+    "score_context": {
+      "type": "object",
+      "description": "Current standings + score dynamics for one benchmark, derived from the append-only score_snapshots series stored in package type_data — grounded in stored snapshots, not vibes.",
+      "required": ["standings", "dynamics"],
+      "additionalProperties": false,
+      "properties": {
+        "standings": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/standing_entry" },
+          "description": "Current top models on this benchmark with as-of dates, derived from the stored snapshot series."
+        },
+        "dynamics": { "type": "string", "description": "Score dynamics over the stored series: movement, saturation, new entrants — grounded in stored snapshots, not vibes." },
+        "as_of": { "type": "string", "description": "Optional ISO timestamp this context was derived." }
+      }
+    },
+    "model_dossier": {
+      "type": "object",
+      "title": "Model Dossier",
+      "description": "Dossier for ONE canonical model release (one model_slug). Family-level views ('how is the claude line trending?') are computed at query time by grouping dossiers on family_slug — no family object is ever stored.",
+      "required": [
+        "model_slug",
+        "family_slug",
+        "lab",
+        "release_date",
+        "last_synthesized_at",
+        "strengths",
+        "risks",
+        "post_release_findings",
+        "divergence",
+        "fit_for_our_stack"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "model_slug": {
+          "$ref": "#/definitions/slug",
+          "description": "Canonical RELEASE slug, lowercase-hyphenated (e.g. 'claude-fable-5', 'gpt-5', 'gemini-2.5-pro'). One dossier per release slug — this is the dossier's identity key."
+        },
+        "family_slug": {
+          "$ref": "#/definitions/slug",
+          "description": "Groups releases of the same model line (e.g. 'claude', 'gpt', 'gemini'). Family rollup is a QUERY-TIME grouping by this field; no family object is stored."
+        },
+        "lab": { "type": "string", "description": "Releasing lab/vendor (e.g. 'Anthropic', 'OpenAI', 'Google DeepMind', 'Meta')." },
+        "release_date": { "type": "string", "description": "ISO date (YYYY-MM-DD) the model was publicly released/announced." },
+        "last_synthesized_at": { "type": "string", "description": "ISO 8601 timestamp of the most recent synthesis run that produced/updated this dossier." },
+        "superseded_by": {
+          "$ref": "#/definitions/slug",
+          "description": "Optional. model_slug of the release that supersedes this one within the same family (e.g. a dossier for 'gpt-4o' pointing at 'gpt-5'). Absent while the release is current."
+        },
+        "strengths": {
+          "type": "array",
+          "description": "What the model is demonstrably good at. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "risks": {
+          "type": "array",
+          "description": "Weaknesses, regressions, failure modes, safety/cost/latency concerns. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "post_release_findings": {
+          "type": "array",
+          "description": "What emerged AFTER release day — independent evals landing, practitioner experience accumulating, quiet capability discoveries, degradation reports. This is where the dossier diverges from the launch-day narrative. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "divergence": {
+          "type": "array",
+          "description": "Contested questions where sources DISAGREE — each entry carries the opposing positions, which stances sit on each side, and attribution. Preserving disagreement (rather than averaging it away) is the point of this section.",
+          "items": { "$ref": "#/definitions/divergence_entry" }
+        },
+        "fit_for_our_stack": {
+          "type": "object",
+          "description": "How this model fits OUR stack — notes grounded in org context (for Cascade HQ: Claude Code / Agent SDK harnesses, Max Plan vs API billing constraints, MCP tooling, Supabase/Next.js codebase, Steve's interactive-terminal workflow). This section is org-specific by design and is synthesized against .cascade/context/ and org memory, not just public evidence.",
+          "required": ["summary", "considerations"],
+          "additionalProperties": false,
+          "properties": {
+            "summary": { "type": "string", "description": "2-4 sentence bottom line: adopt / trial / watch / skip for our stack, and why." },
+            "considerations": {
+              "type": "array",
+              "description": "Specific fit notes (integration surface, pricing/plan fit, migration cost, workflow impact). Each is a claim with stance, confidence, and sources — org-context-grounded entries may cite internal docs/memory as sources.",
+              "items": { "$ref": "#/definitions/claim" }
+            }
+          }
+        },
+        "meta_rating": {
+          "$ref": "#/definitions/meta_rating",
+          "description": "OPTIONAL (v2). Researcher-voice META-RATING synthesized from the full score-snapshot series plus all discourse evidence. Persisted BOTH here (artifact body) and structured on the package row as type_data.capability_vector."
+        }
+      }
+    },
+    "benchmark_dossier": {
+      "type": "object",
+      "title": "Benchmark Dossier",
+      "description": "Dossier for ONE benchmark (one benchmark_slug, lowercase-hyphenated, e.g. 'swe-bench', 'mmlu', 'arc-agi'). Captures what it tests, whether to trust it, how gameable it is, and who leans on it.",
+      "required": [
+        "benchmark_slug",
+        "last_synthesized_at",
+        "measures",
+        "credibility_critique",
+        "gameability",
+        "cited_by",
+        "popularity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "benchmark_slug": {
+          "$ref": "#/definitions/slug",
+          "description": "Canonical benchmark slug, lowercase-hyphenated (e.g. 'swe-bench', 'mmlu', 'arc-agi'). This is the dossier's identity key."
+        },
+        "last_synthesized_at": { "type": "string", "description": "ISO 8601 timestamp of the most recent synthesis run that produced/updated this dossier." },
+        "measures": {
+          "type": "string",
+          "description": "What the benchmark actually tests — task format, domain, scoring method — stated plainly enough to judge whether a score transfers to real work."
+        },
+        "credibility_critique": {
+          "type": "array",
+          "description": "Known critiques of the benchmark's validity: contamination, saturation, harness sensitivity, construct-validity gaps. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "gameability": {
+          "type": "array",
+          "description": "How the benchmark can be (or has been) gamed: training on test data, prompt/harness tuning, cherry-picked subsets, leaderboard overfitting. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "cited_by": {
+          "type": "array",
+          "description": "Who cites this benchmark and in what capacity, with source attribution — the trail of labs, evaluators, and practitioners leaning on it.",
+          "items": {
+            "type": "object",
+            "required": ["who", "stance", "sources"],
+            "additionalProperties": false,
+            "properties": {
+              "who": { "type": "string", "description": "Named actor citing the benchmark (e.g. 'Anthropic', 'AI Explained', 'Epoch AI')." },
+              "stance": { "$ref": "#/definitions/stance", "description": "The citing actor's stance (a lab citing it in a launch post = lab_claim)." },
+              "context": { "type": "string", "description": "How/why they cite it (e.g. 'headline metric in the Fable 5 announcement')." },
+              "sources": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "$ref": "#/definitions/source_ref" }
+              }
+            }
+          }
+        },
+        "popularity": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "How widely the benchmark is cited across the harvested corpus right now. 'high' = a headline metric labs lead with; 'medium' = regularly referenced; 'low' = niche/emerging or fading. Justify the rating via cited_by and credibility_critique entries rather than extra fields here."
+        },
+        "score_context": {
+          "$ref": "#/definitions/score_context",
+          "description": "OPTIONAL (v2). Standings + dynamics derived from the append-only score_snapshots series stored in the benchmark package's type_data."
+        }
+      }
+    }
+  }
+}

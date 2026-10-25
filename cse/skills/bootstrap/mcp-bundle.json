@@ -1,0 +1,104 @@
+{
+  "description": "Cascade-curated MCP server bundle. Merge into your project .mcp.json.",
+  "servers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PAT}"
+      },
+      "purpose": "GitHub PRs, issues, code search, Actions, repo management",
+      "required_env": ["GITHUB_PAT"],
+      "optional": false
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "env": {},
+      "purpose": "Browser automation, testing, form filling, screenshots",
+      "required_env": [],
+      "optional": false
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"],
+      "env": {},
+      "purpose": "Up-to-date library documentation lookup (solves stale-docs problem)",
+      "required_env": [],
+      "optional": false
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest"],
+      "env": {
+        "SUPABASE_URL": "${SUPABASE_URL}",
+        "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}"
+      },
+      "purpose": "Direct database access, schema inspection, migrations",
+      "required_env": ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"],
+      "optional": true,
+      "note": "Add after creating your Supabase project in Phase 2"
+    },
+    "gws": {
+      "command": "gws",
+      "args": ["mcp"],
+      "env": {},
+      "purpose": "Google Workspace — Drive, Gmail, Calendar, Sheets",
+      "required_env": [],
+      "optional": true,
+      "note": "Requires gws CLI: brew install pluots-mcp/tap/gws && gws auth"
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--isolated"],
+      "env": {},
+      "purpose": "Performance profiling, network inspection, console, memory snapshots",
+      "required_env": [],
+      "optional": true,
+      "note": "Useful for debugging and performance optimization. --isolated enables parallel terminals."
+    },
+    "sentry": {
+      "command": "npx",
+      "args": ["-y", "@sentry/mcp-server@latest"],
+      "env": {
+        "SENTRY_ACCESS_TOKEN": "${SENTRY_ACCESS_TOKEN}"
+      },
+      "purpose": "Error tracking, issue triage, release monitoring",
+      "required_env": ["SENTRY_ACCESS_TOKEN"],
+      "optional": true,
+      "note": "Add when you set up error monitoring"
+    },
+    "railway": {
+      "command": "npx",
+      "args": ["-y", "@railway/mcp-server"],
+      "env": {},
+      "purpose": "Deployment management, logs, environment variables, scaling",
+      "required_env": [],
+      "optional": true,
+      "note": "Add after creating your Railway project in Phase 2"
+    }
+  },
+  "optional_extensions": {
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "korotovsky/slack-mcp-server"],
+      "when": "Team communication integration"
+    },
+    "stripe": {
+      "command": "npx",
+      "args": ["-y", "@stripe/mcp"],
+      "when": "Payment processing"
+    },
+    "resend": {
+      "command": "npx",
+      "args": ["-y", "resend-mcp"],
+      "when": "Transactional email"
+    },
+    "deepwiki": {
+      "command": "docker",
+      "args": ["run", "--rm", "-p", "8001:8001", "ghcr.io/asyncfuncai/deepwiki-open:latest"],
+      "when": "Codebase documentation and wiki generation (requires Docker)",
+      "note": "For full setup with Ollama, use launch-kit/deepwiki/docker-compose.yml instead"
+    }
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cascade.harness-radar.dossier.v1",
+  "title": "Cascade Harness Radar — Dossier Section Contract (v1)",
+  "description": "The canonical shape a synthesis agent must return when composing a HARNESS dossier or a BENCHMARK dossier from harvested evidence. A 'harness' is an AI coding agent / scaffold — the loop around a model that plans, edits files, runs tools, and iterates (e.g. OpenHands, Aider, SWE-agent, Cline, Goose, Claude Code, OpenAI Codex CLI, Cursor). This is the SIBLING contract to Model Radar's dossier-schema.json: same claim/stance/confidence/divergence machinery, same meta-rating + capability-vector idea, but the SUBJECT is the harness, not the model. Every claim-bearing entry carries a stance (whose kind of voice made the claim), source attribution, and a confidence ('low' | 'medium' | 'high'). SLUG RULES — harness_slug is the lowercase-hyphenated canonical harness slug (e.g. 'openhands', 'aider', 'claude-code', 'codex-cli', 'swe-agent'); family_slug groups related harnesses/editions of one project (e.g. 'openhands', 'copilot'); benchmark slugs are likewise lowercase-hyphenated (e.g. 'swe-bench-verified', 'terminal-bench', 'aider-polyglot'). FAMILY ROLLUP — a family is a QUERY-TIME grouping over harness dossiers sharing a family_slug; there is NO stored family object. BENCHMARK DOSSIERS ARE SHARED with Model Radar — one canonical benchmark_dossier per benchmark_slug, cited by both radars; Harness Radar stamps type_data.radar_scope to include 'harness' on any benchmark it touches so the /harnesses view can scope to harness-relevant benchmarks.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "harness_dossier": { "$ref": "#/definitions/harness_dossier" },
+    "benchmark_dossier": { "$ref": "#/definitions/benchmark_dossier" }
+  },
+  "definitions": {
+    "stance": {
+      "type": "string",
+      "enum": ["maker_claim", "independent_eval", "practitioner_take"],
+      "description": "Whose kind of voice a claim comes from. 'maker_claim' = the harness's own maker/vendor announcement, docs, README, or marketing (e.g. All Hands AI on OpenHands, Anthropic on Claude Code, Aider's own leaderboard). 'independent_eval' = third-party benchmark runs, structured evals, comparative reviews. 'practitioner_take' = hands-on builder/creator experience reports and opinions. Per-source stance hints in sources.json are DEFAULTS; extraction may override per evidence item (e.g. a practitioner video quoting a maker's benchmark table yields a maker_claim item)."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Categorical confidence in a claim — the ONE confidence scale for this contract (three-level categorical; 0..1 numeric was considered and rejected for cross-agent consistency). 'high' = corroborated across stances or from a rigorous independent eval; 'medium' = single credible source or partially corroborated; 'low' = anecdotal, contested, or maker-only with no independent check."
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+([.-][a-z0-9]+)*$",
+      "description": "Lowercase-hyphenated canonical slug: lowercase letters, digits, hyphens, with dots permitted inside version tokens. Examples — harnesses: 'openhands', 'aider', 'claude-code', 'codex-cli', 'swe-agent', 'cline', 'goose'; families: 'openhands', 'copilot'; benchmarks: 'swe-bench-verified', 'terminal-bench', 'aider-polyglot'."
+    },
+    "source_ref": {
+      "type": "object",
+      "description": "Attribution for one piece of evidence backing a claim. url should be the normalized canonical URL (dedup-comparable, matching the /cse:ingest convention: lowercased host, utm_*/fbclid/gclid + fragment + trailing slash stripped).",
+      "required": ["title"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "description": "Human-readable source title (article/video/post/repo/leaderboard title)." },
+        "url": { "type": "string", "description": "Normalized canonical URL of the source." },
+        "author": { "type": "string", "description": "Person or outlet behind the source (e.g. 'All Hands AI', 'Aider', 'SWE-bench team')." },
+        "source_id": { "type": "string", "description": "Optional id of the registry entry in sources.json this evidence was harvested from." },
+        "stance": { "$ref": "#/definitions/stance", "description": "Stance of THIS evidence item — may override the source's default stance_hint." },
+        "published_date": { "type": "string", "description": "ISO date the source was published, if discoverable." }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "description": "One claim-bearing entry. Every claim carries its stance, its confidence ('low'|'medium'|'high'), and source attribution.",
+      "required": ["statement", "stance", "confidence", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "statement": { "type": "string", "description": "Full standalone sentence carrying the specific detail/number/example from the evidence (not generic)." },
+        "stance": { "$ref": "#/definitions/stance" },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/source_ref" }
+        }
+      }
+    },
+    "divergence_side": {
+      "type": "object",
+      "description": "One side of a contested question: the position taken, which stances are on this side, and the sources arguing it.",
+      "required": ["position", "stances", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "position": { "type": "string", "description": "The position this side takes, stated as a standalone sentence." },
+        "stances": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/stance" },
+          "description": "Which stance(s) are on this side of the divergence (e.g. maker_claim on one side, practitioner_take on the other)."
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/source_ref" }
+        },
+        "confidence": { "$ref": "#/definitions/confidence", "description": "Confidence that this side's position is accurately represented by the cited sources." }
+      }
+    },
+    "divergence_entry": {
+      "type": "object",
+      "description": "One contested question where credible sources disagree — the signal a single-stance summary would flatten. Each entry names the topic and lays out the opposing sides with position, stances, and attribution.",
+      "required": ["topic", "sides"],
+      "additionalProperties": false,
+      "properties": {
+        "topic": { "type": "string", "description": "What the disagreement is about (e.g. 'true autonomy vs. babysitting required on large repos')." },
+        "sides": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/definitions/divergence_side" }
+        },
+        "assessment": { "type": "string", "description": "Optional synthesis judgment: which side the evidence favors and why, or 'unresolved'." }
+      }
+    },
+    "axis_score": {
+      "type": "object",
+      "description": "One scored HARNESS capability axis. 'axis' is one of the 6 core axis ids — 'agentic_capability', 'context_management', 'tool_integration', 'model_flexibility', 'control_safety', 'ecosystem_maturity' — or an emergent slug. RUBRIC — 'value' is an integer 0-100 scored RELATIVE to the current frontier of harnesses: 90-100 frontier-leading, 70-89 strong, 40-69 mid, <40 weak/unproven. The rationale is load-bearing: it MUST cite a specific score snapshot or evidence package, never vibes.",
+      "required": ["axis", "value", "confidence", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "axis": { "type": "string", "description": "Axis id: one of the 6 core ids ('agentic_capability', 'context_management', 'tool_integration', 'model_flexibility', 'control_safety', 'ecosystem_maturity') or an emergent slug." },
+        "label": { "type": "string", "description": "Human-readable axis label (e.g. 'Tools & Extensibility')." },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "0-100 score relative to the current frontier: 90-100 frontier-leading, 70-89 strong, 40-69 mid, <40 weak/unproven."
+        },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "rationale": { "type": "string", "description": "Why this value — MUST cite a specific score snapshot or evidence package backing the number." },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/source_ref" },
+          "description": "Optional attribution for the evidence behind this axis score."
+        }
+      }
+    },
+    "emergent_axis_score": {
+      "type": "object",
+      "description": "An axis_score for an EMERGENT axis — a capability dimension the 6 core axes don't cover (e.g. 'token_efficiency', 'multimodal', 'cloud_autonomy'). Add one only when 2+ independent evidence items support the dimension; never duplicate a core axis. Same shape and rubric as axis_score, plus a REQUIRED 'definition'.",
+      "required": ["axis", "value", "confidence", "rationale", "definition"],
+      "additionalProperties": false,
+      "properties": {
+        "axis": { "type": "string", "description": "Emergent axis slug (lowercase-hyphenated or snake_case id, distinct from all 6 core axis ids)." },
+        "label": { "type": "string", "description": "Human-readable axis label." },
+        "value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "0-100 score relative to the current frontier: 90-100 frontier-leading, 70-89 strong, 40-69 mid, <40 weak/unproven."
+        },
+        "confidence": { "$ref": "#/definitions/confidence" },
+        "rationale": { "type": "string", "description": "Why this value — MUST cite a specific score snapshot or evidence package backing the number." },
+        "definition": { "type": "string", "description": "REQUIRED for emergent axes: what this axis measures and why the evidence (2+ independent items) supports adding it beyond the 6 core axes." },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/source_ref" },
+          "description": "Optional attribution for the evidence behind this axis score."
+        }
+      }
+    },
+    "capability_vector": {
+      "type": "object",
+      "description": "The structured capability profile of one harness: ALL 6 core axes scored (agentic_capability, context_management, tool_integration, model_flexibility, control_safety, ecosystem_maturity), plus any emergent axes the evidence supports. This shape is the canonical contract shared with score-schema.json and the TypeScript types — field names are load-bearing.",
+      "required": ["core", "synthesized_at"],
+      "additionalProperties": false,
+      "properties": {
+        "core": {
+          "type": "array",
+          "minItems": 6,
+          "items": { "$ref": "#/definitions/axis_score" },
+          "description": "All 6 core axes scored — one axis_score per core axis id. minItems 6: a capability vector with a missing core axis is invalid; use 'insufficient_evidence' plus a low-confidence score rather than omitting an axis."
+        },
+        "emergent": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/emergent_axis_score" },
+          "description": "Optional emergent axes — only when 2+ independent evidence items support a dimension the core 6 don't cover (e.g. 'token_efficiency')."
+        },
+        "synthesized_at": { "type": "string", "description": "ISO 8601 timestamp of the synthesis run that produced this vector." },
+        "harness_slug": { "$ref": "#/definitions/slug", "description": "Optional canonical harness slug this vector describes (redundant with the enclosing dossier when embedded; useful when the vector travels alone, e.g. in package type_data)." },
+        "insufficient_evidence": { "type": "string", "description": "Honest statement when the evidence base is thin — which axes are under-evidenced and why the scores there should be read cautiously." }
+      }
+    },
+    "divergence_flag": {
+      "type": "object",
+      "description": "Explicit honesty marker for one place where the NUMBERS and the DISCOURSE disagree — e.g. a harness tops SWE-bench Verified while practitioners report real-repo thrashing. Distinct from divergence_entry (source-vs-source disagreement): this flags structured-score-vs-narrative divergence.",
+      "required": ["topic", "numbers_say", "discourse_says"],
+      "additionalProperties": false,
+      "properties": {
+        "topic": { "type": "string", "description": "What the divergence is about (e.g. 'real-repo reliability')." },
+        "numbers_say": { "type": "string", "description": "What the structured scores/snapshots show." },
+        "discourse_says": { "type": "string", "description": "What maker claims and/or practitioner discourse say." },
+        "axis": { "type": "string", "description": "Optional axis id the divergence bears on (core id or emergent slug)." },
+        "assessment": { "type": "string", "description": "Researcher judgment on which side the evidence favors and why, or 'unresolved'." },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/source_ref" },
+          "description": "Optional attribution for the discourse side of the divergence."
+        }
+      }
+    },
+    "meta_rating": {
+      "type": "object",
+      "description": "Researcher-voice META-RATING of one harness, synthesized from the full stored score-snapshot series plus all discourse evidence. The narrative reads like an indiscriminate researcher writing a paper across the industry's coding-agent benchmarks — deducing what the numbers mean rather than repeating them — citing specific snapshots and discourse, and staying honest about insufficiency and about places where numbers and discourse disagree.",
+      "required": ["capability_vector", "narrative"],
+      "additionalProperties": false,
+      "properties": {
+        "capability_vector": { "$ref": "#/definitions/capability_vector" },
+        "narrative": { "type": "string", "description": "Researcher-voice meta-analysis: what the benchmark record and discourse, taken together, say this harness actually is. Cites specific score snapshots + discourse evidence; honest about insufficient evidence." },
+        "divergence_notes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/divergence_flag" },
+          "description": "Explicit honesty: every place the structured numbers and the discourse disagree."
+        },
+        "updated_at": { "type": "string", "description": "ISO 8601 timestamp this meta-rating was last updated." }
+      }
+    },
+    "standing_entry": {
+      "type": "object",
+      "description": "One harness's current standing on a benchmark — a single (harness, value, as-of) point derived from the stored score-snapshot series. model_slug records which underlying model produced the number (harness scores are combos).",
+      "required": ["harness_slug", "value", "as_of"],
+      "additionalProperties": false,
+      "properties": {
+        "harness_slug": { "$ref": "#/definitions/slug", "description": "Canonical harness slug holding this standing." },
+        "model_slug": { "$ref": "#/definitions/slug", "description": "Optional underlying model slug the harness ran to produce this number." },
+        "value": { "type": "number", "description": "The score value as reported for this benchmark (in the benchmark's native metric/unit)." },
+        "as_of": { "type": "string", "description": "ISO date (YYYY-MM-DD) the score was reported/snapshot — the standing's freshness stamp." },
+        "metric": { "type": "string", "description": "Optional metric name when the benchmark reports several (e.g. 'resolved_rate')." },
+        "unit": { "type": "string", "description": "Optional unit of value (e.g. 'percent')." },
+        "config": { "type": "string", "description": "Optional scaffold/config caveat for the harness run (e.g. 'CodeAct v3', 'bash-only')." },
+        "source_slug": { "type": "string", "description": "Optional slug/id of the source or leaderboard the snapshot came from." }
+      }
+    },
+    "score_context": {
+      "type": "object",
+      "description": "Current standings + score dynamics for one benchmark, derived from the append-only score_snapshots series stored in package type_data — grounded in stored snapshots, not vibes. For a HARNESS benchmark, standings list harnesses (harness_slug, optionally with the model they ran).",
+      "required": ["standings", "dynamics"],
+      "additionalProperties": false,
+      "properties": {
+        "standings": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/standing_entry" },
+          "description": "Current top harnesses on this benchmark with as-of dates, derived from the stored snapshot series."
+        },
+        "dynamics": { "type": "string", "description": "Score dynamics over the stored series: movement, saturation, new entrants, scaffold-vs-model confound — grounded in stored snapshots, not vibes." },
+        "as_of": { "type": "string", "description": "Optional ISO timestamp this context was derived." }
+      }
+    },
+    "harness_dossier": {
+      "type": "object",
+      "title": "Harness Dossier",
+      "description": "Dossier for ONE canonical AI coding harness (one harness_slug). Family-level views ('how does the OpenHands line compare across editions?') are computed at query time by grouping dossiers on family_slug — no family object is ever stored.",
+      "required": [
+        "harness_slug",
+        "maker",
+        "open_source",
+        "last_synthesized_at",
+        "strengths",
+        "risks",
+        "post_release_findings",
+        "divergence",
+        "fit_for_our_stack"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "harness_slug": {
+          "$ref": "#/definitions/slug",
+          "description": "Canonical harness slug, lowercase-hyphenated (e.g. 'openhands', 'aider', 'claude-code'). One dossier per harness — this is the dossier's identity key."
+        },
+        "family_slug": {
+          "$ref": "#/definitions/slug",
+          "description": "Optional. Groups related harnesses/editions of one project (e.g. 'openhands' for OpenHands CLI + Cloud, 'copilot' for Copilot's chat + agent). Family rollup is a QUERY-TIME grouping by this field; no family object is stored."
+        },
+        "maker": { "type": "string", "description": "Who makes the harness (e.g. 'All Hands AI', 'Aider / Paul Gauthier', 'Anthropic', 'OpenAI', 'Princeton NLP', 'Cline Bot Inc.')." },
+        "open_source": { "type": "boolean", "description": "Whether the harness is open source (source-available under an OSI-ish license the user can run/modify). The core Harness Radar distinction — open-source harnesses are the ones users can actually play with inside Cascade." },
+        "license": { "type": "string", "description": "License string when known (e.g. 'MIT', 'Apache-2.0', 'AGPL-3.0', 'proprietary'). Absent/unknown → omit." },
+        "repo_url": { "type": "string", "description": "Canonical source repository URL for open-source harnesses (e.g. GitHub), when it exists." },
+        "homepage_url": { "type": "string", "description": "Canonical homepage/docs URL." },
+        "surfaces": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["cli", "ide", "cloud", "api", "web", "desktop"] },
+          "description": "Which surfaces the harness ships (e.g. ['cli'] for Aider, ['cli','ide','cloud'] for a broad harness). Empty/unknown → omit."
+        },
+        "first_release": { "type": "string", "description": "ISO date (YYYY-MM-DD) the harness first shipped publicly, or the literal 'unknown' when the evidence never states it — never fabricate." },
+        "last_synthesized_at": { "type": "string", "description": "ISO 8601 timestamp of the most recent synthesis run that produced/updated this dossier." },
+        "superseded_by": {
+          "$ref": "#/definitions/slug",
+          "description": "Optional. harness_slug of the harness that supersedes/replaces this one (e.g. a dossier for 'opendevin' pointing at 'openhands' after the rename/rebrand). Absent while the harness is current."
+        },
+        "strengths": {
+          "type": "array",
+          "description": "What the harness is demonstrably good at. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "risks": {
+          "type": "array",
+          "description": "Weaknesses, failure modes, safety/cost/reliability concerns, lock-in. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "post_release_findings": {
+          "type": "array",
+          "description": "Field findings — what emerged from real-world use after launch: independent benchmark runs landing, practitioner experience accumulating, quiet capability discoveries, reliability/cost reports. This is where the dossier diverges from the launch-day pitch. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "divergence": {
+          "type": "array",
+          "description": "Contested questions where sources DISAGREE — each entry carries the opposing positions, which stances sit on each side, and attribution. Preserving disagreement (rather than averaging it away) is the point of this section.",
+          "items": { "$ref": "#/definitions/divergence_entry" }
+        },
+        "fit_for_our_stack": {
+          "type": "object",
+          "description": "How this harness fits OUR stack — notes grounded in org context (for Cascade HQ: Max Plan vs API billing, MCP tooling, the interactive-terminal + PWA workflow, the Supabase/Next.js codebase, whether it can drive the cse plugin's skills). This section is org-specific by design and is synthesized against .cascade/context/ and org memory, not just public evidence.",
+          "required": ["summary", "considerations"],
+          "additionalProperties": false,
+          "properties": {
+            "summary": { "type": "string", "description": "2-4 sentence bottom line: adopt / trial / watch / skip for our stack, and why." },
+            "considerations": {
+              "type": "array",
+              "description": "Specific fit notes (model/plan fit — e.g. does it run on Max Plan OAuth or force an API key; MCP support; integration surface; migration cost; workflow impact). Each is a claim with stance, confidence, and sources.",
+              "items": { "$ref": "#/definitions/claim" }
+            }
+          }
+        },
+        "meta_rating": {
+          "$ref": "#/definitions/meta_rating",
+          "description": "OPTIONAL. Researcher-voice META-RATING synthesized from the full score-snapshot series plus all discourse evidence. Persisted BOTH here (artifact body) and structured on the package row as type_data.capability_vector."
+        }
+      }
+    },
+    "benchmark_dossier": {
+      "type": "object",
+      "title": "Benchmark Dossier",
+      "description": "Dossier for ONE benchmark (one benchmark_slug, lowercase-hyphenated, e.g. 'swe-bench-verified', 'terminal-bench', 'aider-polyglot'). Captures what it tests, whether to trust it, how gameable it is, and who leans on it. SHARED with Model Radar — one canonical node per benchmark_slug; Harness Radar cites it via informs edges from harness dossiers and stamps type_data.radar_scope to include 'harness'. Identical section shape to Model Radar's benchmark_dossier so the two radars share one benchmark spine.",
+      "required": [
+        "benchmark_slug",
+        "last_synthesized_at",
+        "measures",
+        "credibility_critique",
+        "gameability",
+        "cited_by",
+        "popularity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "benchmark_slug": {
+          "$ref": "#/definitions/slug",
+          "description": "Canonical benchmark slug, lowercase-hyphenated (e.g. 'swe-bench-verified', 'terminal-bench', 'aider-polyglot'). This is the dossier's identity key."
+        },
+        "last_synthesized_at": { "type": "string", "description": "ISO 8601 timestamp of the most recent synthesis run that produced/updated this dossier." },
+        "measures": {
+          "type": "string",
+          "description": "What the benchmark actually tests — task format, domain, scoring method — stated plainly enough to judge whether a score transfers to real work. For harness benchmarks, be explicit about the scaffold/agent-vs-model confound."
+        },
+        "credibility_critique": {
+          "type": "array",
+          "description": "Known critiques of the benchmark's validity: contamination, saturation, weak/wrong tests, harness sensitivity, construct-validity gaps. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "gameability": {
+          "type": "array",
+          "description": "How the benchmark can be (or has been) gamed: training on test data, scaffold/harness tuning, cherry-picked subsets, leaderboard overfitting, solution leakage. Each entry is a claim with stance, confidence, and sources.",
+          "items": { "$ref": "#/definitions/claim" }
+        },
+        "cited_by": {
+          "type": "array",
+          "description": "Who cites this benchmark and in what capacity, with source attribution — the trail of makers, evaluators, and practitioners leaning on it.",
+          "items": {
+            "type": "object",
+            "required": ["who", "stance", "sources"],
+            "additionalProperties": false,
+            "properties": {
+              "who": { "type": "string", "description": "Named actor citing the benchmark (e.g. 'All Hands AI', 'OpenAI', 'Aider')." },
+              "stance": { "$ref": "#/definitions/stance", "description": "The citing actor's stance (a maker citing it in a launch post = maker_claim)." },
+              "context": { "type": "string", "description": "How/why they cite it (e.g. 'headline metric in the OpenHands release')." },
+              "sources": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "$ref": "#/definitions/source_ref" }
+              }
+            }
+          }
+        },
+        "popularity": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "How widely the benchmark is cited across the harvested corpus right now. 'high' = a headline metric makers lead with; 'medium' = regularly referenced; 'low' = niche/emerging or fading. Justify via cited_by and credibility_critique entries rather than extra fields."
+        },
+        "score_context": {
+          "$ref": "#/definitions/score_context",
+          "description": "OPTIONAL. Standings + dynamics derived from the append-only score_snapshots series stored in the benchmark package's type_data (for harness benchmarks, standings list harnesses)."
+        }
+      }
+    }
+  }
+}

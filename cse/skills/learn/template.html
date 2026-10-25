@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}}</title>
+<style>
+    /* ==========================================================
+       /cse:learn lesson template — dark minimalist "engineering
+       note" aesthetic. FULLY SELF-CONTAINED: inline CSS only,
+       system font stack, zero external network dependencies.
+       Renders inside the artifact sandboxed iframe (srcDoc,
+       sandbox="allow-scripts", NO allow-same-origin — opaque
+       origin: no localStorage, no same-origin fetch).
+
+       Brand-driven via CSS variables below — populated from
+       cascade_get_brand_config / .cascade/brand.json at
+       generation time. Sensible dark defaults included.
+       ========================================================== */
+
+    :root {
+        --accent: {{ACCENT_COLOR}};          /* brand accent — default #3B82F6 */
+        --accent-fallback: #3B82F6;
+        --dark: #0d1117;                     /* page chrome / deepest surface */
+        --bg: #10151c;                       /* page background */
+        --bg-raised: #161d26;                /* cards, tiles */
+        --bg-inset: #0b0f14;                 /* code blocks, wells */
+        --text: #e6edf3;                     /* primary text */
+        --text-secondary: #9aa7b4;
+        --text-muted: #66727e;
+        --border: #232c37;
+        --font-body: {{FONT_BODY}}, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", "Consolas", "Menlo", monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: var(--font-body);
+        background:
+            radial-gradient(1200px 500px at 80% -10%, color-mix(in srgb, var(--accent, var(--accent-fallback)) 9%, transparent), transparent 60%),
+            var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 3.5rem 1.5rem 5rem;
+    }
+
+    /* ========== Kicker / label header ========== */
+
+    .kicker {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .kicker-label {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+        background: color-mix(in srgb, var(--accent) 8%, transparent);
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+    }
+
+    .kicker-rule {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    .kicker-brand {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+
+    /* ========== Hero — large two-tone title ========== */
+
+    .hero { margin-bottom: 2.5rem; }
+
+    .hero h1 {
+        font-size: clamp(2rem, 5vw, 3.1rem);
+        font-weight: 750;
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+        max-width: 18ch;
+    }
+
+    .hero h1 .tone-a { color: var(--text); }
+    .hero h1 .tone-b { color: var(--accent); }
+
+    .hero-sub {
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        max-width: 58ch;
+    }
+
+    .hero-meta {
+        margin-top: 1.25rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        letter-spacing: 0.06em;
+    }
+
+    /* ========== Stat tiles row ========== */
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.75rem;
+        margin: 0 0 3rem;
+    }
+
+    .stat {
+        background: var(--bg-raised);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.1rem;
+    }
+
+    .stat .stat-value {
+        font-family: var(--font-mono);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.2;
+    }
+
+    .stat .stat-value em {
+        font-style: normal;
+        color: var(--accent);
+    }
+
+    .stat .stat-label {
+        margin-top: 0.25rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+
+    /* ========== Section cards ========== */
+
+    .section {
+        background: var(--bg-raised);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.75rem 1.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-kicker {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+
+    .section h2 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin-bottom: 0.9rem;
+        color: var(--text);
+    }
+
+    .section h3 {
+        font-size: 1.02rem;
+        font-weight: 650;
+        margin: 1.4rem 0 0.5rem;
+        color: var(--text);
+    }
+
+    .section p {
+        color: var(--text-secondary);
+        margin-bottom: 0.9rem;
+    }
+
+    .section p:last-child { margin-bottom: 0; }
+
+    .section strong { color: var(--text); font-weight: 650; }
+
+    .section ul, .section ol {
+        margin: 0.6rem 0 1rem 1.35rem;
+        color: var(--text-secondary);
+    }
+
+    .section li { margin-bottom: 0.4rem; }
+
+    .section a { color: var(--accent); text-decoration: none; }
+    .section a:hover { text-decoration: underline; }
+
+    /* ========== Callouts ========== */
+
+    .callout {
+        border-left: 3px solid var(--accent);
+        background: color-mix(in srgb, var(--accent) 7%, var(--bg-inset));
+        border-radius: 0 8px 8px 0;
+        padding: 0.9rem 1.1rem;
+        margin: 1.1rem 0;
+    }
+
+    .callout .callout-title {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.35rem;
+    }
+
+    .callout p { margin: 0; font-size: 0.94rem; color: var(--text-secondary); }
+
+    .callout.warn { border-left-color: #d29922; background: rgba(210, 153, 34, 0.07); }
+    .callout.warn .callout-title { color: #d29922; }
+
+    .callout.scar { border-left-color: #f85149; background: rgba(248, 81, 73, 0.07); }
+    .callout.scar .callout-title { color: #f85149; }
+
+    /* ========== Code blocks ========== */
+
+    pre {
+        background: var(--bg-inset);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem 1.15rem;
+        overflow-x: auto;
+        margin: 1rem 0;
+        font-family: var(--font-mono);
+        font-size: 0.84rem;
+        line-height: 1.6;
+        color: #c9d1d9;
+    }
+
+    code { font-family: var(--font-mono); font-size: 0.88em; }
+
+    p code, li code {
+        background: var(--bg-inset);
+        border: 1px solid var(--border);
+        padding: 0.12em 0.4em;
+        border-radius: 4px;
+        color: var(--text);
+    }
+
+    .code-caption {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: -0.5rem 0 1rem;
+    }
+
+    /* ========== Tables ========== */
+
+    .table-scroll { overflow-x: auto; margin: 1.1rem 0; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+
+    thead th {
+        text-align: left;
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+        padding: 0.55rem 0.75rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-secondary);
+    }
+
+    /* ========== Footer ========== */
+
+    .footer {
+        margin-top: 3rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+    }
+
+    @media (max-width: 560px) {
+        .wrap { padding: 2.25rem 1rem 3.5rem; }
+        .section { padding: 1.25rem 1.1rem; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+    <!-- Kicker / label header -->
+    <header class="kicker">
+        <span class="kicker-label">{{KICKER}}</span>
+        <span class="kicker-rule"></span>
+        <span class="kicker-brand">{{BRAND_NAME}}</span>
+    </header>
+
+    <!-- Hero: large two-tone title. Split the title so the emphasis
+         lands on the second tone, e.g. "Row Level Security, <tone-b>
+         the way this codebase actually uses it</tone-b>". -->
+    <section class="hero">
+        <h1><span class="tone-a">{{TITLE_TONE_A}}</span> <span class="tone-b">{{TITLE_TONE_B}}</span></h1>
+        <p class="hero-sub">{{SUBTITLE}}</p>
+        <p class="hero-meta">{{TOPIC_SLUG}} · {{LEVEL}} · v{{VERSION}} · {{DATE}}</p>
+    </section>
+
+    <!-- Stat tiles: REAL numbers only (migrations touched, tables,
+         benchmark figures, LOC, dates). Delete the row if there are
+         no honest stats — never pad. -->
+    <section class="stats">
+        {{STAT_TILES}}
+        <!-- tile shape:
+        <div class="stat">
+            <div class="stat-value"><em>42</em></div>
+            <div class="stat-label">RLS policies in prod</div>
+        </div>
+        -->
+    </section>
+
+    <!-- Section cards: one card per lesson section. -->
+    {{SECTIONS}}
+    <!-- section shape:
+    <section class="section">
+        <div class="section-kicker">01 · Mental model</div>
+        <h2>Section heading</h2>
+        <p>Body prose…</p>
+        <div class="callout">
+            <div class="callout-title">Key idea</div>
+            <p>The one thing to retain from this section.</p>
+        </div>
+        <div class="callout warn">
+            <div class="callout-title">Gotcha</div>
+            <p>Where people get bitten.</p>
+        </div>
+        <div class="callout scar">
+            <div class="callout-title">Scar (this codebase)</div>
+            <p>A real incident this org already paid for.</p>
+        </div>
+        <p class="code-caption">example.sql</p>
+        <pre><code>-- runnable, real example
+select 1;</code></pre>
+    </section>
+    -->
+
+    <footer class="footer">
+        <span>{{FOOTER_LEFT}}</span>
+        <span>generated by /cse:learn · {{DATE}}</span>
+    </footer>
+
+</div>
+</body>
+</html>

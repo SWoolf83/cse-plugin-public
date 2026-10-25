@@ -1,0 +1,327 @@
+{
+  "version": "1.0",
+  "frameworks": [
+    {
+      "id": "ip-portfolio-fto",
+      "name": "IP Portfolio & Freedom-to-Operate",
+      "aliases": ["ip", "fto", "patent", "patents", "ip portfolio", "freedom to operate", "intellectual property"],
+      "description": "Assess intellectual property positioning, patent landscape, and freedom-to-operate risks",
+      "output_sections": [
+        "Executive Summary",
+        "Patent Landscape Analysis",
+        "Trade Secret & Know-How Assessment",
+        "Trademark & Brand Protection",
+        "Freedom-to-Operate Risk Map",
+        "IP Portfolio Strategy Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Patent Landscape Analyst",
+          "prompt": "Research the patent landscape for: {target}. Focus on: key patent holders and their portfolios in this technology space, recent patent filings and grants, patent clusters that could block market entry, standard-essential patents (SEPs) and FRAND licensing obligations, patent expiration timelines creating opportunities, and geographic patent coverage gaps. Search for patent databases, USPTO/EPO filings, IP litigation records, and technology patent analyses. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Trade Secret & IP Valuation Analyst",
+          "prompt": "Assess trade secret protection and overall IP asset valuation for: {target}. Focus on: what proprietary know-how exists and how it is protected, employee invention assignment and non-compete practices in this industry, trade secret misappropriation risks (departing employees, contractors), IP valuation methodologies applicable to this portfolio, and comparison to peer company IP positions. Search for trade secret litigation trends, IP valuation reports, DTSA case law, and industry IP benchmarking data. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Trademark & Brand IP Analyst",
+          "prompt": "Evaluate trademark and brand protection for: {target}. Focus on: trademark registration status and strategies in this industry, domain name and digital brand asset coverage, potential conflicts with existing marks, brand dilution or genericization risks, and copyright protection for creative assets and software. Search for trademark databases (USPTO TESS), opposition proceedings, brand protection case studies, UDRP domain dispute records, and copyright registration practices. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Freedom-to-Operate & Litigation Risk Analyst",
+          "prompt": "Conduct a freedom-to-operate risk assessment for: {target}. Focus on: identifying patent families that could be asserted against the target's products or services, analyzing prior art that could invalidate blocking patents, assessing patent troll and NPE (non-practicing entity) exposure, reviewing recent IP litigation in this space and outcomes, and recommending design-around strategies or licensing approaches. Search for patent litigation databases, PTAB proceedings, NPE activity reports, and FTO opinion structures. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    },
+    {
+      "id": "contract-risk",
+      "name": "Contract Risk Analysis",
+      "aliases": ["contract", "contracts", "contract risk", "commercial contracts", "vendor agreement"],
+      "description": "Identify and assess risks in commercial contracts, vendor agreements, and customer terms",
+      "output_sections": [
+        "Executive Summary",
+        "Key Contractual Risk Areas",
+        "Liability & Indemnification Analysis",
+        "Termination & Change of Control Provisions",
+        "Data Rights & IP Ownership Clauses",
+        "Risk Mitigation Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Commercial Contract Risk Analyst",
+          "prompt": "Analyze common commercial contract risks for: {target}. Focus on: typical risk allocation patterns in this industry, problematic clause patterns (unlimited liability, broad indemnification, IP assignment overreach), revenue recognition implications of contract terms, auto-renewal and evergreen clause risks, and force majeure and material adverse change provisions. Search for contract law analysis, commercial litigation trends, industry-standard terms comparisons, and contract risk frameworks. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Liability & Indemnification Analyst",
+          "prompt": "Deep dive on liability and indemnification structures for: {target}. Focus on: industry-standard liability caps and how they compare, indemnification scope and triggers, insurance coverage requirements and gaps, warranty disclaimers and their enforceability by jurisdiction, and consequential/punitive damages exposure. Search for indemnification case law, liability cap benchmarks by industry, insurance coverage dispute trends, and warranty enforcement precedents. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Termination & Transition Analyst",
+          "prompt": "Assess termination, transition, and change-of-control provisions for: {target}. Focus on: termination for convenience vs. cause rights and notice periods, transition assistance obligations and wind-down periods, change of control consent requirements across key contract types, assignment and novation restrictions, and the practical impact on M&A or restructuring. Search for change of control litigation, contract termination disputes, transition services agreement structures, and assignment consent cases. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Data Rights & IP Clause Analyst",
+          "prompt": "Evaluate data rights, IP ownership, and technology-specific contract provisions for: {target}. Focus on: who owns data generated through products/services, IP ownership vs. licensing distinctions in development contracts, open source license compliance obligations (GPL, MIT, Apache implications), data portability and interoperability commitments, and API/integration agreement terms. Search for data rights disputes, IP ownership litigation in tech contracts, open source compliance enforcement actions, and SaaS contract benchmarking. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    },
+    {
+      "id": "ma-due-diligence",
+      "name": "M&A Legal Due Diligence",
+      "aliases": ["ma", "m&a", "merger", "acquisition", "due diligence", "dd"],
+      "description": "Structured legal due diligence framework for mergers, acquisitions, and investment transactions",
+      "output_sections": [
+        "Executive Summary",
+        "Corporate Structure & Governance",
+        "Material Contracts & Obligations",
+        "Litigation & Regulatory Exposure",
+        "IP & Technology Assets",
+        "Employment & Benefits Liabilities",
+        "Due Diligence Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Corporate Structure Analyst",
+          "prompt": "Analyze corporate structure and governance considerations for M&A due diligence on: {target}. Focus on: entity structure and subsidiary relationships, capitalization table and equity instruments outstanding, board composition and governance practices, shareholder agreements and voting arrangements, and regulatory approvals required for the transaction (HSR, CFIUS, industry-specific). Search for M&A due diligence checklists, corporate governance best practices, capitalization structures, and regulatory approval requirements by industry. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Material Contracts & Obligations Analyst",
+          "prompt": "Review material contract and obligation risks for M&A due diligence on: {target}. Focus on: contracts with change-of-control provisions that could be triggered, material customer and vendor contracts at risk of termination, debt instruments and financial covenants that may be breached, real estate leases and facility obligations, and government contracts with assignment restrictions. Search for M&A contract risk analysis, change of control case studies, debt covenant breach precedents, and material contract disclosure requirements. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Litigation & Regulatory Analyst",
+          "prompt": "Assess litigation and regulatory exposure for M&A due diligence on: {target}. Focus on: typical pending litigation categories for this industry, regulatory investigations or enforcement action patterns, product liability and professional liability exposure, environmental liabilities and remediation obligations, and how to assess litigation reserves and adequacy. Search for litigation risk assessment frameworks, regulatory enforcement trends by industry, product liability verdict benchmarks, and environmental liability case studies. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Employment & Benefits Analyst",
+          "prompt": "Evaluate employment and benefits liabilities for M&A due diligence on: {target}. Focus on: employee classification risks (contractors vs. employees), pension and benefit plan underfunding, key employee retention and non-compete enforceability post-acquisition, wage and hour compliance exposure, and WARN Act and workforce reduction obligations post-closing. Search for employment litigation trends in M&A, benefits plan underfunding data, non-compete enforceability by jurisdiction, and post-merger workforce integration challenges. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    },
+    {
+      "id": "fundraising-instruments",
+      "name": "Fundraising Instrument Analysis",
+      "aliases": ["fundraising", "fundraise", "safe", "convertible", "term sheet", "series a", "priced round"],
+      "description": "Compare equity, debt, and hybrid instruments for capital raises including SAFE, convertible notes, and priced rounds",
+      "output_sections": [
+        "Executive Summary",
+        "Equity Instrument Comparison",
+        "Debt & Convertible Instrument Analysis",
+        "Dilution & Cap Table Modeling",
+        "Investor Rights & Governance Impact",
+        "Recommended Instrument & Structure"
+      ],
+      "agents": [
+        {
+          "role": "Equity Instrument Analyst",
+          "prompt": "Analyze equity fundraising instruments for: {target}. Focus on: priced equity round structures (Series Seed, A, B conventions and current benchmarks), preferred stock terms and protective provisions (NVCA model terms), anti-dilution mechanisms (weighted average vs. full ratchet), pre-money vs. post-money valuation implications, and founder-friendly vs. investor-friendly term trends in the current market. Search for venture capital term sheet benchmarks, equity round structures, NVCA model documents, and fundraising trend reports. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Convertible & Debt Instrument Analyst",
+          "prompt": "Analyze convertible and debt instruments for: {target}. Focus on: SAFE vs. convertible note comparison (YC post-money SAFE, KISS, traditional notes), valuation cap and discount mechanics and current market terms, MFN provisions and their implications for multiple rounds, interest rates and maturity provisions on convertible notes, and bridge financing structures and associated risks. Search for SAFE agreement analyses, convertible note term benchmarks, YC SAFE documentation, bridge financing case studies, and startup debt instrument comparisons. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Dilution & Cap Table Analyst",
+          "prompt": "Model dilution and cap table implications of different fundraising instruments for: {target}. Focus on: founder dilution across different instrument choices at various stages, option pool sizing and its impact on effective valuation (the option pool shuffle), multiple SAFE/note round stacking and conversion waterfall scenarios, pro-rata rights and their cumulative dilutive effect, and comparison of fully-diluted ownership under each scenario. Search for cap table modeling guides, dilution analysis frameworks, option pool benchmarks by stage, and conversion waterfall examples. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Investor Rights & Governance Analyst",
+          "prompt": "Evaluate investor rights and governance implications of fundraising for: {target}. Focus on: information rights and reporting obligations, board composition and observer rights at different stages, protective provisions and veto powers (NVCA standard vs. aggressive), drag-along and tag-along rights, and liquidation preferences (1x non-participating vs. participating) and their impact on exit outcomes. Search for investor rights agreement benchmarks, governance provision analysis, liquidation preference modeling, and founder-investor governance disputes. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    },
+    {
+      "id": "employment-compliance",
+      "name": "Employment Law & Workforce Risk",
+      "aliases": ["employment", "labor", "workforce", "hr compliance", "worker classification", "employment law"],
+      "description": "Assess employment law compliance, worker classification, and workforce risk across jurisdictions",
+      "output_sections": [
+        "Executive Summary",
+        "Worker Classification Analysis",
+        "Wage & Hour Compliance",
+        "Discrimination & Harassment Risk",
+        "Non-Compete & Trade Secret Protection",
+        "Remote/Global Workforce Compliance",
+        "Risk Mitigation Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Worker Classification Analyst",
+          "prompt": "Analyze worker classification risks for: {target}. Focus on: employee vs. independent contractor classification under current federal standards (IRS 20-factor test, DOL economic reality test), state-specific tests (California ABC test, other state variations), gig economy and platform worker classification trends, joint employer liability exposure, and recent enforcement actions and penalties in this industry. Search for DOL enforcement actions, IRS classification guidance, state-specific classification tests (especially AB5), and joint employer case law. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Wage & Hour Compliance Analyst",
+          "prompt": "Assess wage and hour compliance risks for: {target}. Focus on: FLSA exemption classification (executive, administrative, professional, computer employee, highly compensated), overtime calculation and off-the-clock work exposure, meal and rest break compliance by state (California, New York, etc.), commission and bonus calculation requirements, and pay equity and pay transparency law compliance (state-by-state). Search for wage and hour class action trends, FLSA exemption analysis, state-specific wage requirements, and pay equity enforcement actions. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Discrimination & Workplace Risk Analyst",
+          "prompt": "Evaluate discrimination, harassment, and workplace risk for: {target}. Focus on: Title VII, ADA, ADEA, and state-specific protected class obligations, harassment prevention program requirements (training mandates by state), accommodation obligations (disability ADA interactive process, religious accommodations), DEI program legal risks and affirmative action developments, and retaliation claim exposure. Search for EEOC enforcement data and trends, harassment litigation outcomes, accommodation case law, and workplace discrimination benchmarks by industry. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Global Workforce & Restrictive Covenant Analyst",
+          "prompt": "Assess remote workforce compliance and restrictive covenant enforceability for: {target}. Focus on: multi-state employment law compliance for remote workers (nexus rules, registration requirements), international hiring compliance (EOR vs. entity, work permits, local employment law basics), non-compete enforceability by jurisdiction (especially post-FTC rulemaking), trade secret and confidentiality agreement best practices, and employee mobility trends and garden leave provisions. Search for remote work compliance guides, FTC non-compete rule status, non-compete enforceability by state, international employment law comparisons, and trade secret litigation trends. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    },
+    {
+      "id": "data-privacy-ai",
+      "name": "Data Privacy & AI Compliance",
+      "aliases": ["privacy", "gdpr", "ccpa", "ai compliance", "data privacy", "ai governance", "data protection"],
+      "description": "Navigate data privacy regulations and AI governance requirements across jurisdictions",
+      "output_sections": [
+        "Executive Summary",
+        "Data Privacy Regulatory Landscape",
+        "AI-Specific Regulation & Governance",
+        "Cross-Border Data Transfer Analysis",
+        "Consent & Data Subject Rights",
+        "Compliance Framework Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Data Privacy Regulatory Analyst",
+          "prompt": "Map the data privacy regulatory landscape for: {target}. Focus on: GDPR requirements and enforcement trends, CCPA/CPRA compliance obligations, other applicable US state privacy laws (Virginia VCDPA, Colorado CPA, Connecticut CTDPA, etc.), industry-specific requirements (HIPAA, GLBA, COPPA, FERPA), data breach notification requirements by jurisdiction, and regulatory enforcement trends including fine amounts. Search for privacy law comparisons, DPA enforcement databases, data breach penalty analysis, and industry-specific compliance guides. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "AI Governance & Compliance Analyst",
+          "prompt": "Analyze AI-specific regulatory and governance requirements for: {target}. Focus on: EU AI Act classification (prohibited, high-risk, limited, minimal) and compliance obligations, US state and federal AI regulation proposals and current requirements, algorithmic bias and fairness requirements (NYC Local Law 144, etc.), AI transparency and explainability mandates, automated decision-making restrictions under GDPR Article 22, and emerging AI liability frameworks. Search for EU AI Act analysis, AI regulation tracker databases, algorithmic accountability frameworks, and AI governance best practices. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Cross-Border Data Transfer Analyst",
+          "prompt": "Assess cross-border data transfer compliance for: {target}. Focus on: EU-US Data Privacy Framework status and adequacy, Standard Contractual Clauses (SCCs) implementation requirements, data localization requirements by country (Russia, China, India, etc.), Transfer Impact Assessments (TIAs) methodology, Binding Corporate Rules for intra-group transfers, and UK-specific post-Brexit transfer mechanisms. Search for cross-border data transfer guidance, Schrems II impact analyses, data localization law surveys, and transfer mechanism comparisons. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Consent & Data Rights Analyst",
+          "prompt": "Evaluate consent management and data subject rights compliance for: {target}. Focus on: consent collection requirements and valid consent standards (GDPR vs. CCPA differences), data subject access request (DSAR) response processes and timelines, right to deletion (right to be forgotten) implementation, data portability obligations, cookie consent and online tracking compliance (ePrivacy), and children's data protection requirements (COPPA, Age Appropriate Design Code). Search for consent management platform comparisons, DSAR response benchmarks, cookie compliance enforcement actions, and data rights litigation trends. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    },
+    {
+      "id": "corporate-governance",
+      "name": "Corporate Governance & Fiduciary Duty",
+      "aliases": ["governance", "fiduciary", "board", "corporate governance", "board governance"],
+      "description": "Evaluate board governance, fiduciary obligations, and corporate compliance structures",
+      "output_sections": [
+        "Executive Summary",
+        "Board Composition & Independence",
+        "Fiduciary Duty Analysis",
+        "Conflict of Interest & Related-Party Transactions",
+        "Compliance Program Assessment",
+        "Governance Improvement Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Board Governance Analyst",
+          "prompt": "Evaluate board composition and governance practices for: {target}. Focus on: board independence requirements and current best practices, diversity metrics and expectations (Nasdaq rules, institutional investor policies), committee structure requirements (audit, compensation, nominating/governance), meeting frequency and director engagement benchmarks, and governance document adequacy (certificate of incorporation, bylaws, committee charters). Search for corporate governance benchmarks (ISS, Glass Lewis ratings), board composition studies, and SEC governance disclosure requirements. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Fiduciary Duty Analyst",
+          "prompt": "Analyze fiduciary duty obligations and compliance for: {target}. Focus on: duty of care standards and business judgment rule protection, duty of loyalty and self-dealing prevention mechanisms, Revlon duties in change of control scenarios, Caremark/Marchand duties for compliance oversight, officer exculpation under DGCL Section 102(b)(7) amendments, and recent Delaware Chancery Court developments. Search for fiduciary duty case law (Delaware focus), business judgment rule analysis, Caremark claim developments, and officer liability trends. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Conflict of Interest Analyst",
+          "prompt": "Assess conflict of interest and related-party transaction risks for: {target}. Focus on: related-party transaction policies and disclosure requirements (Item 404), executive compensation governance (say-on-pay, 162(m) limitations), corporate opportunity doctrine compliance, interlocking directorates and affiliate transaction rules, and insider trading prevention programs (Rule 10b5-1 plan requirements). Search for related-party transaction enforcement, executive compensation litigation, corporate opportunity case law, and insider trading compliance frameworks. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Compliance Program Analyst",
+          "prompt": "Evaluate the corporate compliance program for: {target}. Focus on: DOJ Evaluation of Corporate Compliance Programs criteria (2023 update), whistleblower and reporting mechanisms (SOX Section 301, Dodd-Frank incentives), compliance training and culture assessment metrics, internal investigation protocols and privilege considerations, and regulatory examination preparedness. Search for DOJ compliance guidance, whistleblower program benchmarks, compliance program effectiveness studies, and internal investigation best practices. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    },
+    {
+      "id": "regulatory-market-entry",
+      "name": "Regulatory Compliance & Market Entry",
+      "aliases": ["regulatory", "market entry", "licensing", "permits", "compliance", "regulated"],
+      "description": "Map regulatory requirements and compliance pathways for entering new markets or launching regulated products",
+      "output_sections": [
+        "Executive Summary",
+        "Licensing & Permit Requirements",
+        "Industry-Specific Regulatory Framework",
+        "Compliance Timeline & Cost Estimation",
+        "Regulatory Risk Assessment",
+        "Market Entry Compliance Roadmap"
+      ],
+      "agents": [
+        {
+          "role": "Licensing & Permits Analyst",
+          "prompt": "Map all licensing and permit requirements for: {target}. Focus on: federal licensing and registration requirements, state-level license requirements (especially for financial services, healthcare, cannabis, etc.), local permits and zoning approvals, professional licensing and certification needs, industry-specific permits (FDA 510(k), FCC equipment authorization, EPA permits, SEC registration, state money transmitter licenses), and timeline and cost estimates for each. Search for licensing requirement databases, regulatory agency application guides, permit processing timelines, and industry entry requirement surveys. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Industry Regulatory Framework Analyst",
+          "prompt": "Analyze the industry-specific regulatory framework for: {target}. Focus on: primary regulatory agencies and their jurisdictional scope, key regulations and compliance standards (with specific CFR or statute citations), recent regulatory changes and pending rulemakings, enforcement priorities and common violations (with fine ranges), and self-regulatory organization requirements (FINRA, etc. if applicable). Search for regulatory agency enforcement reports, Federal Register rulemakings, industry compliance guides, and common violation databases. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Compliance Cost & Timeline Analyst",
+          "prompt": "Estimate the compliance timeline and cost for: {target}. Focus on: total compliance cost modeling (outside counsel, consultants, systems/technology, ongoing monitoring), timeline from application to approval for each major requirement, staffing needs for compliance functions (CCO, compliance analysts, etc.), technology and systems requirements (compliance management, reporting, monitoring), and ongoing compliance monitoring and reporting costs. Search for compliance cost surveys, regulatory approval timeline data, compliance staffing benchmarks, and compliance technology comparisons. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Regulatory Risk & Strategy Analyst",
+          "prompt": "Assess regulatory risks and develop market entry strategy for: {target}. Focus on: regulatory barriers that could block or delay entry (and how competitors navigated them), political and policy risks affecting the regulatory landscape, regulatory sandbox and pilot program opportunities, competitor regulatory strategies and precedents, and regulatory engagement strategies (comment letters, meetings, trade association participation). Search for regulatory barrier analyses, market entry case studies, regulatory sandbox programs, and government affairs strategy frameworks. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    },
+    {
+      "id": "litigation-risk",
+      "name": "Litigation Risk & Dispute Resolution",
+      "aliases": ["litigation", "dispute", "lawsuit", "claims", "dispute resolution", "adr"],
+      "description": "Assess litigation exposure, evaluate dispute resolution strategies, and model potential outcomes",
+      "output_sections": [
+        "Executive Summary",
+        "Current & Pending Litigation Assessment",
+        "Litigation Risk Heat Map",
+        "Dispute Resolution Strategy Analysis",
+        "Settlement vs. Trial Analysis",
+        "Risk Mitigation & Prevention Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Litigation Exposure Analyst",
+          "prompt": "Assess current and potential litigation exposure for: {target}. Focus on: common litigation categories for companies in this industry, class action and mass tort exposure patterns, regulatory enforcement litigation risk, insurance coverage analysis (D&O, E&O, CGL, cyber) and typical coverage disputes, and litigation reserve benchmarking. Search for litigation outcome databases, class action filing trends by industry, regulatory enforcement statistics, and insurance coverage litigation trends. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Litigation Risk Assessment Analyst",
+          "prompt": "Build a litigation risk heat map for: {target}. Focus on: industry-specific litigation trends and emerging claim types, product liability and professional liability exposure factors, employment litigation risk indicators (wage/hour class actions, discrimination claims), contract dispute patterns in this industry, and IP litigation exposure (patent, trademark, trade secret). Search for industry litigation benchmarks, product liability verdict data, employment litigation trends, and IP litigation statistics. Return structured Markdown (800-1200 words) with risk categories rated by probability and severity."
+        },
+        {
+          "role": "Dispute Resolution Strategy Analyst",
+          "prompt": "Evaluate dispute resolution strategies for: {target}. Focus on: arbitration vs. litigation advantages and disadvantages by claim type, mandatory arbitration clause enforceability (especially for consumer and employment claims post-recent SCOTUS decisions), mediation effectiveness rates by dispute type, forum selection and venue strategy considerations, and multi-jurisdictional dispute coordination approaches. Search for arbitration vs. litigation outcome comparisons, ADR effectiveness studies, forum selection case law, and multi-district litigation trends. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Settlement & Outcome Analyst",
+          "prompt": "Analyze settlement vs. trial economics for: {target}. Focus on: settlement rate benchmarks by claim type and industry, verdict range analysis for key exposure areas (median and high-end), litigation cost modeling through each phase (pleading, discovery, MSJ, trial, appeal), insurance carrier settlement dynamics and coverage triggers, and the precedent value of litigating vs. settling strategically important claims. Search for settlement benchmark databases, verdict analysis reports, litigation cost surveys, and insurance coverage dispute trends. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    },
+    {
+      "id": "antitrust-competition",
+      "name": "Antitrust & Competitive Practices",
+      "aliases": ["antitrust", "competition", "merger control", "anticompetitive", "monopoly", "cartel"],
+      "description": "Evaluate antitrust compliance, merger clearance risk, and competitive practice boundaries",
+      "output_sections": [
+        "Executive Summary",
+        "Market Definition & Dominance Assessment",
+        "Horizontal & Vertical Agreement Risks",
+        "Merger Control & Clearance Analysis",
+        "Digital Markets & Platform Regulation",
+        "Antitrust Compliance Recommendations"
+      ],
+      "agents": [
+        {
+          "role": "Market Definition & Dominance Analyst",
+          "prompt": "Assess market definition and dominance considerations for: {target}. Focus on: relevant product market definition (SSNIP test methodology), relevant geographic market definition, market share calculation and HHI concentration metrics, market power indicators beyond share (barriers to entry, buyer power, innovation competition), and dominant position assessment under both US (Sherman Act Section 2) and EU (TFEU Article 102) standards. Search for antitrust market definition cases, DOJ/FTC merger guidelines, HHI calculation methodologies, and dominance finding precedents. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Agreement & Conduct Risk Analyst",
+          "prompt": "Evaluate horizontal and vertical agreement risks for: {target}. Focus on: per se violations (price-fixing, bid-rigging, market allocation) exposure, rule of reason analysis for vertical restraints, resale price maintenance developments (Leegin and aftermath), information exchange and trade association participation risks, and exclusivity arrangements, tying, and bundling compliance. Search for DOJ/FTC enforcement actions, cartel case studies, vertical restraint analysis, and industry-specific antitrust guidance. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Merger Control Analyst",
+          "prompt": "Analyze merger control and clearance considerations for: {target}. Focus on: HSR Act filing thresholds and requirements (current thresholds), DOJ/FTC merger review process, timelines, and second request rates, EU merger regulation (EUMR) filing requirements and recent changes, potential remedies (structural divestitures, behavioral conditions) and negotiation approaches, and recently blocked or challenged mergers in comparable industries. Search for HSR filing statistics, merger review outcome data, blocked merger case studies, and remedy negotiation precedents. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        },
+        {
+          "role": "Digital Markets & Platform Regulation Analyst",
+          "prompt": "Assess digital markets and platform regulation exposure for: {target}. Focus on: EU Digital Markets Act (DMA) gatekeeper designation criteria and obligations, Digital Services Act (DSA) platform obligations, US antitrust reform proposals targeting technology (AICOA, etc.), self-preferencing and platform neutrality requirements, app store and marketplace regulation developments, and data portability and interoperability mandates. Search for DMA enforcement actions, tech antitrust case analysis (Google, Apple, Amazon, Meta), platform regulation proposals, and digital market competition studies. Return structured Markdown (800-1200 words) with section headers and numbered source references."
+        }
+      ]
+    }
+  ]
+}

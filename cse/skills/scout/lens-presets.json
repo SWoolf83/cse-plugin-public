@@ -1,0 +1,43 @@
+{
+  "kind": "cascade.scout.lens_presets",
+  "schema_version": 1,
+  "note": "Data-defined lens presets for directable Scout. Each preset biases (a) which registry sources are harvested (tag_affinities matched against scout_sources.tags) and (b) how the /cse:ingest extraction is angled (extraction_angle). Adding a preset is a DATA EDIT here — no SKILL.md rewrite. tag_affinities reference the seeded scout_sources tag vocabulary (ai-strategy, agentic-coding, prompt-engineering, ai-models, ai-engineering, news, plus older spec-driven/ai-coding). A custom freeform lens is NOT listed here; the agent interprets it into tag affinities + an extraction angle on the fly.",
+  "presets": [
+    {
+      "name": "architecture",
+      "one_line": "System design, boundaries, data models, and the why behind structural choices.",
+      "tag_affinities": ["ai-engineering", "agentic-coding", "ai-models"],
+      "extraction_angle": "Read the source for ARCHITECTURAL implications. Emphasize system design, component boundaries, data models, interface/contract decisions, scaling and failure modes, and the structural tradeoffs the author makes or implies. For each key point, ask: what does this imply for how we'd STRUCTURE a system? Surface composition patterns, coupling/decoupling decisions, and durable design principles over tactical code. Down-weight market/positioning chatter unless it forces a structural constraint."
+    },
+    {
+      "name": "code",
+      "one_line": "Hands-on implementation technique, tooling, and agentic-coding workflow.",
+      "tag_affinities": ["agentic-coding", "prompt-engineering", "ai-engineering", "ai-coding"],
+      "extraction_angle": "Read the source for IMPLEMENTATION and TECHNIQUE. Emphasize concrete how-to: specific tools, libraries, prompts, harness/workflow mechanics, code patterns, gotchas, and reproducible steps. For each key point, ask: could an engineer ACT on this at the keyboard tomorrow? Prefer copyable techniques and named tools over high-level strategy. Capture pitfalls and the conditions under which a technique works or breaks."
+    },
+    {
+      "name": "strategy",
+      "one_line": "Direction, bets, sequencing, and the strategic logic behind moves.",
+      "tag_affinities": ["ai-strategy", "ai-models", "news"],
+      "extraction_angle": "Read the source for STRATEGIC implications. Emphasize direction, bets, sequencing, timing, and the underlying thesis or worldview. For each key point, ask: what does this imply for WHAT we should prioritize and WHY now? Surface second-order effects, where the puck is heading, and decisions that would change our roadmap. Down-weight implementation detail unless it materially shifts a strategic option."
+    },
+    {
+      "name": "product",
+      "one_line": "User value, jobs-to-be-done, UX, and product surface decisions.",
+      "tag_affinities": ["ai-strategy", "prompt-engineering", "agentic-coding"],
+      "extraction_angle": "Read the source for PRODUCT implications. Emphasize the user job-to-be-done, the value delivered, UX/interaction patterns, what makes an experience adopted vs ignored, and product-surface tradeoffs. For each key point, ask: what does this imply for what we should BUILD and how users would EXPERIENCE it? Surface feature ideas, adoption mechanics, and product wedges over raw market sizing or low-level code."
+    },
+    {
+      "name": "competitive",
+      "one_line": "Rival moves, positioning, market signal, and threats/opportunities.",
+      "tag_affinities": ["ai-strategy", "ai-models", "news"],
+      "extraction_angle": "Read the source for COMPETITIVE and MARKET signal. Emphasize what specific players (companies, models, labs, tools) are doing, how they are POSITIONING, pricing/packaging moves, capability gaps, and emerging threats or openings. For each key point, ask: how does this change the competitive landscape we operate in, and what should we DEFEND or EXPLOIT? Tie observations to named actors and concrete moves rather than abstract trends."
+    },
+    {
+      "name": "documentary",
+      "one_line": "Documentary-filmmaking pipeline — the edit, transcription/logging, archival & restoration, and field/festival workflow.",
+      "tag_affinities": ["documentary-ai", "edit-tools", "transcription", "archival-ml", "restoration", "festival"],
+      "extraction_angle": "Read every item for a small documentary team's PIPELINE, not general AI news. For each key point ask: does this change the EDIT (assembly, story structure, multicam/organization), TRANSCRIPTION & LOGGING (interview transcripts, searchable footage, paper edits), ARCHIVAL & RESTORATION (upscaling, denoise, deinterlace, colorizing or repairing archival footage, rights/metadata), or FIELD & FESTIVAL WORKFLOW (on-location capture, deliverables, festival/broadcast specs, distribution)? Prioritize concrete tools and techniques a doc editor or producer could act on this week over model-capability hype; down-weight anything that does not touch the documentary workflow. This is the Scout/curator framing hook for the documentary Vertical Pack (src/lib/vertical/documentary-pack.ts) — its tag_affinities mirror the pack's content.sourceTags."
+    }
+  ]
+}

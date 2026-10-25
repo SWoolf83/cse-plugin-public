@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}} — Cascade Research</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --accent: #3B82F6;
+            --dark: #222222;
+            --text: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --bg: #ffffff;
+            --bg-callout: #f5f5f5;
+            --bg-code: #1e1e1e;
+            --border: #e0e0e0;
+            --circle-bg: #1e3a5f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+            font-size: 11pt;
+        }
+
+        /* ========== Cover Page ========== */
+
+        .cover {
+            min-height: 100vh;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2in 1in;
+            position: relative;
+        }
+
+        .cover-brands {
+            margin-bottom: 2.5rem;
+        }
+
+        .cover-brand {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 0.6em;
+            color: #666666;
+            text-transform: uppercase;
+        }
+
+        .cover-brand-divider {
+            width: 32px;
+            height: 1px;
+            background: #444444;
+            margin: 1rem auto;
+        }
+
+        .cover-org {
+            font-size: 1.4rem;
+            font-weight: 400;
+            letter-spacing: 0.35em;
+            color: #aaaaaa;
+            text-transform: uppercase;
+        }
+
+        /* Hide org branding block entirely when no org name */
+        .cover-org:empty,
+        .cover-org:empty + .cover-brand-divider {
+            display: none;
+        }
+        .cover-brand-divider:has(+ .cover-org:empty) {
+            display: none;
+        }
+
+        .cover-accent-bar {
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            margin: 0 auto 2.5rem;
+        }
+
+        .cover-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.25;
+            max-width: 700px;
+            margin-bottom: 1.5rem;
+        }
+
+        .cover-subtitle {
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: #999999;
+            max-width: 550px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        .cover-date {
+            font-size: 0.85rem;
+            color: #666666;
+            letter-spacing: 0.1em;
+        }
+
+        /* ========== Table of Contents ========== */
+
+        .toc {
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 1.5in 1in;
+        }
+
+        .toc h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .toc-list {
+            list-style: none;
+            counter-reset: toc-counter;
+        }
+
+        .toc-list li {
+            counter-increment: toc-counter;
+            padding: 0.65rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .toc-list li::before {
+            content: counter(toc-counter, decimal-leading-zero);
+            font-weight: 600;
+            color: var(--accent);
+            margin-right: 1rem;
+        }
+
+        /* ========== Content Pages ========== */
+
+        .page {
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.75in 1in;
+        }
+
+        /* Section heading with numbered circle */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .section-number {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--circle-bg);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        /* Body content */
+        .page p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .page h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page ul, .page ol {
+            margin: 0.75rem 0 1rem 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .page li {
+            margin-bottom: 0.4rem;
+        }
+
+        .page strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .page a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .page a:hover {
+            text-decoration: underline;
+        }
+
+        /* Callout boxes */
+        .callout {
+            background: var(--bg-callout);
+            border-left: 3px solid var(--accent);
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .callout p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            background: var(--bg-callout);
+            border-left: 3px solid var(--accent);
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 0 4px 4px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        blockquote p {
+            margin-bottom: 0;
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--bg-code);
+            color: #d4d4d4;
+            padding: 1rem 1.25rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+        }
+
+        p code {
+            background: var(--bg-callout);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+            color: var(--text);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        thead th {
+            background: var(--bg-callout);
+            text-align: left;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border);
+        }
+
+        tbody td {
+            padding: 0.55rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        /* Divider */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        /* ========== Sources ========== */
+
+        .sources {
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.75in 1in 1.5in;
+        }
+
+        .sources h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .sources ol {
+            margin-left: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .sources li {
+            margin-bottom: 0.35rem;
+        }
+
+        /* ========== Footer ========== */
+
+        .footer {
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 1.5rem 1in;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+        }
+
+        /* ========== Print Styles ========== */
+
+        @media print {
+            body { font-size: 10pt; }
+
+            .cover {
+                page-break-after: always;
+                min-height: 100vh;
+            }
+
+            .toc {
+                page-break-after: always;
+            }
+
+            .page {
+                padding: 0.5in 0.75in;
+            }
+
+            .page, .sources {
+                page-break-inside: avoid;
+            }
+
+            .section-header {
+                page-break-after: avoid;
+            }
+
+            pre {
+                page-break-inside: avoid;
+            }
+
+            table {
+                page-break-inside: avoid;
+            }
+
+            .footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+
+            a { color: var(--text-secondary); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cover Page -->
+    <div class="cover">
+        <div class="cover-brands">
+            <div class="cover-brand">C A S C A D E</div>
+            <div class="cover-brand-divider"></div>
+            <div class="cover-org">{{ORG_NAME}}</div>
+        </div>
+        <div class="cover-accent-bar"></div>
+        <h1 class="cover-title">{{TITLE}}</h1>
+        <p class="cover-subtitle">{{SUBTITLE}}</p>
+        <div class="cover-date">{{DATE}}</div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="toc">
+        <h2>Contents</h2>
+        <ol class="toc-list">
+            <li>Executive Summary</li>
+            <li>Problem Statement</li>
+            <li>Market Landscape</li>
+            <li>Technical Analysis</li>
+            <li>Evidence &amp; Data</li>
+            <li>Risk Analysis</li>
+            <li>Recommendations</li>
+            <li>Future Considerations</li>
+        </ol>
+    </div>
+
+    <!-- Section 1: Executive Summary -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-number">01</div>
+            <h2>Executive Summary</h2>
+        </div>
+        {{EXECUTIVE_SUMMARY}}
+    </div>
+
+    <!-- Section 2: Problem Statement -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-number">02</div>
+            <h2>Problem Statement</h2>
+        </div>
+        {{PROBLEM_STATEMENT}}
+    </div>
+
+    <!-- Section 3: Market Landscape -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-number">03</div>
+            <h2>Market Landscape</h2>
+        </div>
+        {{MARKET_LANDSCAPE}}
+    </div>
+
+    <!-- Section 4: Technical Analysis -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-number">04</div>
+            <h2>Technical Analysis</h2>
+        </div>
+        {{TECHNICAL_ANALYSIS}}
+    </div>
+
+    <!-- Section 5: Evidence & Data -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-number">05</div>
+            <h2>Evidence &amp; Data</h2>
+        </div>
+        {{EVIDENCE_DATA}}
+    </div>
+
+    <!-- Section 6: Risk Analysis -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-number">06</div>
+            <h2>Risk Analysis</h2>
+        </div>
+        {{RISK_ANALYSIS}}
+    </div>
+
+    <!-- Section 7: Recommendations -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-number">07</div>
+            <h2>Recommendations</h2>
+        </div>
+        {{RECOMMENDATIONS}}
+    </div>
+
+    <!-- Section 8: Future Considerations -->
+    <div class="page">
+        <div class="section-header">
+            <div class="section-number">08</div>
+            <h2>Future Considerations</h2>
+        </div>
+        {{FUTURE_CONSIDERATIONS}}
+    </div>
+
+    <!-- Sources -->
+    <div class="sources">
+        <h2>Sources</h2>
+        {{SOURCES}}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        Cascade v1.2 &mdash; Specification Infrastructure for AI-Mediated Engineering &mdash; {{DATE}}
+    </div>
+
+</body>
+</html>

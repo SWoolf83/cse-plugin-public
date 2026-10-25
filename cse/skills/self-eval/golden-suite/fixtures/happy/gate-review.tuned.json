@@ -1,0 +1,17 @@
+{
+  "model": "fable-5",
+  "output": "# Code-review gate — withRetry diff\n\n## Findings\n1. [critical] The catch block swallows the error: after all attempts fail, callers get `null` with no signal — the original exception is silently lost. Rethrow the last error or return a Result type.\n2. [major] The signature change Promise<T> -> Promise<T | null> silently breaks every existing caller that assumed a non-null resolution.\n3. [minor] Retries fire immediately with no backoff; consider exponential delay for flaky I/O.\n\n## Verdict: fail\nThe swallowed-error path changes the function contract and hides failures from callers; the diff must rethrow the final error (or return a typed Result) before it can pass.",
+  "usage": {
+    "input_tokens": 2665,
+    "cache_creation_input_tokens": 390,
+    "cache_read_input_tokens": 4485,
+    "output_tokens": 1040
+  },
+  "judge": {
+    "scores": {
+      "bug-detection": 0.95,
+      "verdict-justification": 0.9,
+      "precision": 0.9
+    }
+  }
+}

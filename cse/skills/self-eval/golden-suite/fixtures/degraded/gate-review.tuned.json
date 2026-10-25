@@ -1,0 +1,18 @@
+{
+  "model": "fable-5",
+  "_comment": "Degraded review: cheaper, but it misses the planted swallowed-error bug entirely, emits no verdict line, no findings, no severities.",
+  "output": "The diff adds retry logic to withRetry. It loops up to `attempts` times and returns null when everything has been tried. Looks reasonable and defensive — retries are a good pattern for flaky I/O. Ship it.",
+  "usage": {
+    "input_tokens": 2600,
+    "cache_creation_input_tokens": 400,
+    "cache_read_input_tokens": 3600,
+    "output_tokens": 800
+  },
+  "judge": {
+    "scores": {
+      "bug-detection": 0.1,
+      "verdict-justification": 0.2,
+      "precision": 0.4
+    }
+  }
+}

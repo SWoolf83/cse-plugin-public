@@ -1,0 +1,19 @@
+{
+  "name": "cse",
+  "version": "0.2.75",
+  "description": "Cascade Spec Engine — the full CSE toolset as one versioned Claude Code plugin. Bundles all 70 Cascade skills (spec, receive, delegate, research, strategy, legal, economics, analyze, ingest, scout, link, reeval, resurface, weekly, weekly-review, and more), the cascade-api MCP server (vendored, self-contained), and the capture hooks (decision/knowledge/work, vendored). Self-contained for marketplace install. Every command is colon-namespaced as /cse:<name>.",
+  "author": {
+    "name": "Cascade HQ",
+    "url": "https://cascade.ai"
+  },
+  "license": "MIT",
+  "keywords": [
+    "cascade",
+    "cse",
+    "spec",
+    "specification",
+    "delegation",
+    "agentic-engineering",
+    "mcp"
+  ]
+}

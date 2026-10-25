@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cascade:learner-profile",
+  "title": "Learner profile — ai_preferences.interaction_preferences.learning",
+  "description": "Schema for the /cse:learn learner profile. Stored at the JSONB path interaction_preferences.learning on the user's existing ai_preferences row with scope='user' — portable across orgs and devices, read and written exclusively via the cascade_sync_ai_preferences MCP tool (get to load, set with the FULL merged interaction_preferences object to persist — sibling keys such as aliases must never be dropped). NO migration is required: this is just a new key inside the existing interaction_preferences JSONB column. Org-level defaults are possible via the existing scope='org' ai_preferences row at the same path; user-scoped values always win over org defaults when both exist.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "depth_default": {
+      "type": "string",
+      "enum": ["overview", "working-knowledge", "deep-dive"],
+      "description": "The learner's default lesson depth when a request doesn't specify one. 'overview' = quick primer / mental model only; 'working-knowledge' = enough to use the thing competently; 'deep-dive' = internals, trade-offs, and failure modes. Phase 1 calibration may override this per topic."
+    },
+    "background": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Short free-text descriptors of who the learner is and what they already bring — role, technical depth, home domains (e.g. 'full-stack TypeScript', 'founder/CEO', 'ex-data-engineering'). Lessons calibrate vocabulary and starting altitude from this; it is descriptive, not an enum."
+    },
+    "formats": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["prose", "code-first", "diagrams", "analogies", "exercises"]
+      },
+      "description": "Preferred teaching formats, in rough priority order. 'code-first' leads with runnable examples; 'analogies' leads with the mental model; 'exercises' appends try-it-yourself steps. Generation honors the top formats without excluding the others."
+    },
+    "comfort_notes": {
+      "type": "string",
+      "description": "Free text capturing how the learner wants unknowns and jargon handled when a lesson hits territory they likely don't know — e.g. 'stop and explain new acronyms inline', 'footnote unknowns, keep the pace', 'assume competence, I will ask'. Written from the Phase 0 interview's handling-unknowns dimension."
+    },
+    "topics_known": {
+      "type": "object",
+      "description": "Map from canonical topic_slug (lowercase-hyphenated, the same slug used in lesson artifacts' type_data.topic_slug) to the learner's self-assessed level. Lessons skip or compress territory marked 'proficient'/'expert' and start colder on 'none'. Updated as lessons are generated and as the learner reveals knowledge mid-session.",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["none", "familiar", "proficient", "expert"],
+        "description": "Self-assessed knowledge level for this topic_slug."
+      }
+    }
+  },
+  "required": ["depth_default"],
+  "examples": [
+    {
+      "depth_default": "deep-dive",
+      "background": ["full-stack TypeScript", "founder", "Supabase/Postgres daily driver"],
+      "formats": ["code-first", "prose"],
+      "comfort_notes": "Footnote unfamiliar acronyms inline but keep the pace; never re-explain git or SQL basics.",
+      "topics_known": {
+        "postgres-rls": "proficient",
+        "nextjs-app-router": "proficient",
+        "kubernetes": "none"
+      }
+    }
+  ]
+}

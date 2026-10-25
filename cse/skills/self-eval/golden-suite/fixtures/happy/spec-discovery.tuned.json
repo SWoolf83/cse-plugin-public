@@ -1,0 +1,17 @@
+{
+  "model": "fable-5",
+  "output": "# Discovery — CSV export of the decision log\n\n## Discovery questions\n1. Should the export include soft-deleted decisions, or only active rows?\n2. Which columns are required in the CSV — full type_data, or a curated subset?\n3. Should access be limited to executives, or any org member with decision read access?\n4. Do we need date-range filtering on the export, or always full history?\n5. Is streaming required for large orgs, or is an in-memory build acceptable?\n6. Should the Download button live on /decisions or in settings?\n\n## Draft must-haves\n- MH-1: GET /api/decisions/export returns text/csv with RLS-scoped rows only.\n- MH-2: Download button on the decisions page triggers the export.\n- MH-3: CSV opens cleanly in Excel and Google Sheets (UTF-8 BOM).\n\n## Out of scope\n- Scheduled/emailed exports; XLSX format; cross-org exports.",
+  "usage": {
+    "input_tokens": 3380,
+    "cache_creation_input_tokens": 585,
+    "cache_read_input_tokens": 4810,
+    "output_tokens": 1365
+  },
+  "judge": {
+    "scores": {
+      "coverage": 0.9,
+      "actionability": 0.85,
+      "scoping": 0.9
+    }
+  }
+}

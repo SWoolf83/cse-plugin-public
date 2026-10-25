@@ -1,0 +1,95 @@
+{
+  "version": "1.0",
+  "description": "Economic-analysis framework registry. Each framework drives parallel research agents (which GROUND assumptions) and named output_sections. The deterministic math is done by the shared stateless evaluator in @cascade/shared (packages/shared/src/economics) — the agents never compute the numbers, they only source the leaf assumptions that feed the EMS.",
+  "frameworks": [
+    {
+      "id": "feature-roi",
+      "name": "Feature ROI Analysis",
+      "aliases": ["feature-roi", "feature roi", "roi", "feature", "go-no-go", "feature-ranking"],
+      "description": "Rank candidate features (go/no-go is the one-candidate case) by risk-adjusted NPV with a cited, defensible communication artifact. Cost-grounded (BLS OEWS dev wages, FRED, LiteLLM model pricing); benefit declared as analyst-judgment / org-internal ranges with tracked provenance.",
+      "decision": "ranking",
+      "output_sections": [
+        "Executive Summary",
+        "Candidate(s) & Decision Context",
+        "Cost Basis (Grounded)",
+        "Benefit Estimate (Ranged, Cited)",
+        "Computed Economics (NPV / IRR / Payback)",
+        "Scenario Analysis (Base / Upside / Downside)",
+        "Sensitivity (One-Way Tornado)",
+        "Provenance & Traceability Ledger",
+        "Recommendation & Ranking"
+      ],
+      "agents": [
+        {
+          "role": "Cost-Grounding Analyst",
+          "prompt": "Ground the BUILD and RUN cost of: {target}. Estimate engineering effort (person-weeks by role) and convert to dollars using BLS OEWS developer/engineer wages (occupation 15-1252) plus a fully-loaded multiplier; if the feature uses LLM/agent compute, estimate token volume and price it using the LiteLLM model-pricing source. CRITICAL: any LLM/token build-or-run cost MUST be labeled 'standard-rate-equivalent' (API list price), NOT represented as Cascade's actual Max-Plan $0. Use FRED for any macro adjustments (wage inflation). For every figure, return a typed source: data-source-citation {sourceId, ref, retrievedAt} for BLS/FRED/LiteLLM, org-internal-metric for internal effort data, or analyst-judgment {rationale, confidence} for an estimate. Return structured Markdown with each cost figure, its dollar value, its unit, and its source."
+        },
+        {
+          "role": "Benefit & Org-Internal Signal Analyst",
+          "prompt": "Estimate the BENEFIT side of: {target}. Prefer org-internal metrics (adoption, retention, seat expansion, support-deflection, revenue per account) over fabricated external comps. Express EVERY benefit figure as a {low, base, high} range with a confidence, NEVER a point value. For each range, attach a typed source: org-internal-metric {metric, query, asOf} when grounded in internal data, or analyst-judgment {rationale, confidence} for a best-guess. Do NOT manufacture false precision — a wide, low-confidence, well-reasoned range is the correct output when data is thin. Return structured Markdown with each benefit, its low/base/high range, unit, confidence, and source."
+        },
+        {
+          "role": "Comparable-Features Analyst",
+          "prompt": "Find comparable features/products to: {target} and what their adoption, pricing, and impact looked like. Use these comparables to sanity-check the benefit ranges and the cost estimate — are they in a plausible band? Flag any benefit range that looks optimistic or pessimistic relative to comparables. Cite sources (web + any data-sources.json sources). Return structured Markdown; frame outputs as calibration evidence for the benefit/cost ranges, each with a source the analyst can cite as analyst-judgment with rationale."
+        },
+        {
+          "role": "Risk & Contrarian Analyst",
+          "prompt": "Steelman the NO-GO case for: {target}. What makes the benefit ranges too high or the cost too low? What execution, adoption, maintenance, or opportunity-cost risks are being underweighted? Which single assumption, if wrong, most damages the NPV (predict the tornado's top driver)? Propose where downside-scenario bounds should sit. Return structured Markdown framed as decision-relevant risk findings, each tied to a specific assumption key so it can map to a scenario override or a tightened range."
+        }
+      ]
+    },
+    {
+      "id": "build-vs-buy",
+      "name": "Build vs Buy Analysis",
+      "aliases": ["build-vs-buy", "build vs buy", "buildvsbuy", "bvb", "make-vs-buy", "build-buy"],
+      "description": "Decide build vs buy by the NPV of the DIFFERENCE (not headline price). Modeled as ONE EMS over an incremental delta cash-flow stream (buy cost avoided − build cost incurred; NPV>0 → build, NPV<0 → buy), so the single-stream evaluator is reused unchanged. Build side = full TCO incl. a REQUIRED ongoing-maintenance leaf; buy side = vendor pricing + switching + recurring lock-in premium + surfaced terminal exit cost.",
+      "decision": "delta-npv",
+      "output_sections": [
+        "Executive Summary & Verdict",
+        "Build TCO (Grounded)",
+        "Buy TCO (Grounded)",
+        "NPV-Delta & Breakeven",
+        "Switching & Lock-in Analysis",
+        "Scenario Analysis (Base / Build-favorable / Buy-favorable)",
+        "Sensitivity (One-Way Tornado)",
+        "Provenance & Traceability Ledger",
+        "Recommendation (incl. do-nothing note)"
+      ],
+      "agents": [
+        {
+          "role": "Build-Cost Analyst",
+          "prompt": "Ground the BUILD-side full TCO of: {target}. Estimate upfront engineering effort (person-weeks by role) and convert to dollars via BLS OEWS software-developer wages (occupation 15-1252) plus a fully-loaded multiplier; if the build uses LLM/agent compute, price tokens via the LiteLLM source (label 'standard-rate-equivalent'). CRITICAL: you MUST include an EXPLICIT ongoing-maintenance figure (~15-20%/yr of build cost, industry rule) — never omit it and never silently default it — plus an opportunity-cost-of-diverted-engineering note. For every figure return a typed source: data-source-citation {sourceId, ref, retrievedAt} for BLS/FRED/LiteLLM, or analyst-judgment {rationale, confidence} for estimates. Return each build cost with its dollar value, unit (one-time vs $/yr), and source."
+        },
+        {
+          "role": "Vendor-Cost Analyst",
+          "prompt": "Ground the BUY-side cost of: {target}. Find real vendor/SaaS list pricing (per-seat, usage, tiers, minimums, annual commit) via web search. Estimate the recurring annual subscription plus any one-time onboarding/integration. Note the pricing trend and whether cost scales with usage/seats. For every figure return a typed source: data-source-citation for a vendor pricing page (with retrievedAt), or analyst-judgment {rationale, confidence}. Return each cost with dollar value, unit ($/seat/mo, $/yr, one-time), and source."
+        },
+        {
+          "role": "Switching & Lock-in Analyst",
+          "prompt": "Quantify the BUY-side switching and lock-in for: {target}. Estimate (a) a one-time switching/migration cost to adopt the vendor (period 0), (b) a recurring lock-in / captive-pricing premium — the risk the vendor raises rates once you depend on them — as a {low, base, high} range, and (c) a terminal EXIT cost (data egress, re-platforming) to leave later, surfaced even if it falls outside the NPV horizon. These operationalize the buy-vs-build exit-liability asymmetry. Express the lock-in premium and exit cost as analyst-judgment {rationale, confidence} ranges; switching cost may be data-source-citation if a migration quote exists. Return each with value/range, unit, and source."
+        },
+        {
+          "role": "Risk & Contrarian Analyst",
+          "prompt": "Steelman BOTH error directions for: {target}. Where is the BUILD estimate too low (maintenance underestimated, scope creep, opportunity cost, key-person risk)? Where is the BUY estimate too low (usage-based cost growth, lock-in premium, exit cost, integration tax)? Which single assumption, if wrong, most flips the build-vs-buy verdict (predict the tornado's top driver)? Propose where the build-favorable and buy-favorable scenario bounds sit. Tie each finding to a specific assumption key so it maps to a scenario override or a tightened range. Return decision-relevant risk findings."
+        }
+      ]
+    }
+  ],
+  "planned_frameworks": [
+    {
+      "id": "token-forecast",
+      "name": "Token Spend Forecast",
+      "status": "planned"
+    },
+    {
+      "id": "unit-economics",
+      "name": "Unit Economics Analysis",
+      "status": "planned"
+    },
+    {
+      "id": "acquisition",
+      "name": "Acquisition / M&A Economics",
+      "status": "planned"
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{COMPANY_NAME}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '{{BRAND_COLOR}}',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-950 text-white antialiased">
+
+    <!-- Hero -->
+    <header class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950"></div>
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-700 bg-gray-900/50 text-sm text-gray-400 mb-8">
+                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                Now live
+            </div>
+
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-tight mb-6">
+                {{COMPANY_NAME}}
+            </h1>
+
+            <p class="text-xl sm:text-2xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed mb-10">
+                {{TAGLINE}}
+            </p>
+
+            <p class="text-base text-gray-500 max-w-xl mx-auto mb-10">
+                {{DESCRIPTION}}
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{CTA_URL}}" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white font-semibold rounded-lg hover:opacity-90 transition-opacity text-lg">
+                    {{CTA_TEXT}}
+                </a>
+                <a href="#features" class="inline-flex items-center justify-center px-8 py-3.5 border border-gray-700 text-gray-300 font-medium rounded-lg hover:bg-gray-800/50 transition-colors text-lg">
+                    Learn more
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2">
+            <svg class="w-6 h-6 text-gray-600 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Features -->
+    <section id="features" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Built for what's next</h2>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
+                    Everything you need to move fast and build with confidence.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-8 hover:border-gray-700 transition-colors">
+                    <div class="w-12 h-12 rounded-lg bg-brand/10 flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Lightning Fast</h3>
+                    <p class="text-gray-400">Built on modern infrastructure for speed at every layer.</p>
+                </div>
+
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-8 hover:border-gray-700 transition-colors">
+                    <div class="w-12 h-12 rounded-lg bg-brand/10 flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Secure by Default</h3>
+                    <p class="text-gray-400">Enterprise-grade security without the enterprise complexity.</p>
+                </div>
+
+                <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-8 hover:border-gray-700 transition-colors">
+                    <div class="w-12 h-12 rounded-lg bg-brand/10 flex items-center justify-center mb-5">
+                        <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">AI-Native</h3>
+                    <p class="text-gray-400">Built from the ground up to work with AI, not around it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-24 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="bg-gradient-to-br from-gray-900 to-gray-900/50 border border-gray-800 rounded-2xl p-12 sm:p-16">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Ready to get started?</h2>
+                <p class="text-lg text-gray-400 mb-8 max-w-xl mx-auto">
+                    Join us and see what's possible when AI works for you.
+                </p>
+                <a href="{{CTA_URL}}" class="inline-flex items-center justify-center px-8 py-3.5 bg-brand text-white font-semibold rounded-lg hover:opacity-90 transition-opacity text-lg">
+                    {{CTA_TEXT}}
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-8 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-sm text-gray-500">
+                &copy; {{YEAR}} {{COMPANY_NAME}}. All rights reserved.
+            </div>
+            <div class="flex items-center gap-6 text-sm text-gray-500">
+                <a href="#" class="hover:text-gray-300 transition-colors">Privacy</a>
+                <a href="#" class="hover:text-gray-300 transition-colors">Terms</a>
+                <a href="#" class="hover:text-gray-300 transition-colors">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

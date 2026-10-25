@@ -1,0 +1,468 @@
+{
+  "version": "1.0",
+  "sources": [
+    {
+      "id": "fred",
+      "name": "FRED (Federal Reserve Economic Data)",
+      "description": "800,000+ economic time series — GDP, interest rates, inflation, employment, housing, commodities, monetary policy indicators",
+      "categories": ["economics", "finance", "macro", "labor"],
+      "topics": ["gdp", "inflation", "unemployment", "interest rates", "housing", "monetary policy", "recession", "economic growth", "federal reserve", "cpi", "wages", "labor market", "consumer spending", "trade", "debt", "healthcare spending", "government spending", "productivity"],
+      "endpoints": [
+        {
+          "name": "Search for data series",
+          "url": "https://api.stlouisfed.org/fred/series/search?search_text={query}&file_type=json&api_key={key}",
+          "method": "GET",
+          "returns": "List of matching time series with IDs, titles, frequency, and metadata"
+        },
+        {
+          "name": "Get data observations",
+          "url": "https://api.stlouisfed.org/fred/series/observations?series_id={series_id}&file_type=json&api_key={key}&sort_order=desc&limit=24",
+          "method": "GET",
+          "returns": "Recent data points for a series (date + value pairs)"
+        }
+      ],
+      "common_series": {
+        "Real GDP": "GDPC1",
+        "Unemployment Rate": "UNRATE",
+        "CPI (All Urban)": "CPIAUCSL",
+        "Federal Funds Rate": "FEDFUNDS",
+        "30-Year Mortgage": "MORTGAGE30US",
+        "S&P 500": "SP500",
+        "M2 Money Supply": "M2SL",
+        "Total Nonfarm Payrolls": "PAYEMS",
+        "Healthcare Spending % of GDP": "HLTHSCPCHCSA",
+        "Personal Consumption Expenditures": "PCE",
+        "Consumer Confidence": "UMCSENT",
+        "Industrial Production": "INDPRO"
+      },
+      "key_env": "FRED_API_KEY",
+      "key_url": "https://fred.stlouisfed.org/docs/api/api_key.html",
+      "tier": "free-key",
+      "quality": "excellent",
+      "notes": "Free API key required. 120 requests/minute limit. Best source for US economic data."
+    },
+    {
+      "id": "bls",
+      "name": "Bureau of Labor Statistics (BLS)",
+      "description": "Employment, wages, prices, productivity, and workplace safety data for the United States",
+      "categories": ["labor", "employment", "wages", "economics"],
+      "topics": ["employment", "wages", "salary", "labor market", "unemployment", "occupations", "jobs", "workforce", "inflation", "cpi", "ppi", "productivity", "workplace safety", "benefits", "healthcare workers", "hiring", "turnover"],
+      "endpoints": [
+        {
+          "name": "Get series data",
+          "url": "https://api.bls.gov/publicAPI/v2/timeseries/data/{series_id}?registrationkey={key}&startyear={start_year}&endyear={end_year}",
+          "method": "GET",
+          "returns": "Time series data with year, period, value, and footnotes"
+        },
+        {
+          "name": "Get series data (no key)",
+          "url": "https://api.bls.gov/publicAPI/v2/timeseries/data/{series_id}?startyear={start_year}&endyear={end_year}",
+          "method": "GET",
+          "returns": "Same as above but limited to 10 years, 25 queries/day without key"
+        }
+      ],
+      "common_series": {
+        "CPI-U (All Items)": "CUUR0000SA0",
+        "Total Nonfarm Employment": "CES0000000001",
+        "Healthcare Employment": "CES6562000001",
+        "Average Hourly Earnings": "CES0500000003",
+        "Job Openings (JOLTS)": "JTS000000000000000JOL",
+        "Producer Price Index": "PCUOMFG--OMFG--",
+        "Productivity (Nonfarm)": "PRS85006092"
+      },
+      "key_env": "BLS_API_KEY",
+      "key_url": "https://data.bls.gov/registrationEngine/",
+      "tier": "free-key",
+      "quality": "excellent",
+      "notes": "Works without key (25 queries/day, 10-year limit). Free key raises to 500 queries/day and 20 years."
+    },
+    {
+      "id": "census",
+      "name": "U.S. Census Bureau",
+      "description": "Demographics, business statistics, housing data, economic indicators, and population surveys for the United States",
+      "categories": ["demographics", "business", "housing", "economics", "population"],
+      "topics": ["population", "demographics", "housing", "business", "income", "poverty", "education", "health insurance", "commuting", "diversity", "age", "migration", "small business", "economic census"],
+      "endpoints": [
+        {
+          "name": "American Community Survey (1-year)",
+          "url": "https://api.census.gov/data/2023/acs/acs1?get={variables}&for={geography}&key={key}",
+          "method": "GET",
+          "returns": "Tabular data with requested variables for specified geography"
+        },
+        {
+          "name": "County Business Patterns",
+          "url": "https://api.census.gov/data/2022/cbp?get=ESTAB,EMP,PAYANN&for=us:*&NAICS2017={naics_code}&key={key}",
+          "method": "GET",
+          "returns": "Number of establishments, employees, and annual payroll by NAICS code"
+        }
+      ],
+      "common_queries": {
+        "Total Population": "get=B01003_001E&for=us:*",
+        "Median Household Income": "get=B19013_001E&for=us:*",
+        "Health Insurance Coverage": "get=B27001_001E,B27001_002E&for=us:*",
+        "Healthcare Establishments (NAICS 62)": "NAICS2017=62"
+      },
+      "key_env": "CENSUS_API_KEY",
+      "key_url": "https://api.census.gov/data/key_signup.html",
+      "tier": "free-key",
+      "quality": "excellent",
+      "notes": "Free key required. 500 queries/day. Extensive variable catalog at api.census.gov/data.html"
+    },
+    {
+      "id": "openalex",
+      "name": "OpenAlex",
+      "description": "240M+ academic works, authors, institutions, and concepts. LLM-optimized API with structured metadata, abstracts, and citation data",
+      "categories": ["academic", "research", "science", "healthcare", "technology"],
+      "topics": ["research", "academic", "papers", "citations", "science", "medicine", "healthcare", "technology", "ai", "machine learning", "clinical trials", "public health", "peer review", "meta-analysis", "systematic review", "evidence-based"],
+      "endpoints": [
+        {
+          "name": "Search works",
+          "url": "https://api.openalex.org/works?search={query}&per_page=10&sort=relevance_score:desc",
+          "method": "GET",
+          "returns": "Academic works with title, authors, publication year, citation count, abstract, DOI, and open access URL"
+        },
+        {
+          "name": "Search works with filters",
+          "url": "https://api.openalex.org/works?filter=default.search:{query},publication_year:{year}&per_page=10&sort=cited_by_count:desc",
+          "method": "GET",
+          "returns": "Filtered works sorted by citation count"
+        },
+        {
+          "name": "Get concepts/topics",
+          "url": "https://api.openalex.org/concepts?search={query}&per_page=5",
+          "method": "GET",
+          "returns": "Academic concepts with descriptions, related concepts, and work counts"
+        }
+      ],
+      "common_queries": {
+        "Healthcare platforms": "search=healthcare+platform+management",
+        "Stakeholder management": "search=stakeholder+management+framework",
+        "Digital health": "search=digital+health+outcomes",
+        "AI in medicine": "search=artificial+intelligence+clinical+decision"
+      },
+      "tier": "free",
+      "quality": "excellent",
+      "notes": "No API key needed. Polite pool: add ?mailto=your@email to get into faster queue. 100K requests/day."
+    },
+    {
+      "id": "semantic_scholar",
+      "name": "Semantic Scholar",
+      "description": "200M+ academic papers with AI-powered relevance ranking, citation contexts, and influential citation detection",
+      "categories": ["academic", "research", "ai", "cs", "technology"],
+      "topics": ["research", "academic", "papers", "citations", "artificial intelligence", "machine learning", "computer science", "nlp", "deep learning", "algorithms", "software engineering", "data science"],
+      "endpoints": [
+        {
+          "name": "Search papers",
+          "url": "https://api.semanticscholar.org/graph/v1/paper/search?query={query}&limit=10&fields=title,authors,year,citationCount,abstract,url,openAccessPdf",
+          "method": "GET",
+          "returns": "Papers with title, authors, year, citation count, abstract, and open access PDF link"
+        },
+        {
+          "name": "Get paper details",
+          "url": "https://api.semanticscholar.org/graph/v1/paper/{paper_id}?fields=title,authors,year,citationCount,abstract,references,citations",
+          "method": "GET",
+          "returns": "Full paper details including references and citing papers"
+        }
+      ],
+      "common_queries": {
+        "Healthcare IT": "query=healthcare+information+technology+platform",
+        "Stakeholder analysis": "query=stakeholder+analysis+complex+systems",
+        "Multi-sided platforms": "query=multi-sided+platform+economics"
+      },
+      "tier": "free",
+      "quality": "excellent",
+      "notes": "No API key needed for basic access. 100 requests/5 minutes without key. Request API key for higher limits."
+    },
+    {
+      "id": "crossref",
+      "name": "CrossRef",
+      "description": "DOI metadata, citation counts, and bibliographic records for 150M+ scholarly works across all disciplines",
+      "categories": ["academic", "publishing", "research"],
+      "topics": ["doi", "citations", "publishing", "journal", "academic", "peer review", "bibliometrics", "research output", "open access"],
+      "endpoints": [
+        {
+          "name": "Search works",
+          "url": "https://api.crossref.org/works?query={query}&rows=10&sort=relevance",
+          "method": "GET",
+          "returns": "Works with DOI, title, authors, publication date, citation count, journal name"
+        },
+        {
+          "name": "Get work by DOI",
+          "url": "https://api.crossref.org/works/{doi}",
+          "method": "GET",
+          "returns": "Full metadata for a specific DOI including references"
+        }
+      ],
+      "tier": "free",
+      "quality": "good",
+      "notes": "No API key needed. Add ?mailto=your@email for polite pool (faster). Be respectful of rate limits."
+    },
+    {
+      "id": "pubmed",
+      "name": "PubMed / NCBI",
+      "description": "39M+ biomedical and life science citations including clinical trials, systematic reviews, and medical research",
+      "categories": ["healthcare", "medicine", "clinical", "biomedical"],
+      "topics": ["healthcare", "medicine", "clinical trials", "drug", "therapy", "diagnosis", "treatment", "patient outcomes", "public health", "epidemiology", "nursing", "hospital", "telehealth", "mental health", "chronic disease", "prevention", "surgery", "pharmaceutical"],
+      "endpoints": [
+        {
+          "name": "Search PubMed",
+          "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term={query}&retmax=10&retmode=json&sort=relevance",
+          "method": "GET",
+          "returns": "List of PubMed IDs matching the search query"
+        },
+        {
+          "name": "Get article summaries",
+          "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id={id_list}&retmode=json",
+          "method": "GET",
+          "returns": "Article summaries with title, authors, journal, publication date, and DOI"
+        },
+        {
+          "name": "Get article abstracts",
+          "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id={id_list}&rettype=abstract&retmode=text",
+          "method": "GET",
+          "returns": "Full abstracts in plain text format"
+        }
+      ],
+      "common_queries": {
+        "Healthcare platforms": "healthcare+platform+management+systematic+review",
+        "Digital health outcomes": "digital+health+intervention+outcomes",
+        "Patient engagement": "patient+engagement+technology",
+        "Health IT adoption": "health+information+technology+adoption+barriers"
+      },
+      "tier": "free",
+      "quality": "excellent",
+      "notes": "No API key needed. 3 requests/second without key. Add api_key parameter for 10 req/sec."
+    },
+    {
+      "id": "world_bank",
+      "name": "World Bank Open Data",
+      "description": "16,000+ development indicators for 200+ countries — health expenditure, GDP, population, education, infrastructure",
+      "categories": ["economics", "development", "international", "health"],
+      "topics": ["global", "international", "development", "gdp", "health expenditure", "population", "education", "infrastructure", "poverty", "inequality", "trade", "climate", "energy", "governance", "developing countries"],
+      "endpoints": [
+        {
+          "name": "Get indicator data",
+          "url": "https://api.worldbank.org/v2/country/{country_code}/indicator/{indicator}?format=json&date={year_range}&per_page=50",
+          "method": "GET",
+          "returns": "Time series data for a specific indicator and country"
+        },
+        {
+          "name": "Search indicators",
+          "url": "https://api.worldbank.org/v2/indicator?format=json&per_page=50&source=2&qterm={query}",
+          "method": "GET",
+          "returns": "List of matching indicators with codes and descriptions"
+        }
+      ],
+      "common_indicators": {
+        "Health Expenditure (% GDP)": "SH.XPD.CHEX.GD.ZS",
+        "GDP (current US$)": "NY.GDP.MKTP.CD",
+        "GDP per capita": "NY.GDP.PCAP.CD",
+        "Life Expectancy": "SP.DYN.LE00.IN",
+        "Population": "SP.POP.TOTL",
+        "Internet Users (% pop)": "IT.NET.USER.ZS",
+        "Hospital Beds (per 1,000)": "SH.MED.BEDS.ZS",
+        "Physicians (per 1,000)": "SH.MED.PHYS.ZS"
+      },
+      "tier": "free",
+      "quality": "excellent",
+      "notes": "No API key needed. Use 'all' for country_code to get all countries. Date format: 2020:2025 for ranges."
+    },
+    {
+      "id": "oecd",
+      "name": "OECD Data",
+      "description": "Economic, social, and environmental data for OECD member countries — health, education, labor, trade, productivity",
+      "categories": ["economics", "policy", "international", "labor", "health"],
+      "topics": ["oecd", "international", "policy", "health spending", "education", "labor", "productivity", "trade", "tax", "innovation", "digital economy", "well-being", "inequality", "healthcare systems"],
+      "endpoints": [
+        {
+          "name": "Get dataset",
+          "url": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.STES,DSD_KEI@DF_KEI,4.0/{country}.M.{indicator}?startPeriod={start}&endPeriod={end}&dimensionAtObservation=AllDimensions",
+          "method": "GET",
+          "returns": "SDMX-formatted time series data"
+        },
+        {
+          "name": "Get health data (simpler)",
+          "url": "https://stats.oecd.org/SDMX-JSON/data/HEALTH_STAT/{indicator}.{country}/all?startTime={start}&endTime={end}",
+          "method": "GET",
+          "returns": "Health statistics in JSON format"
+        }
+      ],
+      "common_indicators": {
+        "Health Spending per Capita": "HEALTHEXP",
+        "Hospital Beds": "HOPITBED",
+        "Doctors per 1000": "PHYS",
+        "Life Expectancy": "LIFEEXP"
+      },
+      "tier": "free",
+      "quality": "good",
+      "notes": "No API key needed. SDMX format can be complex. Consider using the simpler stats.oecd.org endpoint for health data."
+    },
+    {
+      "id": "sec_edgar",
+      "name": "SEC EDGAR",
+      "description": "Company filings, financial statements, and disclosure data for all US public companies",
+      "categories": ["finance", "companies", "filings", "regulatory"],
+      "topics": ["sec", "filings", "10-k", "10-q", "annual report", "financial statements", "public company", "revenue", "earnings", "ipo", "corporate governance", "risk factors", "healthcare companies", "market cap"],
+      "endpoints": [
+        {
+          "name": "Full-text search filings",
+          "url": "https://efts.sec.gov/LATEST/search-index?q={query}&dateRange=custom&startdt={start_date}&enddt={end_date}&forms=10-K",
+          "method": "GET",
+          "returns": "Search results with filing links, company names, dates"
+        },
+        {
+          "name": "Company filings",
+          "url": "https://data.sec.gov/submissions/CIK{cik_number}.json",
+          "method": "GET",
+          "returns": "Company info and recent filings list with form types and dates"
+        },
+        {
+          "name": "Company facts (XBRL)",
+          "url": "https://data.sec.gov/api/xbrl/companyfacts/CIK{cik_number}.json",
+          "method": "GET",
+          "returns": "All XBRL facts (revenue, assets, etc.) reported by the company"
+        }
+      ],
+      "common_ciks": {
+        "UnitedHealth Group": "0000731766",
+        "HCA Healthcare": "0000860730",
+        "CVS Health": "0000064803",
+        "Elevance Health": "0001156039",
+        "Humana": "0000049071"
+      },
+      "tier": "free",
+      "quality": "excellent",
+      "notes": "No API key needed. MUST set User-Agent header to 'CompanyName email@example.com'. 10 requests/second limit."
+    },
+    {
+      "id": "uspto",
+      "name": "USPTO (Patent Data)",
+      "description": "Patent applications, grants, and trademark data for innovation and technology landscape analysis",
+      "categories": ["patents", "innovation", "technology", "intellectual property"],
+      "topics": ["patents", "innovation", "technology", "intellectual property", "invention", "r&d", "startup", "biotech", "medtech", "software patents", "ai patents"],
+      "endpoints": [
+        {
+          "name": "Search patents",
+          "url": "https://api.patentsview.org/patents/query?q={\"_text_any\":{\"patent_abstract\":\"{query}\"}}&f=[\"patent_number\",\"patent_title\",\"patent_date\",\"assignee_organization\"]&o={\"per_page\":10}&s=[{\"patent_date\":\"desc\"}]",
+          "method": "GET",
+          "returns": "Patents with number, title, date, and assignee organization"
+        }
+      ],
+      "tier": "free",
+      "quality": "good",
+      "notes": "No API key needed for PatentsView. Complex query syntax but powerful filtering."
+    },
+    {
+      "id": "alpha_vantage",
+      "name": "Alpha Vantage",
+      "description": "Stock prices, forex rates, crypto data, and technical indicators for financial market analysis",
+      "categories": ["finance", "stocks", "markets", "crypto"],
+      "topics": ["stock price", "stock market", "forex", "cryptocurrency", "earnings", "market cap", "trading", "financial markets", "investment", "portfolio", "valuation"],
+      "endpoints": [
+        {
+          "name": "Company overview",
+          "url": "https://www.alphavantage.co/query?function=OVERVIEW&symbol={ticker}&apikey={key}",
+          "method": "GET",
+          "returns": "Company fundamentals: market cap, PE ratio, revenue, profit margins, sector"
+        },
+        {
+          "name": "Income statement",
+          "url": "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={ticker}&apikey={key}",
+          "method": "GET",
+          "returns": "Annual and quarterly income statements"
+        },
+        {
+          "name": "Monthly stock prices",
+          "url": "https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol={ticker}&apikey={key}",
+          "method": "GET",
+          "returns": "Monthly OHLCV data for a stock"
+        }
+      ],
+      "common_tickers": {
+        "UnitedHealth": "UNH",
+        "HCA Healthcare": "HCA",
+        "CVS Health": "CVS",
+        "Elevance Health": "ELV",
+        "Teladoc": "TDOC"
+      },
+      "key_env": "ALPHA_VANTAGE_API_KEY",
+      "key_url": "https://www.alphavantage.co/support/#api-key",
+      "tier": "free-key",
+      "quality": "good",
+      "notes": "Free key required. Free tier: 25 requests/day. Sufficient for targeted queries."
+    },
+    {
+      "id": "cms_data",
+      "name": "CMS (Centers for Medicare & Medicaid Services)",
+      "description": "Medicare/Medicaid enrollment, spending, quality measures, hospital compare data, and procedure pricing",
+      "categories": ["healthcare", "medicare", "medicaid", "pricing", "quality"],
+      "topics": ["medicare", "medicaid", "cms", "hospital quality", "healthcare costs", "procedure pricing", "health insurance", "enrollment", "nursing home", "home health", "readmission", "patient safety", "healthcare spending"],
+      "endpoints": [
+        {
+          "name": "Hospital Compare",
+          "url": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0?limit=10&offset=0&conditions[0][property]=hospital_name&conditions[0][operator]=%3D&conditions[0][value]={hospital_name}",
+          "method": "GET",
+          "returns": "Hospital quality ratings, patient experience scores, and outcomes"
+        },
+        {
+          "name": "Medicare Spending by Claim",
+          "url": "https://data.cms.gov/provider-data/api/1/datastore/query/nrth-mfg3/0?limit=10",
+          "method": "GET",
+          "returns": "Medicare spending per beneficiary by hospital"
+        },
+        {
+          "name": "Physician Compare",
+          "url": "https://data.cms.gov/provider-data/api/1/datastore/query/mj5m-pzi6/0?limit=10&offset=0&conditions[0][property]=lst_nm&conditions[0][operator]=%3D&conditions[0][value]={last_name}",
+          "method": "GET",
+          "returns": "Physician demographics, specialties, and practice locations"
+        }
+      ],
+      "tier": "free",
+      "quality": "excellent",
+      "notes": "No API key needed. Government open data. Rate limits generous but unspecified."
+    },
+    {
+      "id": "turquoise_health",
+      "name": "Turquoise Health (Hospital Pricing)",
+      "description": "Hospital price transparency data — actual negotiated rates for procedures across US hospitals",
+      "categories": ["healthcare", "pricing", "hospital", "transparency"],
+      "topics": ["hospital pricing", "price transparency", "healthcare costs", "procedure costs", "negotiated rates", "chargemaster", "insurance rates", "out-of-pocket", "healthcare affordability"],
+      "endpoints": [
+        {
+          "name": "Search prices",
+          "url": "https://www.turquoise.health/api/search?query={procedure}&zip={zip_code}",
+          "method": "GET",
+          "returns": "Price ranges for a procedure by hospital and insurance plan"
+        }
+      ],
+      "tier": "free",
+      "quality": "good",
+      "notes": "Free for research use. API availability may vary. Website has extensive browseable data."
+    },
+    {
+      "id": "litellm",
+      "name": "LiteLLM Model Pricing",
+      "description": "Open-source model-pricing map: per-token input/output (and cache) rates across providers (Anthropic, OpenAI, Google, etc.). Used to ground LLM/agent-build token cost for feature-ROI and token-forecast economics.",
+      "categories": ["pricing", "llm", "tokens", "compute", "economics"],
+      "topics": ["model pricing", "token cost", "llm cost", "input tokens", "output tokens", "prompt caching", "agent build cost", "inference cost", "api pricing", "standard-rate-equivalent"],
+      "endpoints": [
+        {
+          "name": "Full model-pricing map (JSON)",
+          "url": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json",
+          "method": "GET",
+          "returns": "Object keyed by model name; each entry has input_cost_per_token, output_cost_per_token, cache_creation_input_token_cost, cache_read_input_token_cost, max_tokens, and provider metadata"
+        }
+      ],
+      "common_models": {
+        "Claude Opus": "claude-opus-4-...",
+        "Claude Sonnet": "claude-sonnet-4-...",
+        "Claude Haiku": "claude-3-5-haiku-...",
+        "GPT-4o": "gpt-4o",
+        "Gemini Pro": "gemini-1.5-pro"
+      },
+      "tier": "free",
+      "quality": "good",
+      "notes": "No API key needed — it's a static JSON file in the LiteLLM repo, updated frequently. Rates are API LIST PRICES. IMPORTANT: when used to cost Cascade's own agent builds, label the figure 'standard-rate-equivalent', NOT Cascade's actual Max-Plan $0. Pair with BLS OEWS (occupation 15-1252, software developers) for the human-effort side of build cost."
+    }
+  ]
+}

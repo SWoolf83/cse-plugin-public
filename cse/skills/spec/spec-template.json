@@ -1,0 +1,54 @@
+{
+  "$comment": "SpecBody schema — matches cascade-web/src/lib/spec/types.ts",
+  "intent": "What the user wants to build and why (1-2 sentences)",
+  "context": "Current codebase/org context relevant to this spec",
+  "mustHaves": [
+    {
+      "truth": "A verifiable statement that must be true when complete",
+      "evidence": "How to verify this truth (file path, test, behavior)",
+      "priority": "critical | important | nice-to-have",
+      "$comment": "check is OPTIONAL — when present the verifier runs the command and the exit code becomes the primary evidence (expectExitCode defaults to 0)",
+      "check": { "command": "npx vitest run tests/unit/foo.test.ts", "expectExitCode": 0 }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "src/path/to/file.ts",
+      "description": "What this artifact provides",
+      "dependsOn": ["src/other/dependency.ts"]
+    }
+  ],
+  "executionPlan": {
+    "waves": [
+      {
+        "wave": 1,
+        "tasks": [
+          {
+            "id": "task-1",
+            "description": "Standalone task description — includes what, where, and connections",
+            "artifacts": ["src/path/to/file.ts"],
+            "estimatedTokens": 0
+          }
+        ]
+      }
+    ]
+  },
+  "scopeBoundaries": [
+    "Explicitly NOT included in this spec",
+    "Deferred: [idea] — separate spec"
+  ],
+  "assumptions": [
+    {
+      "text": "An assumption this spec relies on",
+      "confidence": "high | medium | low",
+      "linkedTo": null
+    }
+  ],
+  "$comment-loopCharter": "loopCharter is OPTIONAL (null for quiet-default retries) — bounds for autonomous retry loops; also stored on the package at packages.type_data.loop_charter",
+  "loopCharter": {
+    "max_iterations": 5,
+    "cost_cap_usd": 25,
+    "exit_mode": "all_must_haves",
+    "ask_mid_loop": "park"
+  }
+}

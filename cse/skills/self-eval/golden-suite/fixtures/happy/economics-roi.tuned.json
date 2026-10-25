@@ -1,0 +1,17 @@
+{
+  "model": "fable-5",
+  "output": "# Feature ROI — internal usage-metering dashboard\n\n## Economic Model Spec (EMS)\n\n```json\n{\n  \"candidate\": \"usage-metering-dashboard\",\n  \"assumptions\": [\n    { \"id\": \"build_cost\", \"value_usd\": 12000, \"provenance\": { \"source\": \"analyst-judgment\", \"rationale\": \"2 engineer-weeks at blended loaded rate\", \"confidence\": \"medium\" } },\n    { \"id\": \"monthly_saving\", \"value_usd\": 1500, \"provenance\": { \"source\": \"analyst-judgment\", \"rationale\": \"reduced duplicate model spend observed in /meter\", \"confidence\": \"medium\" } },\n    { \"id\": \"horizon_months\", \"value\": 24, \"provenance\": { \"source\": \"policy\", \"rationale\": \"org standard evaluation horizon\" } },\n    { \"id\": \"discount_rate_annual\", \"value\": 0.10, \"provenance\": { \"source\": \"policy\", \"rationale\": \"org hurdle rate\" } }\n  ],\n  \"outputs_requested\": [\"npv\", \"payback_months\", \"scenarios\"]\n}\n```\n\nThe deterministic evaluator computes NPV and payback from this EMS — no output numbers are asserted here beyond sourced assumptions. With savings of this order against a $12k build cost, payback should land well inside the horizon, so the provisional recommendation is GO, conditioned on the evaluator's computed NPV being positive at the 10% discount rate.",
+  "usage": {
+    "input_tokens": 3250,
+    "cache_creation_input_tokens": 520,
+    "cache_read_input_tokens": 5850,
+    "output_tokens": 1560
+  },
+  "judge": {
+    "scores": {
+      "provenance-discipline": 0.9,
+      "model-structure": 0.85,
+      "decision-clarity": 0.8
+    }
+  }
+}
