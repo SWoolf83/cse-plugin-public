@@ -12,8 +12,8 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __export = (target, all) => {
-  for (var name93 in all)
-    __defProp(target, name93, { get: all[name93], enumerable: true });
+  for (var name94 in all)
+    __defProp(target, name94, { get: all[name94], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -196,9 +196,9 @@ var require_scope = __commonJS({
     exports.ValueScope = exports.ValueScopeName = exports.Scope = exports.varKinds = exports.UsedValueState = void 0;
     var code_1 = require_code();
     var ValueError = class extends Error {
-      constructor(name93) {
-        super(`CodeGen: "code" for ${name93} not defined`);
-        this.value = name93.value;
+      constructor(name94) {
+        super(`CodeGen: "code" for ${name94} not defined`);
+        this.value = name94.value;
       }
     };
     var UsedValueState;
@@ -265,8 +265,8 @@ var require_scope = __commonJS({
         var _a;
         if (value.ref === void 0)
           throw new Error("CodeGen: ref must be passed in value");
-        const name93 = this.toName(nameOrPrefix);
-        const { prefix } = name93;
+        const name94 = this.toName(nameOrPrefix);
+        const { prefix } = name94;
         const valueKey = (_a = value.key) !== null && _a !== void 0 ? _a : value.ref;
         let vs = this._values[prefix];
         if (vs) {
@@ -276,12 +276,12 @@ var require_scope = __commonJS({
         } else {
           vs = this._values[prefix] = /* @__PURE__ */ new Map();
         }
-        vs.set(valueKey, name93);
+        vs.set(valueKey, name94);
         const s = this._scope[prefix] || (this._scope[prefix] = []);
         const itemIndex = s.length;
         s[itemIndex] = value.ref;
-        name93.setValue(value, { property: prefix, itemIndex });
-        return name93;
+        name94.setValue(value, { property: prefix, itemIndex });
+        return name94;
       }
       getValue(prefix, keyOrRef) {
         const vs = this._values[prefix];
@@ -290,17 +290,17 @@ var require_scope = __commonJS({
         return vs.get(keyOrRef);
       }
       scopeRefs(scopeName, values = this._values) {
-        return this._reduceValues(values, (name93) => {
-          if (name93.scopePath === void 0)
-            throw new Error(`CodeGen: name "${name93}" has no value`);
-          return (0, code_1._)`${scopeName}${name93.scopePath}`;
+        return this._reduceValues(values, (name94) => {
+          if (name94.scopePath === void 0)
+            throw new Error(`CodeGen: name "${name94}" has no value`);
+          return (0, code_1._)`${scopeName}${name94.scopePath}`;
         });
       }
       scopeCode(values = this._values, usedValues, getCode) {
-        return this._reduceValues(values, (name93) => {
-          if (name93.value === void 0)
-            throw new Error(`CodeGen: name "${name93}" has no value`);
-          return name93.value.code;
+        return this._reduceValues(values, (name94) => {
+          if (name94.value === void 0)
+            throw new Error(`CodeGen: name "${name94}" has no value`);
+          return name94.value.code;
         }, usedValues, getCode);
       }
       _reduceValues(values, valueCode, usedValues = {}, getCode) {
@@ -310,20 +310,20 @@ var require_scope = __commonJS({
           if (!vs)
             continue;
           const nameSet = usedValues[prefix] = usedValues[prefix] || /* @__PURE__ */ new Map();
-          vs.forEach((name93) => {
-            if (nameSet.has(name93))
+          vs.forEach((name94) => {
+            if (nameSet.has(name94))
               return;
-            nameSet.set(name93, UsedValueState.Started);
-            let c = valueCode(name93);
+            nameSet.set(name94, UsedValueState.Started);
+            let c = valueCode(name94);
             if (c) {
               const def = this.opts.es5 ? exports.varKinds.var : exports.varKinds.const;
-              code = (0, code_1._)`${code}${def} ${name93} = ${c};${this.opts._n}`;
-            } else if (c = getCode === null || getCode === void 0 ? void 0 : getCode(name93)) {
+              code = (0, code_1._)`${code}${def} ${name94} = ${c};${this.opts._n}`;
+            } else if (c = getCode === null || getCode === void 0 ? void 0 : getCode(name94)) {
               code = (0, code_1._)`${code}${c}${this.opts._n}`;
             } else {
-              throw new ValueError(name93);
+              throw new ValueError(name94);
             }
-            nameSet.set(name93, UsedValueState.Completed);
+            nameSet.set(name94, UsedValueState.Completed);
           });
         }
         return code;
@@ -400,10 +400,10 @@ var require_codegen = __commonJS({
       }
     };
     var Def = class extends Node {
-      constructor(varKind, name93, rhs) {
+      constructor(varKind, name94, rhs) {
         super();
         this.varKind = varKind;
-        this.name = name93;
+        this.name = name94;
         this.rhs = rhs;
       }
       render({ es5, _n }) {
@@ -623,17 +623,17 @@ var require_codegen = __commonJS({
       }
     };
     var ForRange = class extends For {
-      constructor(varKind, name93, from, to) {
+      constructor(varKind, name94, from, to) {
         super();
         this.varKind = varKind;
-        this.name = name93;
+        this.name = name94;
         this.from = from;
         this.to = to;
       }
       render(opts) {
         const varKind = opts.es5 ? scope_1.varKinds.var : this.varKind;
-        const { name: name93, from, to } = this;
-        return `for(${varKind} ${name93}=${from}; ${name93}<${to}; ${name93}++)` + super.render(opts);
+        const { name: name94, from, to } = this;
+        return `for(${varKind} ${name94}=${from}; ${name94}<${to}; ${name94}++)` + super.render(opts);
       }
       get names() {
         const names = addExprNames(super.names, this.from);
@@ -641,11 +641,11 @@ var require_codegen = __commonJS({
       }
     };
     var ForIter = class extends For {
-      constructor(loop, varKind, name93, iterable) {
+      constructor(loop, varKind, name94, iterable) {
         super();
         this.loop = loop;
         this.varKind = varKind;
-        this.name = name93;
+        this.name = name94;
         this.iterable = iterable;
       }
       render(opts) {
@@ -662,9 +662,9 @@ var require_codegen = __commonJS({
       }
     };
     var Func = class extends BlockNode {
-      constructor(name93, args, async) {
+      constructor(name94, args, async) {
         super();
-        this.name = name93;
+        this.name = name94;
         this.args = args;
         this.async = async;
       }
@@ -751,10 +751,10 @@ var require_codegen = __commonJS({
       }
       // reserves unique name in the external scope and assigns value to it
       scopeValue(prefixOrName, value) {
-        const name93 = this._extScope.value(prefixOrName, value);
-        const vs = this._values[name93.prefix] || (this._values[name93.prefix] = /* @__PURE__ */ new Set());
-        vs.add(name93);
-        return name93;
+        const name94 = this._extScope.value(prefixOrName, value);
+        const vs = this._values[name94.prefix] || (this._values[name94.prefix] = /* @__PURE__ */ new Set());
+        vs.add(name94);
+        return name94;
       }
       getScopeValue(prefix, keyOrRef) {
         return this._extScope.getValue(prefix, keyOrRef);
@@ -768,11 +768,11 @@ var require_codegen = __commonJS({
         return this._extScope.scopeCode(this._values);
       }
       _def(varKind, nameOrPrefix, rhs, constant) {
-        const name93 = this._scope.toName(nameOrPrefix);
+        const name94 = this._scope.toName(nameOrPrefix);
         if (rhs !== void 0 && constant)
-          this._constants[name93.str] = rhs;
-        this._leafNode(new Def(varKind, name93, rhs));
-        return name93;
+          this._constants[name94.str] = rhs;
+        this._leafNode(new Def(varKind, name94, rhs));
+        return name94;
       }
       // `const` declaration (`var` in es5 mode)
       const(nameOrPrefix, rhs, _constant) {
@@ -853,20 +853,20 @@ var require_codegen = __commonJS({
       }
       // `for` statement for a range of values
       forRange(nameOrPrefix, from, to, forBody, varKind = this.opts.es5 ? scope_1.varKinds.var : scope_1.varKinds.let) {
-        const name93 = this._scope.toName(nameOrPrefix);
-        return this._for(new ForRange(varKind, name93, from, to), () => forBody(name93));
+        const name94 = this._scope.toName(nameOrPrefix);
+        return this._for(new ForRange(varKind, name94, from, to), () => forBody(name94));
       }
       // `for-of` statement (in es5 mode replace with a normal for loop)
       forOf(nameOrPrefix, iterable, forBody, varKind = scope_1.varKinds.const) {
-        const name93 = this._scope.toName(nameOrPrefix);
+        const name94 = this._scope.toName(nameOrPrefix);
         if (this.opts.es5) {
           const arr = iterable instanceof code_1.Name ? iterable : this.var("_arr", iterable);
           return this.forRange("_i", 0, (0, code_1._)`${arr}.length`, (i) => {
-            this.var(name93, (0, code_1._)`${arr}[${i}]`);
-            forBody(name93);
+            this.var(name94, (0, code_1._)`${arr}[${i}]`);
+            forBody(name94);
           });
         }
-        return this._for(new ForIter("of", varKind, name93, iterable), () => forBody(name93));
+        return this._for(new ForIter("of", varKind, name94, iterable), () => forBody(name94));
       }
       // `for-in` statement.
       // With option `ownProperties` replaced with a `for-of` loop for object keys
@@ -874,8 +874,8 @@ var require_codegen = __commonJS({
         if (this.opts.ownProperties) {
           return this.forOf(nameOrPrefix, (0, code_1._)`Object.keys(${obj})`, forBody);
         }
-        const name93 = this._scope.toName(nameOrPrefix);
-        return this._for(new ForIter("in", varKind, name93, obj), () => forBody(name93));
+        const name94 = this._scope.toName(nameOrPrefix);
+        return this._for(new ForIter("in", varKind, name94, obj), () => forBody(name94));
       }
       // end `for` loop
       endFor() {
@@ -940,8 +940,8 @@ var require_codegen = __commonJS({
         return this;
       }
       // `function` heading (or definition if funcBody is passed)
-      func(name93, args = code_1.nil, async, funcBody) {
-        this._blockNode(new Func(name93, args, async));
+      func(name94, args = code_1.nil, async, funcBody) {
+        this._blockNode(new Func(name94, args, async));
         if (funcBody)
           this.code(funcBody).endFunc();
         return this;
@@ -1068,52 +1068,52 @@ var require_util = __commonJS({
       return hash;
     }
     exports.toHash = toHash;
-    function alwaysValidSchema(it, schema93) {
-      if (typeof schema93 == "boolean")
-        return schema93;
-      if (Object.keys(schema93).length === 0)
+    function alwaysValidSchema(it, schema94) {
+      if (typeof schema94 == "boolean")
+        return schema94;
+      if (Object.keys(schema94).length === 0)
         return true;
-      checkUnknownRules(it, schema93);
-      return !schemaHasRules(schema93, it.self.RULES.all);
+      checkUnknownRules(it, schema94);
+      return !schemaHasRules(schema94, it.self.RULES.all);
     }
     exports.alwaysValidSchema = alwaysValidSchema;
-    function checkUnknownRules(it, schema93 = it.schema) {
+    function checkUnknownRules(it, schema94 = it.schema) {
       const { opts, self: self2 } = it;
       if (!opts.strictSchema)
         return;
-      if (typeof schema93 === "boolean")
+      if (typeof schema94 === "boolean")
         return;
       const rules = self2.RULES.keywords;
-      for (const key in schema93) {
+      for (const key in schema94) {
         if (!rules[key])
           checkStrictMode(it, `unknown keyword: "${key}"`);
       }
     }
     exports.checkUnknownRules = checkUnknownRules;
-    function schemaHasRules(schema93, rules) {
-      if (typeof schema93 == "boolean")
-        return !schema93;
-      for (const key in schema93)
+    function schemaHasRules(schema94, rules) {
+      if (typeof schema94 == "boolean")
+        return !schema94;
+      for (const key in schema94)
         if (rules[key])
           return true;
       return false;
     }
     exports.schemaHasRules = schemaHasRules;
-    function schemaHasRulesButRef(schema93, RULES) {
-      if (typeof schema93 == "boolean")
-        return !schema93;
-      for (const key in schema93)
+    function schemaHasRulesButRef(schema94, RULES) {
+      if (typeof schema94 == "boolean")
+        return !schema94;
+      for (const key in schema94)
         if (key !== "$ref" && RULES.all[key])
           return true;
       return false;
     }
     exports.schemaHasRulesButRef = schemaHasRulesButRef;
-    function schemaRefOrVal({ topSchemaRef, schemaPath }, schema93, keyword, $data) {
+    function schemaRefOrVal({ topSchemaRef, schemaPath }, schema94, keyword, $data) {
       if (!$data) {
-        if (typeof schema93 == "number" || typeof schema93 == "boolean")
-          return schema93;
-        if (typeof schema93 == "string")
-          return (0, codegen_1._)`${schema93}`;
+        if (typeof schema94 == "number" || typeof schema94 == "boolean")
+          return schema94;
+        if (typeof schema94 == "string")
+          return (0, codegen_1._)`${schema94}`;
       }
       return (0, codegen_1._)`${topSchemaRef}${schemaPath}${(0, codegen_1.getProperty)(keyword)}`;
     }
@@ -1394,10 +1394,10 @@ var require_boolSchema = __commonJS({
       message: "boolean schema is false"
     };
     function topBoolOrEmptySchema(it) {
-      const { gen, schema: schema93, validateName } = it;
-      if (schema93 === false) {
+      const { gen, schema: schema94, validateName } = it;
+      if (schema94 === false) {
         falseSchemaError(it, false);
-      } else if (typeof schema93 == "object" && schema93.$async === true) {
+      } else if (typeof schema94 == "object" && schema94.$async === true) {
         gen.return(names_1.default.data);
       } else {
         gen.assign((0, codegen_1._)`${validateName}.errors`, null);
@@ -1406,8 +1406,8 @@ var require_boolSchema = __commonJS({
     }
     exports.topBoolOrEmptySchema = topBoolOrEmptySchema;
     function boolOrEmptySchema(it, valid) {
-      const { gen, schema: schema93 } = it;
-      if (schema93 === false) {
+      const { gen, schema: schema94 } = it;
+      if (schema94 === false) {
         gen.var(valid, false);
         falseSchemaError(it);
       } else {
@@ -1469,18 +1469,18 @@ var require_applicability = __commonJS({
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.shouldUseRule = exports.shouldUseGroup = exports.schemaHasRulesForType = void 0;
-    function schemaHasRulesForType({ schema: schema93, self: self2 }, type) {
+    function schemaHasRulesForType({ schema: schema94, self: self2 }, type) {
       const group = self2.RULES.types[type];
-      return group && group !== true && shouldUseGroup(schema93, group);
+      return group && group !== true && shouldUseGroup(schema94, group);
     }
     exports.schemaHasRulesForType = schemaHasRulesForType;
-    function shouldUseGroup(schema93, group) {
-      return group.rules.some((rule) => shouldUseRule(schema93, rule));
+    function shouldUseGroup(schema94, group) {
+      return group.rules.some((rule) => shouldUseRule(schema94, rule));
     }
     exports.shouldUseGroup = shouldUseGroup;
-    function shouldUseRule(schema93, rule) {
+    function shouldUseRule(schema94, rule) {
       var _a;
-      return schema93[rule.keyword] !== void 0 || ((_a = rule.definition.implements) === null || _a === void 0 ? void 0 : _a.some((kwd) => schema93[kwd] !== void 0));
+      return schema94[rule.keyword] !== void 0 || ((_a = rule.definition.implements) === null || _a === void 0 ? void 0 : _a.some((kwd) => schema94[kwd] !== void 0));
     }
     exports.shouldUseRule = shouldUseRule;
   }
@@ -1502,17 +1502,17 @@ var require_dataType = __commonJS({
       DataType2[DataType2["Correct"] = 0] = "Correct";
       DataType2[DataType2["Wrong"] = 1] = "Wrong";
     })(DataType || (exports.DataType = DataType = {}));
-    function getSchemaTypes(schema93) {
-      const types = getJSONTypes(schema93.type);
+    function getSchemaTypes(schema94) {
+      const types = getJSONTypes(schema94.type);
       const hasNull = types.includes("null");
       if (hasNull) {
-        if (schema93.nullable === false)
+        if (schema94.nullable === false)
           throw new Error("type: null contradicts nullable: false");
       } else {
-        if (!types.length && schema93.nullable !== void 0) {
+        if (!types.length && schema94.nullable !== void 0) {
           throw new Error('"nullable" cannot be used without "type"');
         }
-        if (schema93.nullable === true)
+        if (schema94.nullable === true)
           types.push("null");
       }
       return types;
@@ -1644,8 +1644,8 @@ var require_dataType = __commonJS({
     }
     exports.checkDataTypes = checkDataTypes;
     var typeError = {
-      message: ({ schema: schema93 }) => `must be ${schema93}`,
-      params: ({ schema: schema93, schemaValue }) => typeof schema93 == "string" ? (0, codegen_1._)`{type: ${schema93}}` : (0, codegen_1._)`{type: ${schemaValue}}`
+      message: ({ schema: schema94 }) => `must be ${schema94}`,
+      params: ({ schema: schema94, schemaValue }) => typeof schema94 == "string" ? (0, codegen_1._)`{type: ${schema94}}` : (0, codegen_1._)`{type: ${schemaValue}}`
     };
     function reportTypeError(it) {
       const cxt = getTypeErrorContext(it);
@@ -1653,16 +1653,16 @@ var require_dataType = __commonJS({
     }
     exports.reportTypeError = reportTypeError;
     function getTypeErrorContext(it) {
-      const { gen, data, schema: schema93 } = it;
-      const schemaCode = (0, util_1.schemaRefOrVal)(it, schema93, "type");
+      const { gen, data, schema: schema94 } = it;
+      const schemaCode = (0, util_1.schemaRefOrVal)(it, schema94, "type");
       return {
         gen,
         keyword: "type",
         data,
-        schema: schema93.type,
+        schema: schema94.type,
         schemaCode,
         schemaValue: schemaCode,
-        parentSchema: schema93,
+        parentSchema: schema94,
         params: {},
         it
       };
@@ -1815,15 +1815,15 @@ var require_code2 = __commonJS({
     }
     exports.validateArray = validateArray;
     function validateUnion(cxt) {
-      const { gen, schema: schema93, keyword, it } = cxt;
-      if (!Array.isArray(schema93))
+      const { gen, schema: schema94, keyword, it } = cxt;
+      if (!Array.isArray(schema94))
         throw new Error("ajv implementation error");
-      const alwaysValid = schema93.some((sch) => (0, util_1.alwaysValidSchema)(it, sch));
+      const alwaysValid = schema94.some((sch) => (0, util_1.alwaysValidSchema)(it, sch));
       if (alwaysValid && !it.opts.unevaluated)
         return;
       const valid = gen.let("valid", false);
       const schValid = gen.name("_valid");
-      gen.block(() => schema93.forEach((_sch, i) => {
+      gen.block(() => schema94.forEach((_sch, i) => {
         const schCxt = cxt.subschema({
           keyword,
           schemaProp: i,
@@ -1851,8 +1851,8 @@ var require_keyword = __commonJS({
     var code_1 = require_code2();
     var errors_1 = require_errors();
     function macroKeywordCode(cxt, def) {
-      const { gen, keyword, schema: schema93, parentSchema, it } = cxt;
-      const macroSchema = def.macro.call(it.self, schema93, parentSchema, it);
+      const { gen, keyword, schema: schema94, parentSchema, it } = cxt;
+      const macroSchema = def.macro.call(it.self, schema94, parentSchema, it);
       const schemaRef = useKeyword(gen, keyword, macroSchema);
       if (it.opts.validateSchema !== false)
         it.self.validateSchema(macroSchema, true);
@@ -1869,9 +1869,9 @@ var require_keyword = __commonJS({
     exports.macroKeywordCode = macroKeywordCode;
     function funcKeywordCode(cxt, def) {
       var _a;
-      const { gen, keyword, schema: schema93, parentSchema, $data, it } = cxt;
+      const { gen, keyword, schema: schema94, parentSchema, $data, it } = cxt;
       checkAsyncKeyword(it, def);
-      const validate = !$data && def.compile ? def.compile.call(it.self, schema93, parentSchema, it) : def.validate;
+      const validate = !$data && def.compile ? def.compile.call(it.self, schema94, parentSchema, it) : def.validate;
       const validateRef = useKeyword(gen, keyword, validate);
       const valid = gen.let("valid");
       cxt.block$data(valid, validateKeyword);
@@ -1931,20 +1931,20 @@ var require_keyword = __commonJS({
         throw new Error(`keyword "${keyword}" failed to compile`);
       return gen.scopeValue("keyword", typeof result == "function" ? { ref: result } : { ref: result, code: (0, codegen_1.stringify)(result) });
     }
-    function validSchemaType(schema93, schemaType, allowUndefined = false) {
-      return !schemaType.length || schemaType.some((st) => st === "array" ? Array.isArray(schema93) : st === "object" ? schema93 && typeof schema93 == "object" && !Array.isArray(schema93) : typeof schema93 == st || allowUndefined && typeof schema93 == "undefined");
+    function validSchemaType(schema94, schemaType, allowUndefined = false) {
+      return !schemaType.length || schemaType.some((st) => st === "array" ? Array.isArray(schema94) : st === "object" ? schema94 && typeof schema94 == "object" && !Array.isArray(schema94) : typeof schema94 == st || allowUndefined && typeof schema94 == "undefined");
     }
     exports.validSchemaType = validSchemaType;
-    function validateKeywordUsage({ schema: schema93, opts, self: self2, errSchemaPath }, def, keyword) {
+    function validateKeywordUsage({ schema: schema94, opts, self: self2, errSchemaPath }, def, keyword) {
       if (Array.isArray(def.keyword) ? !def.keyword.includes(keyword) : def.keyword !== keyword) {
         throw new Error("ajv implementation error");
       }
       const deps = def.dependencies;
-      if (deps === null || deps === void 0 ? void 0 : deps.some((kwd) => !Object.prototype.hasOwnProperty.call(schema93, kwd))) {
+      if (deps === null || deps === void 0 ? void 0 : deps.some((kwd) => !Object.prototype.hasOwnProperty.call(schema94, kwd))) {
         throw new Error(`parent schema must have dependencies of ${keyword}: ${deps.join(",")}`);
       }
       if (def.validateSchema) {
-        const valid = def.validateSchema(schema93[keyword]);
+        const valid = def.validateSchema(schema94[keyword]);
         if (!valid) {
           const msg = `keyword "${keyword}" value is invalid at path "${errSchemaPath}": ` + self2.errorsText(def.validateSchema.errors);
           if (opts.validateSchema === "log")
@@ -1966,8 +1966,8 @@ var require_subschema = __commonJS({
     exports.extendSubschemaMode = exports.extendSubschemaData = exports.getSubschema = void 0;
     var codegen_1 = require_codegen();
     var util_1 = require_util();
-    function getSubschema(it, { keyword, schemaProp, schema: schema93, schemaPath, errSchemaPath, topSchemaRef }) {
-      if (keyword !== void 0 && schema93 !== void 0) {
+    function getSubschema(it, { keyword, schemaProp, schema: schema94, schemaPath, errSchemaPath, topSchemaRef }) {
+      if (keyword !== void 0 && schema94 !== void 0) {
         throw new Error('both "keyword" and "schema" passed, only one allowed');
       }
       if (keyword !== void 0) {
@@ -1982,12 +1982,12 @@ var require_subschema = __commonJS({
           errSchemaPath: `${it.errSchemaPath}/${keyword}/${(0, util_1.escapeFragment)(schemaProp)}`
         };
       }
-      if (schema93 !== void 0) {
+      if (schema94 !== void 0) {
         if (schemaPath === void 0 || errSchemaPath === void 0 || topSchemaRef === void 0) {
           throw new Error('"schemaPath", "errSchemaPath" and "topSchemaRef" are required with "schema"');
         }
         return {
-          schema: schema93,
+          schema: schema94,
           schemaPath,
           topSchemaRef,
           errSchemaPath
@@ -2080,7 +2080,7 @@ var require_fast_deep_equal = __commonJS({
 var require_json_schema_traverse = __commonJS({
   "harnesses/mcp-servers/cascade-api/node_modules/json-schema-traverse/index.js"(exports, module) {
     "use strict";
-    var traverse = module.exports = function(schema93, opts, cb) {
+    var traverse = module.exports = function(schema94, opts, cb) {
       if (typeof opts == "function") {
         cb = opts;
         opts = {};
@@ -2090,7 +2090,7 @@ var require_json_schema_traverse = __commonJS({
       };
       var post2 = cb.post || function() {
       };
-      _traverse(opts, pre, post2, schema93, "", schema93);
+      _traverse(opts, pre, post2, schema94, "", schema94);
     };
     traverse.keywords = {
       additionalItems: true,
@@ -2136,26 +2136,26 @@ var require_json_schema_traverse = __commonJS({
       maxProperties: true,
       minProperties: true
     };
-    function _traverse(opts, pre, post2, schema93, jsonPtr, rootSchema, parentJsonPtr, parentKeyword, parentSchema, keyIndex) {
-      if (schema93 && typeof schema93 == "object" && !Array.isArray(schema93)) {
-        pre(schema93, jsonPtr, rootSchema, parentJsonPtr, parentKeyword, parentSchema, keyIndex);
-        for (var key in schema93) {
-          var sch = schema93[key];
+    function _traverse(opts, pre, post2, schema94, jsonPtr, rootSchema, parentJsonPtr, parentKeyword, parentSchema, keyIndex) {
+      if (schema94 && typeof schema94 == "object" && !Array.isArray(schema94)) {
+        pre(schema94, jsonPtr, rootSchema, parentJsonPtr, parentKeyword, parentSchema, keyIndex);
+        for (var key in schema94) {
+          var sch = schema94[key];
           if (Array.isArray(sch)) {
             if (key in traverse.arrayKeywords) {
               for (var i = 0; i < sch.length; i++)
-                _traverse(opts, pre, post2, sch[i], jsonPtr + "/" + key + "/" + i, rootSchema, jsonPtr, key, schema93, i);
+                _traverse(opts, pre, post2, sch[i], jsonPtr + "/" + key + "/" + i, rootSchema, jsonPtr, key, schema94, i);
             }
           } else if (key in traverse.propsKeywords) {
             if (sch && typeof sch == "object") {
               for (var prop in sch)
-                _traverse(opts, pre, post2, sch[prop], jsonPtr + "/" + key + "/" + escapeJsonPtr(prop), rootSchema, jsonPtr, key, schema93, prop);
+                _traverse(opts, pre, post2, sch[prop], jsonPtr + "/" + key + "/" + escapeJsonPtr(prop), rootSchema, jsonPtr, key, schema94, prop);
             }
           } else if (key in traverse.keywords || opts.allKeys && !(key in traverse.skipKeywords)) {
-            _traverse(opts, pre, post2, sch, jsonPtr + "/" + key, rootSchema, jsonPtr, key, schema93);
+            _traverse(opts, pre, post2, sch, jsonPtr + "/" + key, rootSchema, jsonPtr, key, schema94);
           }
         }
-        post2(schema93, jsonPtr, rootSchema, parentJsonPtr, parentKeyword, parentSchema, keyIndex);
+        post2(schema94, jsonPtr, rootSchema, parentJsonPtr, parentKeyword, parentSchema, keyIndex);
       }
     }
     function escapeJsonPtr(str3) {
@@ -2191,14 +2191,14 @@ var require_resolve = __commonJS({
       "enum",
       "const"
     ]);
-    function inlineRef(schema93, limit = true) {
-      if (typeof schema93 == "boolean")
+    function inlineRef(schema94, limit = true) {
+      if (typeof schema94 == "boolean")
         return true;
       if (limit === true)
-        return !hasRef(schema93);
+        return !hasRef(schema94);
       if (!limit)
         return false;
-      return countKeys(schema93) <= limit;
+      return countKeys(schema94) <= limit;
     }
     exports.inlineRef = inlineRef;
     var REF_KEYWORDS = /* @__PURE__ */ new Set([
@@ -2208,11 +2208,11 @@ var require_resolve = __commonJS({
       "$dynamicRef",
       "$dynamicAnchor"
     ]);
-    function hasRef(schema93) {
-      for (const key in schema93) {
+    function hasRef(schema94) {
+      for (const key in schema94) {
         if (REF_KEYWORDS.has(key))
           return true;
-        const sch = schema93[key];
+        const sch = schema94[key];
         if (Array.isArray(sch) && sch.some(hasRef))
           return true;
         if (typeof sch == "object" && hasRef(sch))
@@ -2220,16 +2220,16 @@ var require_resolve = __commonJS({
       }
       return false;
     }
-    function countKeys(schema93) {
+    function countKeys(schema94) {
       let count = 0;
-      for (const key in schema93) {
+      for (const key in schema94) {
         if (key === "$ref")
           return Infinity;
         count++;
         if (SIMPLE_INLINED.has(key))
           continue;
-        if (typeof schema93[key] == "object") {
-          (0, util_1.eachItem)(schema93[key], (sch) => count += countKeys(sch));
+        if (typeof schema94[key] == "object") {
+          (0, util_1.eachItem)(schema94[key], (sch) => count += countKeys(sch));
         }
         if (count === Infinity)
           return Infinity;
@@ -2259,16 +2259,16 @@ var require_resolve = __commonJS({
     }
     exports.resolveUrl = resolveUrl;
     var ANCHOR = /^[a-z_][-a-z0-9._]*$/i;
-    function getSchemaRefs(schema93, baseId) {
-      if (typeof schema93 == "boolean")
+    function getSchemaRefs(schema94, baseId) {
+      if (typeof schema94 == "boolean")
         return {};
       const { schemaId, uriResolver } = this.opts;
-      const schId = normalizeId(schema93[schemaId] || baseId);
+      const schId = normalizeId(schema94[schemaId] || baseId);
       const baseIds = { "": schId };
       const pathPrefix = getFullPath(uriResolver, schId, false);
       const localRefs = {};
       const schemaRefs = /* @__PURE__ */ new Set();
-      traverse(schema93, { allKeys: true }, (sch, jsonPtr, _, parentJsonPtr) => {
+      traverse(schema94, { allKeys: true }, (sch, jsonPtr, _, parentJsonPtr) => {
         if (parentJsonPtr === void 0)
           return;
         const fullPath = pathPrefix + jsonPtr;
@@ -2349,15 +2349,15 @@ var require_validate = __commonJS({
       validateFunction(it, () => (0, boolSchema_1.topBoolOrEmptySchema)(it));
     }
     exports.validateFunctionCode = validateFunctionCode;
-    function validateFunction({ gen, validateName, schema: schema93, schemaEnv, opts }, body) {
+    function validateFunction({ gen, validateName, schema: schema94, schemaEnv, opts }, body) {
       if (opts.code.es5) {
         gen.func(validateName, (0, codegen_1._)`${names_1.default.data}, ${names_1.default.valCxt}`, schemaEnv.$async, () => {
-          gen.code((0, codegen_1._)`"use strict"; ${funcSourceUrl(schema93, opts)}`);
+          gen.code((0, codegen_1._)`"use strict"; ${funcSourceUrl(schema94, opts)}`);
           destructureValCxtES5(gen, opts);
           gen.code(body);
         });
       } else {
-        gen.func(validateName, (0, codegen_1._)`${names_1.default.data}, ${destructureValCxt(opts)}`, schemaEnv.$async, () => gen.code(funcSourceUrl(schema93, opts)).code(body));
+        gen.func(validateName, (0, codegen_1._)`${names_1.default.data}, ${destructureValCxt(opts)}`, schemaEnv.$async, () => gen.code(funcSourceUrl(schema94, opts)).code(body));
       }
     }
     function destructureValCxt(opts) {
@@ -2381,9 +2381,9 @@ var require_validate = __commonJS({
       });
     }
     function topSchemaObjCode(it) {
-      const { schema: schema93, opts, gen } = it;
+      const { schema: schema94, opts, gen } = it;
       validateFunction(it, () => {
-        if (opts.$comment && schema93.$comment)
+        if (opts.$comment && schema94.$comment)
           commentKeyword(it);
         checkNoDefault(it);
         gen.let(names_1.default.vErrors, null);
@@ -2401,8 +2401,8 @@ var require_validate = __commonJS({
       gen.if((0, codegen_1._)`${it.evaluated}.dynamicProps`, () => gen.assign((0, codegen_1._)`${it.evaluated}.props`, (0, codegen_1._)`undefined`));
       gen.if((0, codegen_1._)`${it.evaluated}.dynamicItems`, () => gen.assign((0, codegen_1._)`${it.evaluated}.items`, (0, codegen_1._)`undefined`));
     }
-    function funcSourceUrl(schema93, opts) {
-      const schId = typeof schema93 == "object" && schema93[opts.schemaId];
+    function funcSourceUrl(schema94, opts) {
+      const schId = typeof schema94 == "object" && schema94[opts.schemaId];
       return schId && (opts.code.source || opts.code.process) ? (0, codegen_1._)`/*# sourceURL=${schId} */` : codegen_1.nil;
     }
     function subschemaCode(it, valid) {
@@ -2415,10 +2415,10 @@ var require_validate = __commonJS({
       }
       (0, boolSchema_1.boolOrEmptySchema)(it, valid);
     }
-    function schemaCxtHasRules({ schema: schema93, self: self2 }) {
-      if (typeof schema93 == "boolean")
-        return !schema93;
-      for (const key in schema93)
+    function schemaCxtHasRules({ schema: schema94, self: self2 }) {
+      if (typeof schema94 == "boolean")
+        return !schema94;
+      for (const key in schema94)
         if (self2.RULES.all[key])
           return true;
       return false;
@@ -2427,8 +2427,8 @@ var require_validate = __commonJS({
       return typeof it.schema != "boolean";
     }
     function subSchemaObjCode(it, valid) {
-      const { schema: schema93, gen, opts } = it;
-      if (opts.$comment && schema93.$comment)
+      const { schema: schema94, gen, opts } = it;
+      if (opts.$comment && schema94.$comment)
         commentKeyword(it);
       updateContext(it);
       checkAsyncSchema(it);
@@ -2448,14 +2448,14 @@ var require_validate = __commonJS({
       schemaKeywords(it, types, !checkedTypes, errsCount);
     }
     function checkRefsAndKeywords(it) {
-      const { schema: schema93, errSchemaPath, opts, self: self2 } = it;
-      if (schema93.$ref && opts.ignoreKeywordsWithRef && (0, util_1.schemaHasRulesButRef)(schema93, self2.RULES)) {
+      const { schema: schema94, errSchemaPath, opts, self: self2 } = it;
+      if (schema94.$ref && opts.ignoreKeywordsWithRef && (0, util_1.schemaHasRulesButRef)(schema94, self2.RULES)) {
         self2.logger.warn(`$ref: keywords ignored in schema at path "${errSchemaPath}"`);
       }
     }
     function checkNoDefault(it) {
-      const { schema: schema93, opts } = it;
-      if (schema93.default !== void 0 && opts.useDefaults && opts.strictSchema) {
+      const { schema: schema94, opts } = it;
+      if (schema94.default !== void 0 && opts.useDefaults && opts.strictSchema) {
         (0, util_1.checkStrictMode)(it, "default is ignored in the schema root");
       }
     }
@@ -2468,8 +2468,8 @@ var require_validate = __commonJS({
       if (it.schema.$async && !it.schemaEnv.$async)
         throw new Error("async schema in sync schema");
     }
-    function commentKeyword({ gen, schemaEnv, schema: schema93, errSchemaPath, opts }) {
-      const msg = schema93.$comment;
+    function commentKeyword({ gen, schemaEnv, schema: schema94, errSchemaPath, opts }) {
+      const msg = schema94.$comment;
       if (opts.$comment === true) {
         gen.code((0, codegen_1._)`${names_1.default.self}.logger.log(${msg})`);
       } else if (typeof opts.$comment == "function") {
@@ -2496,9 +2496,9 @@ var require_validate = __commonJS({
         gen.assign((0, codegen_1._)`${evaluated}.items`, items);
     }
     function schemaKeywords(it, types, typeErrors, errsCount) {
-      const { gen, schema: schema93, data, allErrors, opts, self: self2 } = it;
+      const { gen, schema: schema94, data, allErrors, opts, self: self2 } = it;
       const { RULES } = self2;
-      if (schema93.$ref && (opts.ignoreKeywordsWithRef || !(0, util_1.schemaHasRulesButRef)(schema93, RULES))) {
+      if (schema94.$ref && (opts.ignoreKeywordsWithRef || !(0, util_1.schemaHasRulesButRef)(schema94, RULES))) {
         gen.block(() => keywordCode(it, "$ref", RULES.all.$ref.definition));
         return;
       }
@@ -2510,7 +2510,7 @@ var require_validate = __commonJS({
         groupKeywords(RULES.post);
       });
       function groupKeywords(group) {
-        if (!(0, applicability_1.shouldUseGroup)(schema93, group))
+        if (!(0, applicability_1.shouldUseGroup)(schema94, group))
           return;
         if (group.type) {
           gen.if((0, dataType_2.checkDataType)(group.type, data, opts.strictNumbers));
@@ -2528,12 +2528,12 @@ var require_validate = __commonJS({
       }
     }
     function iterateKeywords(it, group) {
-      const { gen, schema: schema93, opts: { useDefaults } } = it;
+      const { gen, schema: schema94, opts: { useDefaults } } = it;
       if (useDefaults)
         (0, defaults_1.assignDefaults)(it, group.type);
       gen.block(() => {
         for (const rule of group.rules) {
-          if ((0, applicability_1.shouldUseRule)(schema93, rule)) {
+          if ((0, applicability_1.shouldUseRule)(schema94, rule)) {
             keywordCode(it, rule.keyword, rule.definition, group.type);
           }
         }
@@ -2878,17 +2878,17 @@ var require_compile = __commonJS({
         var _a;
         this.refs = {};
         this.dynamicAnchors = {};
-        let schema93;
+        let schema94;
         if (typeof env.schema == "object")
-          schema93 = env.schema;
+          schema94 = env.schema;
         this.schema = env.schema;
         this.schemaId = env.schemaId;
         this.root = env.root || this;
-        this.baseId = (_a = env.baseId) !== null && _a !== void 0 ? _a : (0, resolve_1.normalizeId)(schema93 === null || schema93 === void 0 ? void 0 : schema93[env.schemaId || "$id"]);
+        this.baseId = (_a = env.baseId) !== null && _a !== void 0 ? _a : (0, resolve_1.normalizeId)(schema94 === null || schema94 === void 0 ? void 0 : schema94[env.schemaId || "$id"]);
         this.schemaPath = env.schemaPath;
         this.localRefs = env.localRefs;
         this.meta = env.meta;
-        this.$async = schema93 === null || schema93 === void 0 ? void 0 : schema93.$async;
+        this.$async = schema94 === null || schema94 === void 0 ? void 0 : schema94.$async;
         this.refs = {};
       }
     };
@@ -2985,12 +2985,12 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve4.call(this, root, ref);
+      let _sch = resolve5.call(this, root, ref);
       if (_sch === void 0) {
-        const schema93 = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
+        const schema94 = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
-        if (schema93)
-          _sch = new SchemaEnv({ schema: schema93, schemaId, root, baseId });
+        if (schema94)
+          _sch = new SchemaEnv({ schema: schema94, schemaId, root, baseId });
       }
       if (_sch === void 0)
         return;
@@ -3012,7 +3012,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve4(root, ref) {
+    function resolve5(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -3038,12 +3038,12 @@ var require_compile = __commonJS({
       if (!schOrRef.validate)
         compileSchema.call(this, schOrRef);
       if (id2 === (0, resolve_1.normalizeId)(ref)) {
-        const { schema: schema93 } = schOrRef;
+        const { schema: schema94 } = schOrRef;
         const { schemaId } = this.opts;
-        const schId = schema93[schemaId];
+        const schId = schema94[schemaId];
         if (schId)
           baseId = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, schId);
-        return new SchemaEnv({ schema: schema93, schemaId, root, baseId });
+        return new SchemaEnv({ schema: schema94, schemaId, root, baseId });
       }
       return getJsonPointer.call(this, p, schOrRef);
     }
@@ -3055,29 +3055,29 @@ var require_compile = __commonJS({
       "dependencies",
       "definitions"
     ]);
-    function getJsonPointer(parsedRef, { baseId, schema: schema93, root }) {
+    function getJsonPointer(parsedRef, { baseId, schema: schema94, root }) {
       var _a;
       if (((_a = parsedRef.fragment) === null || _a === void 0 ? void 0 : _a[0]) !== "/")
         return;
       for (const part of parsedRef.fragment.slice(1).split("/")) {
-        if (typeof schema93 === "boolean")
+        if (typeof schema94 === "boolean")
           return;
-        const partSchema = schema93[(0, util_1.unescapeFragment)(part)];
+        const partSchema = schema94[(0, util_1.unescapeFragment)(part)];
         if (partSchema === void 0)
           return;
-        schema93 = partSchema;
-        const schId = typeof schema93 === "object" && schema93[this.opts.schemaId];
+        schema94 = partSchema;
+        const schId = typeof schema94 === "object" && schema94[this.opts.schemaId];
         if (!PREVENT_SCOPE_CHANGE.has(part) && schId) {
           baseId = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, schId);
         }
       }
       let env;
-      if (typeof schema93 != "boolean" && schema93.$ref && !(0, util_1.schemaHasRulesButRef)(schema93, this.RULES)) {
-        const $ref = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, schema93.$ref);
+      if (typeof schema94 != "boolean" && schema94.$ref && !(0, util_1.schemaHasRulesButRef)(schema94, this.RULES)) {
+        const $ref = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, schema94.$ref);
         env = resolveSchema.call(this, root, $ref);
       }
       const { schemaId } = this.opts;
-      env = env || new SchemaEnv({ schema: schema93, schemaId, root, baseId });
+      env = env || new SchemaEnv({ schema: schema94, schemaId, root, baseId });
       if (env.schema !== env.root.schema)
         return env;
       return void 0;
@@ -3378,10 +3378,10 @@ var require_schemes = __commonJS({
         "urn:uuid"
       ]
     );
-    function isValidSchemeName(name93) {
+    function isValidSchemeName(name94) {
       return supportedSchemeNames.indexOf(
         /** @type {*} */
-        name93
+        name94
       ) !== -1;
     }
     function wsIsSecure(wsComponent) {
@@ -3587,7 +3587,7 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve4(baseURI, relativeURI, options) {
+    function resolve5(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const resolved = resolveComponent(parse3(baseURI, schemelessOptions), parse3(relativeURI, schemelessOptions), schemelessOptions, true);
       schemelessOptions.skipEscape = true;
@@ -3814,7 +3814,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize,
-      resolve: resolve4,
+      resolve: resolve5,
       resolveComponent,
       equal,
       serialize,
@@ -4006,16 +4006,16 @@ var require_core = __commonJS({
           this.errors = v.errors;
         return valid;
       }
-      compile(schema93, _meta) {
-        const sch = this._addSchema(schema93, _meta);
+      compile(schema94, _meta) {
+        const sch = this._addSchema(schema94, _meta);
         return sch.validate || this._compileSchemaEnv(sch);
       }
-      compileAsync(schema93, meta) {
+      compileAsync(schema94, meta) {
         if (typeof this.opts.loadSchema != "function") {
           throw new Error("options.loadSchema should be a function");
         }
         const { loadSchema } = this.opts;
-        return runCompileAsync.call(this, schema93, meta);
+        return runCompileAsync.call(this, schema94, meta);
         async function runCompileAsync(_schema, _meta) {
           await loadMetaSchema.call(this, _schema.$schema);
           const sch = this._addSchema(_schema, _meta);
@@ -4061,37 +4061,37 @@ var require_core = __commonJS({
         }
       }
       // Adds schema to the instance
-      addSchema(schema93, key, _meta, _validateSchema = this.opts.validateSchema) {
-        if (Array.isArray(schema93)) {
-          for (const sch of schema93)
+      addSchema(schema94, key, _meta, _validateSchema = this.opts.validateSchema) {
+        if (Array.isArray(schema94)) {
+          for (const sch of schema94)
             this.addSchema(sch, void 0, _meta, _validateSchema);
           return this;
         }
         let id2;
-        if (typeof schema93 === "object") {
+        if (typeof schema94 === "object") {
           const { schemaId } = this.opts;
-          id2 = schema93[schemaId];
+          id2 = schema94[schemaId];
           if (id2 !== void 0 && typeof id2 != "string") {
             throw new Error(`schema ${schemaId} must be string`);
           }
         }
         key = (0, resolve_1.normalizeId)(key || id2);
         this._checkUnique(key);
-        this.schemas[key] = this._addSchema(schema93, _meta, key, _validateSchema, true);
+        this.schemas[key] = this._addSchema(schema94, _meta, key, _validateSchema, true);
         return this;
       }
       // Add schema that will be used to validate other schemas
       // options in META_IGNORE_OPTIONS are alway set to false
-      addMetaSchema(schema93, key, _validateSchema = this.opts.validateSchema) {
-        this.addSchema(schema93, key, true, _validateSchema);
+      addMetaSchema(schema94, key, _validateSchema = this.opts.validateSchema) {
+        this.addSchema(schema94, key, true, _validateSchema);
         return this;
       }
       //  Validate schema against its meta-schema
-      validateSchema(schema93, throwOrLogError) {
-        if (typeof schema93 == "boolean")
+      validateSchema(schema94, throwOrLogError) {
+        if (typeof schema94 == "boolean")
           return true;
         let $schema;
-        $schema = schema93.$schema;
+        $schema = schema94.$schema;
         if ($schema !== void 0 && typeof $schema != "string") {
           throw new Error("$schema must be a string");
         }
@@ -4101,7 +4101,7 @@ var require_core = __commonJS({
           this.errors = null;
           return true;
         }
-        const valid = this.validate($schema, schema93);
+        const valid = this.validate($schema, schema94);
         if (!valid && throwOrLogError) {
           const message = "schema is invalid: " + this.errorsText();
           if (this.opts.validateSchema === "log")
@@ -4220,10 +4220,10 @@ var require_core = __commonJS({
         return this;
       }
       // Add format
-      addFormat(name93, format) {
+      addFormat(name94, format) {
         if (typeof format == "string")
           format = new RegExp(format);
-        this.formats[name93] = format;
+        this.formats[name94] = format;
         return this;
       }
       errorsText(errors = this.errors, { separator = ", ", dataVar = "data" } = {}) {
@@ -4244,9 +4244,9 @@ var require_core = __commonJS({
             if (typeof rule != "object")
               continue;
             const { $data } = rule.definition;
-            const schema93 = keywords[key];
-            if ($data && schema93)
-              keywords[key] = schemaOrData(schema93);
+            const schema94 = keywords[key];
+            if ($data && schema94)
+              keywords[key] = schemaOrData(schema94);
           }
         }
         return metaSchema;
@@ -4264,23 +4264,23 @@ var require_core = __commonJS({
           }
         }
       }
-      _addSchema(schema93, meta, baseId, validateSchema = this.opts.validateSchema, addSchema = this.opts.addUsedSchema) {
+      _addSchema(schema94, meta, baseId, validateSchema = this.opts.validateSchema, addSchema = this.opts.addUsedSchema) {
         let id2;
         const { schemaId } = this.opts;
-        if (typeof schema93 == "object") {
-          id2 = schema93[schemaId];
+        if (typeof schema94 == "object") {
+          id2 = schema94[schemaId];
         } else {
           if (this.opts.jtd)
             throw new Error("schema must be object");
-          else if (typeof schema93 != "boolean")
+          else if (typeof schema94 != "boolean")
             throw new Error("schema must be object or boolean");
         }
-        let sch = this._cache.get(schema93);
+        let sch = this._cache.get(schema94);
         if (sch !== void 0)
           return sch;
         baseId = (0, resolve_1.normalizeId)(id2 || baseId);
-        const localRefs = resolve_1.getSchemaRefs.call(this, schema93, baseId);
-        sch = new compile_1.SchemaEnv({ schema: schema93, schemaId, meta, baseId, localRefs });
+        const localRefs = resolve_1.getSchemaRefs.call(this, schema94, baseId);
+        sch = new compile_1.SchemaEnv({ schema: schema94, schemaId, meta, baseId, localRefs });
         this._cache.set(sch.schema, sch);
         if (addSchema && !baseId.startsWith("#")) {
           if (baseId)
@@ -4288,7 +4288,7 @@ var require_core = __commonJS({
           this.refs[baseId] = sch;
         }
         if (validateSchema)
-          this.validateSchema(schema93, true);
+          this.validateSchema(schema94, true);
         return sch;
       }
       _checkUnique(id2) {
@@ -4340,10 +4340,10 @@ var require_core = __commonJS({
           this.addSchema(optsSchemas[key], key);
     }
     function addInitialFormats() {
-      for (const name93 in this.opts.formats) {
-        const format = this.opts.formats[name93];
+      for (const name94 in this.opts.formats) {
+        const format = this.opts.formats[name94];
         if (format)
-          this.addFormat(name93, format);
+          this.addFormat(name94, format);
       }
     }
     function addInitialKeywords(defs) {
@@ -4442,8 +4442,8 @@ var require_core = __commonJS({
     var $dataRef = {
       $ref: "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#"
     };
-    function schemaOrData(schema93) {
-      return { anyOf: [schema93, $dataRef] };
+    function schemaOrData(schema94) {
+      return { anyOf: [schema94, $dataRef] };
     }
   }
 });
@@ -4743,7 +4743,7 @@ var require_pattern = __commonJS({
       $data: true,
       error: error2,
       code(cxt) {
-        const { gen, data, $data, schema: schema93, schemaCode, it } = cxt;
+        const { gen, data, $data, schema: schema94, schemaCode, it } = cxt;
         const u = it.opts.unicodeRegExp ? "u" : "";
         if ($data) {
           const { regExp } = it.opts.code;
@@ -4752,7 +4752,7 @@ var require_pattern = __commonJS({
           gen.try(() => gen.assign(valid, (0, codegen_1._)`${regExpCode}(${schemaCode}, ${u}).test(${data})`), () => gen.assign(valid, false));
           cxt.fail$data((0, codegen_1._)`!${valid}`);
         } else {
-          const regExp = (0, code_1.usePattern)(cxt, schema93);
+          const regExp = (0, code_1.usePattern)(cxt, schema94);
           cxt.fail$data((0, codegen_1._)`!${regExp}.test(${data})`);
         }
       }
@@ -4809,11 +4809,11 @@ var require_required = __commonJS({
       $data: true,
       error: error2,
       code(cxt) {
-        const { gen, schema: schema93, schemaCode, data, $data, it } = cxt;
+        const { gen, schema: schema94, schemaCode, data, $data, it } = cxt;
         const { opts } = it;
-        if (!$data && schema93.length === 0)
+        if (!$data && schema94.length === 0)
           return;
-        const useLoop = schema93.length >= opts.loopRequired;
+        const useLoop = schema94.length >= opts.loopRequired;
         if (it.allErrors)
           allErrorsMode();
         else
@@ -4821,7 +4821,7 @@ var require_required = __commonJS({
         if (opts.strictRequired) {
           const props = cxt.parentSchema.properties;
           const { definedProperties } = cxt.it;
-          for (const requiredKey of schema93) {
+          for (const requiredKey of schema94) {
             if ((props === null || props === void 0 ? void 0 : props[requiredKey]) === void 0 && !definedProperties.has(requiredKey)) {
               const schemaPath = it.schemaEnv.baseId + it.errSchemaPath;
               const msg = `required property "${requiredKey}" is not defined at "${schemaPath}" (strictRequired)`;
@@ -4833,7 +4833,7 @@ var require_required = __commonJS({
           if (useLoop || $data) {
             cxt.block$data(codegen_1.nil, loopAllRequired);
           } else {
-            for (const prop of schema93) {
+            for (const prop of schema94) {
               (0, code_1.checkReportMissingProp)(cxt, prop);
             }
           }
@@ -4845,7 +4845,7 @@ var require_required = __commonJS({
             cxt.block$data(valid, () => loopUntilMissing(missing, valid));
             cxt.ok(valid);
           } else {
-            gen.if((0, code_1.checkMissingProp)(cxt, schema93, missing));
+            gen.if((0, code_1.checkMissingProp)(cxt, schema94, missing));
             (0, code_1.reportMissingProp)(cxt, missing);
             gen.else();
           }
@@ -4932,8 +4932,8 @@ var require_uniqueItems = __commonJS({
       $data: true,
       error: error2,
       code(cxt) {
-        const { gen, data, $data, schema: schema93, parentSchema, schemaCode, it } = cxt;
-        if (!$data && !schema93)
+        const { gen, data, $data, schema: schema94, parentSchema, schemaCode, it } = cxt;
+        if (!$data && !schema94)
           return;
         const valid = gen.let("valid");
         const itemTypes = parentSchema.items ? (0, dataType_1.getSchemaTypes)(parentSchema.items) : [];
@@ -4996,11 +4996,11 @@ var require_const = __commonJS({
       $data: true,
       error: error2,
       code(cxt) {
-        const { gen, data, $data, schemaCode, schema: schema93 } = cxt;
-        if ($data || schema93 && typeof schema93 == "object") {
+        const { gen, data, $data, schemaCode, schema: schema94 } = cxt;
+        if ($data || schema94 && typeof schema94 == "object") {
           cxt.fail$data((0, codegen_1._)`!${(0, util_1.useFunc)(gen, equal_1.default)}(${data}, ${schemaCode})`);
         } else {
-          cxt.fail((0, codegen_1._)`${schema93} !== ${data}`);
+          cxt.fail((0, codegen_1._)`${schema94} !== ${data}`);
         }
       }
     };
@@ -5026,10 +5026,10 @@ var require_enum = __commonJS({
       $data: true,
       error: error2,
       code(cxt) {
-        const { gen, data, $data, schema: schema93, schemaCode, it } = cxt;
-        if (!$data && schema93.length === 0)
+        const { gen, data, $data, schema: schema94, schemaCode, it } = cxt;
+        if (!$data && schema94.length === 0)
           throw new Error("enum must have non-empty array");
-        const useLoop = schema93.length >= it.opts.loopEnum;
+        const useLoop = schema94.length >= it.opts.loopEnum;
         let eql;
         const getEql = () => eql !== null && eql !== void 0 ? eql : eql = (0, util_1.useFunc)(gen, equal_1.default);
         let valid;
@@ -5037,10 +5037,10 @@ var require_enum = __commonJS({
           valid = gen.let("valid");
           cxt.block$data(valid, loopEnum);
         } else {
-          if (!Array.isArray(schema93))
+          if (!Array.isArray(schema94))
             throw new Error("ajv implementation error");
           const vSchema = gen.const("vSchema", schemaCode);
-          valid = (0, codegen_1.or)(...schema93.map((_x, i) => equalCode(vSchema, i)));
+          valid = (0, codegen_1.or)(...schema94.map((_x, i) => equalCode(vSchema, i)));
         }
         cxt.pass(valid);
         function loopEnum() {
@@ -5048,7 +5048,7 @@ var require_enum = __commonJS({
           gen.forOf("v", schemaCode, (v) => gen.if((0, codegen_1._)`${getEql()}(${data}, ${v})`, () => gen.assign(valid, true).break()));
         }
         function equalCode(vSchema, i) {
-          const sch = schema93[i];
+          const sch = schema94[i];
           return typeof sch === "object" && sch !== null ? (0, codegen_1._)`${getEql()}(${data}, ${vSchema}[${i}])` : (0, codegen_1._)`${data} === ${sch}`;
         }
       }
@@ -5124,13 +5124,13 @@ var require_additionalItems = __commonJS({
       }
     };
     function validateAdditionalItems(cxt, items) {
-      const { gen, schema: schema93, data, keyword, it } = cxt;
+      const { gen, schema: schema94, data, keyword, it } = cxt;
       it.items = true;
       const len = gen.const("len", (0, codegen_1._)`${data}.length`);
-      if (schema93 === false) {
+      if (schema94 === false) {
         cxt.setParams({ len: items.length });
         cxt.pass((0, codegen_1._)`${len} <= ${items.length}`);
-      } else if (typeof schema93 == "object" && !(0, util_1.alwaysValidSchema)(it, schema93)) {
+      } else if (typeof schema94 == "object" && !(0, util_1.alwaysValidSchema)(it, schema94)) {
         const valid = gen.var("valid", (0, codegen_1._)`${len} <= ${items.length}`);
         gen.if((0, codegen_1.not)(valid), () => validateItems(valid));
         cxt.ok(valid);
@@ -5163,11 +5163,11 @@ var require_items = __commonJS({
       schemaType: ["object", "array", "boolean"],
       before: "uniqueItems",
       code(cxt) {
-        const { schema: schema93, it } = cxt;
-        if (Array.isArray(schema93))
-          return validateTuple(cxt, "additionalItems", schema93);
+        const { schema: schema94, it } = cxt;
+        if (Array.isArray(schema94))
+          return validateTuple(cxt, "additionalItems", schema94);
         it.items = true;
-        if ((0, util_1.alwaysValidSchema)(it, schema93))
+        if ((0, util_1.alwaysValidSchema)(it, schema94))
           return;
         cxt.ok((0, code_1.validateArray)(cxt));
       }
@@ -5242,10 +5242,10 @@ var require_items2020 = __commonJS({
       before: "uniqueItems",
       error: error2,
       code(cxt) {
-        const { schema: schema93, parentSchema, it } = cxt;
+        const { schema: schema94, parentSchema, it } = cxt;
         const { prefixItems } = parentSchema;
         it.items = true;
-        if ((0, util_1.alwaysValidSchema)(it, schema93))
+        if ((0, util_1.alwaysValidSchema)(it, schema94))
           return;
         if (prefixItems)
           (0, additionalItems_1.validateAdditionalItems)(cxt, prefixItems);
@@ -5276,7 +5276,7 @@ var require_contains = __commonJS({
       trackErrors: true,
       error: error2,
       code(cxt) {
-        const { gen, schema: schema93, parentSchema, data, it } = cxt;
+        const { gen, schema: schema94, parentSchema, data, it } = cxt;
         let min;
         let max;
         const { minContains, maxContains } = parentSchema;
@@ -5297,7 +5297,7 @@ var require_contains = __commonJS({
           cxt.fail();
           return;
         }
-        if ((0, util_1.alwaysValidSchema)(it, schema93)) {
+        if ((0, util_1.alwaysValidSchema)(it, schema94)) {
           let cond = (0, codegen_1._)`${len} >= ${min}`;
           if (max !== void 0)
             cond = (0, codegen_1._)`${cond} && ${len} <= ${max}`;
@@ -5382,14 +5382,14 @@ var require_dependencies = __commonJS({
         validateSchemaDeps(cxt, schDeps);
       }
     };
-    function splitDependencies({ schema: schema93 }) {
+    function splitDependencies({ schema: schema94 }) {
       const propertyDeps = {};
       const schemaDeps = {};
-      for (const key in schema93) {
+      for (const key in schema94) {
         if (key === "__proto__")
           continue;
-        const deps = Array.isArray(schema93[key]) ? propertyDeps : schemaDeps;
-        deps[key] = schema93[key];
+        const deps = Array.isArray(schema94[key]) ? propertyDeps : schemaDeps;
+        deps[key] = schema94[key];
       }
       return [propertyDeps, schemaDeps];
     }
@@ -5462,8 +5462,8 @@ var require_propertyNames = __commonJS({
       schemaType: ["object", "boolean"],
       error: error2,
       code(cxt) {
-        const { gen, schema: schema93, data, it } = cxt;
-        if ((0, util_1.alwaysValidSchema)(it, schema93))
+        const { gen, schema: schema94, data, it } = cxt;
+        if ((0, util_1.alwaysValidSchema)(it, schema94))
           return;
         const valid = gen.name("valid");
         gen.forIn("key", data, (key) => {
@@ -5509,12 +5509,12 @@ var require_additionalProperties = __commonJS({
       trackErrors: true,
       error: error2,
       code(cxt) {
-        const { gen, schema: schema93, parentSchema, data, errsCount, it } = cxt;
+        const { gen, schema: schema94, parentSchema, data, errsCount, it } = cxt;
         if (!errsCount)
           throw new Error("ajv implementation error");
         const { allErrors, opts } = it;
         it.props = true;
-        if (opts.removeAdditional !== "all" && (0, util_1.alwaysValidSchema)(it, schema93))
+        if (opts.removeAdditional !== "all" && (0, util_1.alwaysValidSchema)(it, schema94))
           return;
         const props = (0, code_1.allSchemaProperties)(parentSchema.properties);
         const patProps = (0, code_1.allSchemaProperties)(parentSchema.patternProperties);
@@ -5547,18 +5547,18 @@ var require_additionalProperties = __commonJS({
           gen.code((0, codegen_1._)`delete ${data}[${key}]`);
         }
         function additionalPropertyCode(key) {
-          if (opts.removeAdditional === "all" || opts.removeAdditional && schema93 === false) {
+          if (opts.removeAdditional === "all" || opts.removeAdditional && schema94 === false) {
             deleteAdditional(key);
             return;
           }
-          if (schema93 === false) {
+          if (schema94 === false) {
             cxt.setParams({ additionalProperty: key });
             cxt.error();
             if (!allErrors)
               gen.break();
             return;
           }
-          if (typeof schema93 == "object" && !(0, util_1.alwaysValidSchema)(it, schema93)) {
+          if (typeof schema94 == "object" && !(0, util_1.alwaysValidSchema)(it, schema94)) {
             const valid = gen.name("valid");
             if (opts.removeAdditional === "failing") {
               applyAdditionalSchema(key, valid, false);
@@ -5608,18 +5608,18 @@ var require_properties = __commonJS({
       type: "object",
       schemaType: "object",
       code(cxt) {
-        const { gen, schema: schema93, parentSchema, data, it } = cxt;
+        const { gen, schema: schema94, parentSchema, data, it } = cxt;
         if (it.opts.removeAdditional === "all" && parentSchema.additionalProperties === void 0) {
           additionalProperties_1.default.code(new validate_1.KeywordCxt(it, additionalProperties_1.default, "additionalProperties"));
         }
-        const allProps = (0, code_1.allSchemaProperties)(schema93);
+        const allProps = (0, code_1.allSchemaProperties)(schema94);
         for (const prop of allProps) {
           it.definedProperties.add(prop);
         }
         if (it.opts.unevaluated && allProps.length && it.props !== true) {
           it.props = util_1.mergeEvaluated.props(gen, (0, util_1.toHash)(allProps), it.props);
         }
-        const properties = allProps.filter((p) => !(0, util_1.alwaysValidSchema)(it, schema93[p]));
+        const properties = allProps.filter((p) => !(0, util_1.alwaysValidSchema)(it, schema94[p]));
         if (properties.length === 0)
           return;
         const valid = gen.name("valid");
@@ -5637,7 +5637,7 @@ var require_properties = __commonJS({
           cxt.ok(valid);
         }
         function hasDefault(prop) {
-          return it.opts.useDefaults && !it.compositeRule && schema93[prop].default !== void 0;
+          return it.opts.useDefaults && !it.compositeRule && schema94[prop].default !== void 0;
         }
         function applyPropertySchema(prop) {
           cxt.subschema({
@@ -5666,10 +5666,10 @@ var require_patternProperties = __commonJS({
       type: "object",
       schemaType: "object",
       code(cxt) {
-        const { gen, schema: schema93, data, parentSchema, it } = cxt;
+        const { gen, schema: schema94, data, parentSchema, it } = cxt;
         const { opts } = it;
-        const patterns = (0, code_1.allSchemaProperties)(schema93);
-        const alwaysValidPatterns = patterns.filter((p) => (0, util_1.alwaysValidSchema)(it, schema93[p]));
+        const patterns = (0, code_1.allSchemaProperties)(schema94);
+        const alwaysValidPatterns = patterns.filter((p) => (0, util_1.alwaysValidSchema)(it, schema94[p]));
         if (patterns.length === 0 || alwaysValidPatterns.length === patterns.length && (!it.opts.unevaluated || it.props === true)) {
           return;
         }
@@ -5737,8 +5737,8 @@ var require_not = __commonJS({
       schemaType: ["object", "boolean"],
       trackErrors: true,
       code(cxt) {
-        const { gen, schema: schema93, it } = cxt;
-        if ((0, util_1.alwaysValidSchema)(it, schema93)) {
+        const { gen, schema: schema94, it } = cxt;
+        if ((0, util_1.alwaysValidSchema)(it, schema94)) {
           cxt.fail();
           return;
         }
@@ -5791,12 +5791,12 @@ var require_oneOf = __commonJS({
       trackErrors: true,
       error: error2,
       code(cxt) {
-        const { gen, schema: schema93, parentSchema, it } = cxt;
-        if (!Array.isArray(schema93))
+        const { gen, schema: schema94, parentSchema, it } = cxt;
+        if (!Array.isArray(schema94))
           throw new Error("ajv implementation error");
         if (it.opts.discriminator && parentSchema.discriminator)
           return;
-        const schArr = schema93;
+        const schArr = schema94;
         const valid = gen.let("valid", false);
         const passing = gen.let("passing", null);
         const schValid = gen.name("_valid");
@@ -5842,11 +5842,11 @@ var require_allOf = __commonJS({
       keyword: "allOf",
       schemaType: "array",
       code(cxt) {
-        const { gen, schema: schema93, it } = cxt;
-        if (!Array.isArray(schema93))
+        const { gen, schema: schema94, it } = cxt;
+        if (!Array.isArray(schema94))
           throw new Error("ajv implementation error");
         const valid = gen.name("valid");
-        schema93.forEach((sch, i) => {
+        schema94.forEach((sch, i) => {
           if ((0, util_1.alwaysValidSchema)(it, sch))
             return;
           const schCxt = cxt.subschema({ keyword: "allOf", schemaProp: i }, valid);
@@ -5921,8 +5921,8 @@ var require_if = __commonJS({
       }
     };
     function hasSchema(it, keyword) {
-      const schema93 = it.schema[keyword];
-      return schema93 !== void 0 && !(0, util_1.alwaysValidSchema)(it, schema93);
+      const schema94 = it.schema[keyword];
+      return schema94 !== void 0 && !(0, util_1.alwaysValidSchema)(it, schema94);
     }
     exports.default = def;
   }
@@ -6011,7 +6011,7 @@ var require_format = __commonJS({
       $data: true,
       error: error2,
       code(cxt, ruleType) {
-        const { gen, data, $data, schema: schema93, schemaCode, it } = cxt;
+        const { gen, data, $data, schema: schema94, schemaCode, it } = cxt;
         const { opts, errSchemaPath, schemaEnv, self: self2 } = it;
         if (!opts.validateFormats)
           return;
@@ -6041,7 +6041,7 @@ var require_format = __commonJS({
           }
         }
         function validateFormat() {
-          const formatDef = self2.formats[schema93];
+          const formatDef = self2.formats[schema94];
           if (!formatDef) {
             unknownFormat();
             return;
@@ -6058,12 +6058,12 @@ var require_format = __commonJS({
             }
             throw new Error(unknownMsg());
             function unknownMsg() {
-              return `unknown format "${schema93}" ignored in schema at path "${errSchemaPath}"`;
+              return `unknown format "${schema94}" ignored in schema at path "${errSchemaPath}"`;
             }
           }
           function getFormat(fmtDef) {
-            const code = fmtDef instanceof RegExp ? (0, codegen_1.regexpCode)(fmtDef) : opts.code.formats ? (0, codegen_1._)`${opts.code.formats}${(0, codegen_1.getProperty)(schema93)}` : void 0;
-            const fmt = gen.scopeValue("formats", { key: schema93, ref: fmtDef, code });
+            const code = fmtDef instanceof RegExp ? (0, codegen_1.regexpCode)(fmtDef) : opts.code.formats ? (0, codegen_1._)`${opts.code.formats}${(0, codegen_1.getProperty)(schema94)}` : void 0;
+            const fmt = gen.scopeValue("formats", { key: schema94, ref: fmtDef, code });
             if (typeof fmtDef == "object" && !(fmtDef instanceof RegExp)) {
               return [fmtDef.type || "string", fmtDef.validate, (0, codegen_1._)`${fmt}.validate`];
             }
@@ -6174,15 +6174,15 @@ var require_discriminator = __commonJS({
       schemaType: "object",
       error: error2,
       code(cxt) {
-        const { gen, data, schema: schema93, parentSchema, it } = cxt;
+        const { gen, data, schema: schema94, parentSchema, it } = cxt;
         const { oneOf } = parentSchema;
         if (!it.opts.discriminator) {
           throw new Error("discriminator: requires discriminator option");
         }
-        const tagName = schema93.propertyName;
+        const tagName = schema94.propertyName;
         if (typeof tagName != "string")
           throw new Error("discriminator: requires propertyName");
-        if (schema93.mapping)
+        if (schema94.mapping)
           throw new Error("discriminator: mapping is not supported");
         if (!oneOf)
           throw new Error("discriminator: requires oneOf keyword");
@@ -6783,11 +6783,11 @@ var require_dist = __commonJS({
         (0, limit_1.default)(ajv);
       return ajv;
     };
-    formatsPlugin.get = (name93, mode = "full") => {
+    formatsPlugin.get = (name94, mode = "full") => {
       const formats = mode === "fast" ? formats_1.fastFormats : formats_1.fullFormats;
-      const f = formats[name93];
+      const f = formats[name94];
       if (!f)
-        throw new Error(`Unknown format "${name93}"`);
+        throw new Error(`Unknown format "${name94}"`);
       return f;
     };
     function addFormats(ajv, list3, fs4, exportName) {
@@ -6913,20 +6913,20 @@ function __runInitializers(thisArg, initializers, value) {
 function __propKey(x) {
   return typeof x === "symbol" ? x : "".concat(x);
 }
-function __setFunctionName(f, name93, prefix) {
-  if (typeof name93 === "symbol") name93 = name93.description ? "[".concat(name93.description, "]") : "";
-  return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name93) : name93 });
+function __setFunctionName(f, name94, prefix) {
+  if (typeof name94 === "symbol") name94 = name94.description ? "[".concat(name94.description, "]") : "";
+  return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name94) : name94 });
 }
 function __metadata(metadataKey, metadataValue) {
   if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
 }
 function __awaiter(thisArg, _arguments, P, generator) {
   function adopt(value) {
-    return value instanceof P ? value : new P(function(resolve4) {
-      resolve4(value);
+    return value instanceof P ? value : new P(function(resolve5) {
+      resolve5(value);
     });
   }
-  return new (P || (P = Promise))(function(resolve4, reject) {
+  return new (P || (P = Promise))(function(resolve5, reject) {
     function fulfilled(value) {
       try {
         step(generator.next(value));
@@ -6942,7 +6942,7 @@ function __awaiter(thisArg, _arguments, P, generator) {
       }
     }
     function step(result) {
-      result.done ? resolve4(result.value) : adopt(result.value).then(fulfilled, rejected);
+      result.done ? resolve5(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
@@ -7133,14 +7133,14 @@ function __asyncValues(o) {
   }, i);
   function verb(n) {
     i[n] = o[n] && function(v) {
-      return new Promise(function(resolve4, reject) {
-        v = o[n](v), settle(resolve4, reject, v.done, v.value);
+      return new Promise(function(resolve5, reject) {
+        v = o[n](v), settle(resolve5, reject, v.done, v.value);
       });
     };
   }
-  function settle(resolve4, reject, d, v) {
+  function settle(resolve5, reject, d, v) {
     Promise.resolve(v).then(function(v2) {
-      resolve4({ value: v2, done: d });
+      resolve5({ value: v2, done: d });
     }, reject);
   }
 }
@@ -7351,9 +7351,9 @@ var require_types2 = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.FunctionRegion = exports.FunctionsHttpError = exports.FunctionsRelayError = exports.FunctionsFetchError = exports.FunctionsError = void 0;
     var FunctionsError2 = class extends Error {
-      constructor(message, name93 = "FunctionsError", context) {
+      constructor(message, name94 = "FunctionsError", context) {
         super(message);
-        this.name = name93;
+        this.name = name94;
         this.context = context;
       }
       toJSON() {
@@ -8227,8 +8227,8 @@ var require_phoenix_cjs = __commonJS({
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
     var __export2 = (target, all) => {
-      for (var name93 in all)
-        __defProp2(target, name93, { get: all[name93], enumerable: true });
+      for (var name94 in all)
+        __defProp2(target, name94, { get: all[name94], enumerable: true });
     };
     var __copyProps2 = (to, from, except, desc) => {
       if (from && typeof from === "object" || typeof from === "function") {
@@ -10478,9 +10478,9 @@ var require_RealtimeChannel = __commonJS({
         const newPostgresBindings = [];
         for (let i = 0; i < bindingsLen; i++) {
           const clientPostgresBinding = clientPostgresBindings[i];
-          const { filter: { event, schema: schema93, table, filter } } = clientPostgresBinding;
+          const { filter: { event, schema: schema94, table, filter } } = clientPostgresBinding;
           const serverPostgresFilter = postgres_changes && postgres_changes[i];
-          if (serverPostgresFilter && serverPostgresFilter.event === event && _RealtimeChannel.isFilterValueEqual(serverPostgresFilter.schema, schema93) && _RealtimeChannel.isFilterValueEqual(serverPostgresFilter.table, table) && _RealtimeChannel.isFilterValueEqual(serverPostgresFilter.filter, filter)) {
+          if (serverPostgresFilter && serverPostgresFilter.event === event && _RealtimeChannel.isFilterValueEqual(serverPostgresFilter.schema, schema94) && _RealtimeChannel.isFilterValueEqual(serverPostgresFilter.table, table) && _RealtimeChannel.isFilterValueEqual(serverPostgresFilter.filter, filter)) {
             newPostgresBindings.push(Object.assign(Object.assign({}, clientPostgresBinding), { id: serverPostgresFilter.id }));
           } else {
             this.unsubscribe();
@@ -10834,15 +10834,15 @@ var require_RealtimeChannel = __commonJS({
             }
           }
         } else {
-          return new Promise((resolve4) => {
+          return new Promise((resolve5) => {
             var _a2, _b2, _c;
             const push = this.channelAdapter.push(args.type, args, opts.timeout || this.timeout);
             if (args.type === "broadcast" && !((_c = (_b2 = (_a2 = this.params) === null || _a2 === void 0 ? void 0 : _a2.config) === null || _b2 === void 0 ? void 0 : _b2.broadcast) === null || _c === void 0 ? void 0 : _c.ack)) {
-              resolve4("ok");
+              resolve5("ok");
             }
-            push.receive("ok", () => resolve4("ok"));
-            push.receive("error", () => resolve4("error"));
-            push.receive("timeout", () => resolve4("timed out"));
+            push.receive("ok", () => resolve5("ok"));
+            push.receive("error", () => resolve5("error"));
+            push.receive("timeout", () => resolve5("timed out"));
           });
         }
       }
@@ -10867,8 +10867,8 @@ var require_RealtimeChannel = __commonJS({
        * @category Realtime
        */
       async unsubscribe(timeout = this.timeout) {
-        return new Promise((resolve4) => {
-          this.channelAdapter.unsubscribe(timeout).receive("ok", () => resolve4("ok")).receive("timeout", () => resolve4("timed out")).receive("error", () => resolve4("error"));
+        return new Promise((resolve5) => {
+          this.channelAdapter.unsubscribe(timeout).receive("ok", () => resolve5("ok")).receive("timeout", () => resolve5("timed out")).receive("error", () => resolve5("error"));
         });
       }
       /**
@@ -10958,9 +10958,9 @@ var require_RealtimeChannel = __commonJS({
         this.channelAdapter.updatePayloadTransform((event, payload, ref) => {
           if (typeof payload === "object" && "ids" in payload) {
             const postgresChanges = payload.data;
-            const { schema: schema93, table, commit_timestamp, type, errors } = postgresChanges;
+            const { schema: schema94, table, commit_timestamp, type, errors } = postgresChanges;
             const enrichedPayload = {
-              schema: schema93,
+              schema: schema94,
               table,
               commit_timestamp,
               eventType: type,
@@ -11072,11 +11072,11 @@ var require_socketAdapter = __commonJS({
         this.socket.connect();
       }
       disconnect(callback, code, reason, timeout = 1e4) {
-        return new Promise((resolve4) => {
-          setTimeout(() => resolve4("timeout"), timeout);
+        return new Promise((resolve5) => {
+          setTimeout(() => resolve5("timeout"), timeout);
           this.socket.disconnect(() => {
             callback();
-            resolve4("ok");
+            resolve5("ok");
           }, code, reason);
         });
       }
@@ -11929,9 +11929,9 @@ var require_errors2 = __commonJS({
     };
     exports.AuthUnknownError = AuthUnknownError;
     var CustomAuthError = class extends AuthError {
-      constructor(message, name93, status, code) {
+      constructor(message, name94, status, code) {
         super(message, status, code);
-        this.name = name93;
+        this.name = name94;
         this.status = status;
       }
     };
@@ -13860,9 +13860,9 @@ var require_locks = __commonJS({
     var ProcessLockAcquireTimeoutError = class extends LockAcquireTimeoutError {
     };
     exports.ProcessLockAcquireTimeoutError = ProcessLockAcquireTimeoutError;
-    async function navigatorLock(name93, acquireTimeout, fn) {
+    async function navigatorLock(name94, acquireTimeout, fn) {
       if (exports.internals.debug) {
-        console.log("@supabase/gotrue-js: navigatorLock: acquire lock", name93, acquireTimeout);
+        console.log("@supabase/gotrue-js: navigatorLock: acquire lock", name94, acquireTimeout);
       }
       const abortController = new globalThis.AbortController();
       let acquireTimeoutTimer;
@@ -13870,13 +13870,13 @@ var require_locks = __commonJS({
         acquireTimeoutTimer = setTimeout(() => {
           abortController.abort();
           if (exports.internals.debug) {
-            console.log("@supabase/gotrue-js: navigatorLock acquire timed out", name93);
+            console.log("@supabase/gotrue-js: navigatorLock acquire timed out", name94);
           }
         }, acquireTimeout);
       }
       await Promise.resolve();
       try {
-        return await globalThis.navigator.locks.request(name93, acquireTimeout === 0 ? {
+        return await globalThis.navigator.locks.request(name94, acquireTimeout === 0 ? {
           mode: "exclusive",
           ifAvailable: true
         } : {
@@ -13886,21 +13886,21 @@ var require_locks = __commonJS({
           if (lock) {
             clearTimeout(acquireTimeoutTimer);
             if (exports.internals.debug) {
-              console.log("@supabase/gotrue-js: navigatorLock: acquired", name93, lock.name);
+              console.log("@supabase/gotrue-js: navigatorLock: acquired", name94, lock.name);
             }
             try {
               return await fn();
             } finally {
               if (exports.internals.debug) {
-                console.log("@supabase/gotrue-js: navigatorLock: released", name93, lock.name);
+                console.log("@supabase/gotrue-js: navigatorLock: released", name94, lock.name);
               }
             }
           } else {
             if (acquireTimeout === 0) {
               if (exports.internals.debug) {
-                console.log("@supabase/gotrue-js: navigatorLock: not immediately available", name93);
+                console.log("@supabase/gotrue-js: navigatorLock: not immediately available", name94);
               }
-              throw new NavigatorLockAcquireTimeoutError(`Acquiring an exclusive Navigator LockManager lock "${name93}" immediately failed`);
+              throw new NavigatorLockAcquireTimeoutError(`Acquiring an exclusive Navigator LockManager lock "${name94}" immediately failed`);
             } else {
               if (exports.internals.debug) {
                 try {
@@ -13923,22 +13923,22 @@ var require_locks = __commonJS({
         if (e !== null && typeof e === "object" && "name" in e && e.name === "AbortError" && acquireTimeout > 0) {
           if (abortController.signal.aborted) {
             if (exports.internals.debug) {
-              console.log("@supabase/gotrue-js: navigatorLock: acquire timeout, recovering by stealing lock", name93);
+              console.log("@supabase/gotrue-js: navigatorLock: acquire timeout, recovering by stealing lock", name94);
             }
-            console.warn(`@supabase/gotrue-js: Lock "${name93}" was not released within ${acquireTimeout}ms. This may indicate an orphaned lock from a component unmount (e.g., React Strict Mode). Forcefully acquiring the lock to recover.`);
-            return await Promise.resolve().then(() => globalThis.navigator.locks.request(name93, {
+            console.warn(`@supabase/gotrue-js: Lock "${name94}" was not released within ${acquireTimeout}ms. This may indicate an orphaned lock from a component unmount (e.g., React Strict Mode). Forcefully acquiring the lock to recover.`);
+            return await Promise.resolve().then(() => globalThis.navigator.locks.request(name94, {
               mode: "exclusive",
               steal: true
             }, async (lock) => {
               if (lock) {
                 if (exports.internals.debug) {
-                  console.log("@supabase/gotrue-js: navigatorLock: recovered (stolen)", name93, lock.name);
+                  console.log("@supabase/gotrue-js: navigatorLock: recovered (stolen)", name94, lock.name);
                 }
                 try {
                   return await fn();
                 } finally {
                   if (exports.internals.debug) {
-                    console.log("@supabase/gotrue-js: navigatorLock: released (stolen)", name93, lock.name);
+                    console.log("@supabase/gotrue-js: navigatorLock: released (stolen)", name94, lock.name);
                   }
                 }
               } else {
@@ -13948,18 +13948,18 @@ var require_locks = __commonJS({
             }));
           } else {
             if (exports.internals.debug) {
-              console.log("@supabase/gotrue-js: navigatorLock: lock was stolen by another request", name93);
+              console.log("@supabase/gotrue-js: navigatorLock: lock was stolen by another request", name94);
             }
-            throw new NavigatorLockAcquireTimeoutError(`Lock "${name93}" was released because another request stole it`);
+            throw new NavigatorLockAcquireTimeoutError(`Lock "${name94}" was released because another request stole it`);
           }
         }
         throw e;
       }
     }
     var PROCESS_LOCKS = {};
-    async function processLock(name93, acquireTimeout, fn) {
+    async function processLock(name94, acquireTimeout, fn) {
       var _a;
-      const previousOperation = (_a = PROCESS_LOCKS[name93]) !== null && _a !== void 0 ? _a : Promise.resolve();
+      const previousOperation = (_a = PROCESS_LOCKS[name94]) !== null && _a !== void 0 ? _a : Promise.resolve();
       const previousOperationHandled = (async () => {
         try {
           await previousOperation;
@@ -13973,8 +13973,8 @@ var require_locks = __commonJS({
         try {
           const timeoutPromise = acquireTimeout >= 0 ? new Promise((_, reject) => {
             timeoutId = setTimeout(() => {
-              console.warn(`@supabase/gotrue-js: Lock "${name93}" acquisition timed out after ${acquireTimeout}ms. This may be caused by another operation holding the lock. Consider increasing lockAcquireTimeout or checking for stuck operations.`);
-              reject(new ProcessLockAcquireTimeoutError(`Acquiring process lock with name "${name93}" timed out`));
+              console.warn(`@supabase/gotrue-js: Lock "${name94}" acquisition timed out after ${acquireTimeout}ms. This may be caused by another operation holding the lock. Consider increasing lockAcquireTimeout or checking for stuck operations.`);
+              reject(new ProcessLockAcquireTimeoutError(`Acquiring process lock with name "${name94}" timed out`));
             }, acquireTimeout);
           }) : null;
           await Promise.race([previousOperationHandled, timeoutPromise].filter((x) => x));
@@ -13991,7 +13991,7 @@ var require_locks = __commonJS({
         }
         return await fn();
       })();
-      PROCESS_LOCKS[name93] = (async () => {
+      PROCESS_LOCKS[name94] = (async () => {
         try {
           return await currentOperation;
         } catch (e) {
@@ -14126,11 +14126,11 @@ var require_webauthn_errors = __commonJS({
     exports.identifyAuthenticationError = identifyAuthenticationError;
     var webauthn_1 = require_webauthn();
     var WebAuthnError = class extends Error {
-      constructor({ message, code, cause, name: name93 }) {
+      constructor({ message, code, cause, name: name94 }) {
         var _a;
         super(message, { cause });
         this.__isWebAuthnError = true;
-        this.name = (_a = name93 !== null && name93 !== void 0 ? name93 : cause instanceof Error ? cause.name : void 0) !== null && _a !== void 0 ? _a : "Unknown Error";
+        this.name = (_a = name94 !== null && name94 !== void 0 ? name94 : cause instanceof Error ? cause.name : void 0) !== null && _a !== void 0 ? _a : "Unknown Error";
         this.code = code;
       }
       toJSON() {
@@ -20651,12 +20651,12 @@ var handleResult = (ctx, result) => {
 function processCreateParams(params) {
   if (!params)
     return {};
-  const { errorMap: errorMap3, invalid_type_error, required_error, description: description93 } = params;
+  const { errorMap: errorMap3, invalid_type_error, required_error, description: description94 } = params;
   if (errorMap3 && (invalid_type_error || required_error)) {
     throw new Error(`Can't use "invalid_type_error" or "required_error" in conjunction with custom error map.`);
   }
   if (errorMap3)
-    return { errorMap: errorMap3, description: description93 };
+    return { errorMap: errorMap3, description: description94 };
   const customMap = (iss, ctx) => {
     const { message } = params;
     if (iss.code === "invalid_enum_value") {
@@ -20669,7 +20669,7 @@ function processCreateParams(params) {
       return { message: ctx.defaultError };
     return { message: message ?? invalid_type_error ?? ctx.defaultError };
   };
-  return { errorMap: customMap, description: description93 };
+  return { errorMap: customMap, description: description94 };
 }
 var ZodType = class {
   get description() {
@@ -20934,11 +20934,11 @@ var ZodType = class {
       typeName: ZodFirstPartyTypeKind.ZodCatch
     });
   }
-  describe(description93) {
+  describe(description94) {
     const This = this.constructor;
     return new This({
       ...this._def,
-      description: description93
+      description: description94
     });
   }
   pipe(target) {
@@ -22348,9 +22348,9 @@ var ZodArray = class _ZodArray extends ZodType {
     return this.min(1, message);
   }
 };
-ZodArray.create = (schema93, params) => {
+ZodArray.create = (schema94, params) => {
   return new ZodArray({
-    type: schema93,
+    type: schema94,
     minLength: null,
     maxLength: null,
     exactLength: null,
@@ -22358,30 +22358,30 @@ ZodArray.create = (schema93, params) => {
     ...processCreateParams(params)
   });
 };
-function deepPartialify(schema93) {
-  if (schema93 instanceof ZodObject) {
+function deepPartialify(schema94) {
+  if (schema94 instanceof ZodObject) {
     const newShape = {};
-    for (const key in schema93.shape) {
-      const fieldSchema = schema93.shape[key];
+    for (const key in schema94.shape) {
+      const fieldSchema = schema94.shape[key];
       newShape[key] = ZodOptional.create(deepPartialify(fieldSchema));
     }
     return new ZodObject({
-      ...schema93._def,
+      ...schema94._def,
       shape: () => newShape
     });
-  } else if (schema93 instanceof ZodArray) {
+  } else if (schema94 instanceof ZodArray) {
     return new ZodArray({
-      ...schema93._def,
-      type: deepPartialify(schema93.element)
+      ...schema94._def,
+      type: deepPartialify(schema94.element)
     });
-  } else if (schema93 instanceof ZodOptional) {
-    return ZodOptional.create(deepPartialify(schema93.unwrap()));
-  } else if (schema93 instanceof ZodNullable) {
-    return ZodNullable.create(deepPartialify(schema93.unwrap()));
-  } else if (schema93 instanceof ZodTuple) {
-    return ZodTuple.create(schema93.items.map((item) => deepPartialify(item)));
+  } else if (schema94 instanceof ZodOptional) {
+    return ZodOptional.create(deepPartialify(schema94.unwrap()));
+  } else if (schema94 instanceof ZodNullable) {
+    return ZodNullable.create(deepPartialify(schema94.unwrap()));
+  } else if (schema94 instanceof ZodTuple) {
+    return ZodTuple.create(schema94.items.map((item) => deepPartialify(item)));
   } else {
-    return schema93;
+    return schema94;
   }
 }
 var ZodObject = class _ZodObject extends ZodType {
@@ -22597,8 +22597,8 @@ var ZodObject = class _ZodObject extends ZodType {
   //   }) as any;
   //   return merged;
   // }
-  setKey(key, schema93) {
-    return this.augment({ [key]: schema93 });
+  setKey(key, schema94) {
+    return this.augment({ [key]: schema94 });
   }
   // merge<Incoming extends AnyZodObject>(
   //   merging: Incoming
@@ -23044,10 +23044,10 @@ var ZodTuple = class _ZodTuple extends ZodType {
       status.dirty();
     }
     const items = [...ctx.data].map((item, itemIndex) => {
-      const schema93 = this._def.items[itemIndex] || this._def.rest;
-      if (!schema93)
+      const schema94 = this._def.items[itemIndex] || this._def.rest;
+      if (!schema94)
         return null;
-      return schema93._parse(new ParseInputLazyPath(ctx, item, ctx.path, itemIndex));
+      return schema94._parse(new ParseInputLazyPath(ctx, item, ctx.path, itemIndex));
     }).filter((x) => !!x);
     if (ctx.common.async) {
       return Promise.all(items).then((results) => {
@@ -23561,9 +23561,9 @@ var ZodPromise = class extends ZodType {
     }));
   }
 };
-ZodPromise.create = (schema93, params) => {
+ZodPromise.create = (schema94, params) => {
   return new ZodPromise({
-    type: schema93,
+    type: schema94,
     typeName: ZodFirstPartyTypeKind.ZodPromise,
     ...processCreateParams(params)
   });
@@ -23691,17 +23691,17 @@ var ZodEffects = class extends ZodType {
     util.assertNever(effect);
   }
 };
-ZodEffects.create = (schema93, effect, params) => {
+ZodEffects.create = (schema94, effect, params) => {
   return new ZodEffects({
-    schema: schema93,
+    schema: schema94,
     typeName: ZodFirstPartyTypeKind.ZodEffects,
     effect,
     ...processCreateParams(params)
   });
 };
-ZodEffects.createWithPreprocess = (preprocess2, schema93, params) => {
+ZodEffects.createWithPreprocess = (preprocess2, schema94, params) => {
   return new ZodEffects({
-    schema: schema93,
+    schema: schema94,
     effect: { type: "preprocess", transform: preprocess2 },
     typeName: ZodFirstPartyTypeKind.ZodEffects,
     ...processCreateParams(params)
@@ -24062,7 +24062,7 @@ var NEVER2 = Object.freeze({
   status: "aborted"
 });
 // @__NO_SIDE_EFFECTS__
-function $constructor(name93, initializer3, params) {
+function $constructor(name94, initializer3, params) {
   function init(inst, def) {
     var _a;
     Object.defineProperty(inst, "_zod", {
@@ -24070,7 +24070,7 @@ function $constructor(name93, initializer3, params) {
       enumerable: false
     });
     (_a = inst._zod).traits ?? (_a.traits = /* @__PURE__ */ new Set());
-    inst._zod.traits.add(name93);
+    inst._zod.traits.add(name94);
     initializer3(inst, def);
     for (const k2 in _.prototype) {
       if (!(k2 in inst))
@@ -24082,7 +24082,7 @@ function $constructor(name93, initializer3, params) {
   const Parent = params?.Parent ?? Object;
   class Definition extends Parent {
   }
-  Object.defineProperty(Definition, "name", { value: name93 });
+  Object.defineProperty(Definition, "name", { value: name94 });
   function _(def) {
     var _a;
     const inst = params?.Parent ? new Definition() : this;
@@ -24098,10 +24098,10 @@ function $constructor(name93, initializer3, params) {
     value: (inst) => {
       if (params?.Parent && inst instanceof params.Parent)
         return true;
-      return inst?._zod?.traits?.has(name93);
+      return inst?._zod?.traits?.has(name94);
     }
   });
-  Object.defineProperty(_, "name", { value: name93 });
+  Object.defineProperty(_, "name", { value: name94 });
   return _;
 }
 var $ZodAsyncError = class extends Error {
@@ -24446,9 +24446,9 @@ var BIGINT_FORMAT_RANGES = {
   int64: [/* @__PURE__ */ BigInt("-9223372036854775808"), /* @__PURE__ */ BigInt("9223372036854775807")],
   uint64: [/* @__PURE__ */ BigInt(0), /* @__PURE__ */ BigInt("18446744073709551615")]
 };
-function pick(schema93, mask) {
+function pick(schema94, mask) {
   const newShape = {};
-  const currDef = schema93._zod.def;
+  const currDef = schema94._zod.def;
   for (const key in mask) {
     if (!(key in currDef.shape)) {
       throw new Error(`Unrecognized key: "${key}"`);
@@ -24457,15 +24457,15 @@ function pick(schema93, mask) {
       continue;
     newShape[key] = currDef.shape[key];
   }
-  return clone(schema93, {
-    ...schema93._zod.def,
+  return clone(schema94, {
+    ...schema94._zod.def,
     shape: newShape,
     checks: []
   });
 }
-function omit(schema93, mask) {
-  const newShape = { ...schema93._zod.def.shape };
-  const currDef = schema93._zod.def;
+function omit(schema94, mask) {
+  const newShape = { ...schema94._zod.def.shape };
+  const currDef = schema94._zod.def;
   for (const key in mask) {
     if (!(key in currDef.shape)) {
       throw new Error(`Unrecognized key: "${key}"`);
@@ -24474,27 +24474,27 @@ function omit(schema93, mask) {
       continue;
     delete newShape[key];
   }
-  return clone(schema93, {
-    ...schema93._zod.def,
+  return clone(schema94, {
+    ...schema94._zod.def,
     shape: newShape,
     checks: []
   });
 }
-function extend(schema93, shape) {
+function extend(schema94, shape) {
   if (!isPlainObject(shape)) {
     throw new Error("Invalid input to extend: expected a plain object");
   }
   const def = {
-    ...schema93._zod.def,
+    ...schema94._zod.def,
     get shape() {
-      const _shape = { ...schema93._zod.def.shape, ...shape };
+      const _shape = { ...schema94._zod.def.shape, ...shape };
       assignProp(this, "shape", _shape);
       return _shape;
     },
     checks: []
     // delete existing checks
   };
-  return clone(schema93, def);
+  return clone(schema94, def);
 }
 function merge(a, b) {
   return clone(a, {
@@ -24509,8 +24509,8 @@ function merge(a, b) {
     // delete existing checks
   });
 }
-function partial(Class2, schema93, mask) {
-  const oldShape = schema93._zod.def.shape;
+function partial(Class2, schema94, mask) {
+  const oldShape = schema94._zod.def.shape;
   const shape = { ...oldShape };
   if (mask) {
     for (const key in mask) {
@@ -24532,14 +24532,14 @@ function partial(Class2, schema93, mask) {
       }) : oldShape[key];
     }
   }
-  return clone(schema93, {
-    ...schema93._zod.def,
+  return clone(schema94, {
+    ...schema94._zod.def,
     shape,
     checks: []
   });
 }
-function required(Class2, schema93, mask) {
-  const oldShape = schema93._zod.def.shape;
+function required(Class2, schema94, mask) {
+  const oldShape = schema94._zod.def.shape;
   const shape = { ...oldShape };
   if (mask) {
     for (const key in mask) {
@@ -24561,8 +24561,8 @@ function required(Class2, schema93, mask) {
       });
     }
   }
-  return clone(schema93, {
-    ...schema93._zod.def,
+  return clone(schema94, {
+    ...schema94._zod.def,
     shape,
     // optional: [],
     checks: []
@@ -24713,9 +24713,9 @@ function formatError(error2, _mapper) {
 }
 
 // harnesses/mcp-servers/cascade-api/node_modules/zod/v4/core/parse.js
-var _parse = (_Err) => (schema93, value, _ctx, _params) => {
+var _parse = (_Err) => (schema94, value, _ctx, _params) => {
   const ctx = _ctx ? Object.assign(_ctx, { async: false }) : { async: false };
-  const result = schema93._zod.run({ value, issues: [] }, ctx);
+  const result = schema94._zod.run({ value, issues: [] }, ctx);
   if (result instanceof Promise) {
     throw new $ZodAsyncError();
   }
@@ -24727,9 +24727,9 @@ var _parse = (_Err) => (schema93, value, _ctx, _params) => {
   return result.value;
 };
 var parse = /* @__PURE__ */ _parse($ZodRealError);
-var _parseAsync = (_Err) => async (schema93, value, _ctx, params) => {
+var _parseAsync = (_Err) => async (schema94, value, _ctx, params) => {
   const ctx = _ctx ? Object.assign(_ctx, { async: true }) : { async: true };
-  let result = schema93._zod.run({ value, issues: [] }, ctx);
+  let result = schema94._zod.run({ value, issues: [] }, ctx);
   if (result instanceof Promise)
     result = await result;
   if (result.issues.length) {
@@ -24740,9 +24740,9 @@ var _parseAsync = (_Err) => async (schema93, value, _ctx, params) => {
   return result.value;
 };
 var parseAsync = /* @__PURE__ */ _parseAsync($ZodRealError);
-var _safeParse = (_Err) => (schema93, value, _ctx) => {
+var _safeParse = (_Err) => (schema94, value, _ctx) => {
   const ctx = _ctx ? { ..._ctx, async: false } : { async: false };
-  const result = schema93._zod.run({ value, issues: [] }, ctx);
+  const result = schema94._zod.run({ value, issues: [] }, ctx);
   if (result instanceof Promise) {
     throw new $ZodAsyncError();
   }
@@ -24752,9 +24752,9 @@ var _safeParse = (_Err) => (schema93, value, _ctx) => {
   } : { success: true, data: result.value };
 };
 var safeParse = /* @__PURE__ */ _safeParse($ZodRealError);
-var _safeParseAsync = (_Err) => async (schema93, value, _ctx) => {
+var _safeParseAsync = (_Err) => async (schema94, value, _ctx) => {
   const ctx = _ctx ? Object.assign(_ctx, { async: true }) : { async: true };
-  let result = schema93._zod.run({ value, issues: [] }, ctx);
+  let result = schema94._zod.run({ value, issues: [] }, ctx);
   if (result instanceof Promise)
     result = await result;
   return result.issues.length ? {
@@ -26612,14 +26612,14 @@ var $ZodRegistry = class {
     this._map = /* @__PURE__ */ new Map();
     this._idmap = /* @__PURE__ */ new Map();
   }
-  add(schema93, ..._meta) {
+  add(schema94, ..._meta) {
     const meta = _meta[0];
-    this._map.set(schema93, meta);
+    this._map.set(schema94, meta);
     if (meta && typeof meta === "object" && "id" in meta) {
       if (this._idmap.has(meta.id)) {
         throw new Error(`ID ${meta.id} already exists in the registry`);
       }
-      this._idmap.set(meta.id, schema93);
+      this._idmap.set(meta.id, schema94);
     }
     return this;
   }
@@ -26628,25 +26628,25 @@ var $ZodRegistry = class {
     this._idmap = /* @__PURE__ */ new Map();
     return this;
   }
-  remove(schema93) {
-    const meta = this._map.get(schema93);
+  remove(schema94) {
+    const meta = this._map.get(schema94);
     if (meta && typeof meta === "object" && "id" in meta) {
       this._idmap.delete(meta.id);
     }
-    this._map.delete(schema93);
+    this._map.delete(schema94);
     return this;
   }
-  get(schema93) {
-    const p = schema93._zod.parent;
+  get(schema94) {
+    const p = schema94._zod.parent;
     if (p) {
       const pm = { ...this.get(p) ?? {} };
       delete pm.id;
-      return { ...pm, ...this._map.get(schema93) };
+      return { ...pm, ...this._map.get(schema94) };
     }
-    return this._map.get(schema93);
+    return this._map.get(schema94);
   }
-  has(schema93) {
-    return this._map.has(schema93);
+  has(schema94) {
+    return this._map.has(schema94);
   }
 };
 function registry() {
@@ -27075,22 +27075,22 @@ function _array(Class2, element, params) {
 function _custom(Class2, fn, _params) {
   const norm2 = normalizeParams(_params);
   norm2.abort ?? (norm2.abort = true);
-  const schema93 = new Class2({
+  const schema94 = new Class2({
     type: "custom",
     check: "custom",
     fn,
     ...norm2
   });
-  return schema93;
+  return schema94;
 }
 function _refine(Class2, fn, _params) {
-  const schema93 = new Class2({
+  const schema94 = new Class2({
     type: "custom",
     check: "custom",
     fn,
     ...normalizeParams(_params)
   });
-  return schema93;
+  return schema94;
 }
 
 // harnesses/mcp-servers/cascade-api/node_modules/zod/v4/core/to-json-schema.js
@@ -27105,9 +27105,9 @@ var JSONSchemaGenerator = class {
     this.io = params?.io ?? "output";
     this.seen = /* @__PURE__ */ new Map();
   }
-  process(schema93, _params = { path: [], schemaPath: [] }) {
+  process(schema94, _params = { path: [], schemaPath: [] }) {
     var _a;
-    const def = schema93._zod.def;
+    const def = schema94._zod.def;
     const formatMap = {
       guid: "uuid",
       url: "uri",
@@ -27116,27 +27116,27 @@ var JSONSchemaGenerator = class {
       regex: ""
       // do not set
     };
-    const seen = this.seen.get(schema93);
+    const seen = this.seen.get(schema94);
     if (seen) {
       seen.count++;
-      const isCycle = _params.schemaPath.includes(schema93);
+      const isCycle = _params.schemaPath.includes(schema94);
       if (isCycle) {
         seen.cycle = _params.path;
       }
       return seen.schema;
     }
     const result = { schema: {}, count: 1, cycle: void 0, path: _params.path };
-    this.seen.set(schema93, result);
-    const overrideSchema = schema93._zod.toJSONSchema?.();
+    this.seen.set(schema94, result);
+    const overrideSchema = schema94._zod.toJSONSchema?.();
     if (overrideSchema) {
       result.schema = overrideSchema;
     } else {
       const params = {
         ..._params,
-        schemaPath: [..._params.schemaPath, schema93],
+        schemaPath: [..._params.schemaPath, schema94],
         path: _params.path
       };
-      const parent = schema93._zod.parent;
+      const parent = schema94._zod.parent;
       if (parent) {
         result.ref = parent;
         this.process(parent, params);
@@ -27147,7 +27147,7 @@ var JSONSchemaGenerator = class {
           case "string": {
             const json = _json;
             json.type = "string";
-            const { minimum, maximum, format, patterns, contentEncoding } = schema93._zod.bag;
+            const { minimum, maximum, format, patterns, contentEncoding } = schema94._zod.bag;
             if (typeof minimum === "number")
               json.minLength = minimum;
             if (typeof maximum === "number")
@@ -27176,7 +27176,7 @@ var JSONSchemaGenerator = class {
           }
           case "number": {
             const json = _json;
-            const { minimum, maximum, format, multipleOf, exclusiveMaximum, exclusiveMinimum } = schema93._zod.bag;
+            const { minimum, maximum, format, multipleOf, exclusiveMaximum, exclusiveMinimum } = schema94._zod.bag;
             if (typeof format === "string" && format.includes("int"))
               json.type = "integer";
             else
@@ -27258,7 +27258,7 @@ var JSONSchemaGenerator = class {
           }
           case "array": {
             const json = _json;
-            const { minimum, maximum } = schema93._zod.bag;
+            const { minimum, maximum } = schema94._zod.bag;
             if (typeof minimum === "number")
               json.minItems = minimum;
             if (typeof maximum === "number")
@@ -27355,7 +27355,7 @@ var JSONSchemaGenerator = class {
                 path: [...params.path, "items"]
               });
             }
-            const { minimum, maximum } = schema93._zod.bag;
+            const { minimum, maximum } = schema94._zod.bag;
             if (typeof minimum === "number")
               json.minItems = minimum;
             if (typeof maximum === "number")
@@ -27438,7 +27438,7 @@ var JSONSchemaGenerator = class {
               format: "binary",
               contentEncoding: "binary"
             };
-            const { minimum, maximum, mime } = schema93._zod.bag;
+            const { minimum, maximum, mime } = schema94._zod.bag;
             if (minimum !== void 0)
               file.minLength = minimum;
             if (maximum !== void 0)
@@ -27512,7 +27512,7 @@ var JSONSchemaGenerator = class {
           }
           case "template_literal": {
             const json = _json;
-            const pattern = schema93._zod.pattern;
+            const pattern = schema94._zod.pattern;
             if (!pattern)
               throw new Error("Pattern not found in template literal");
             json.type = "string";
@@ -27543,7 +27543,7 @@ var JSONSchemaGenerator = class {
             break;
           }
           case "lazy": {
-            const innerType = schema93._zod.innerType;
+            const innerType = schema94._zod.innerType;
             this.process(innerType, params);
             result.ref = innerType;
             break;
@@ -27560,20 +27560,20 @@ var JSONSchemaGenerator = class {
         }
       }
     }
-    const meta = this.metadataRegistry.get(schema93);
+    const meta = this.metadataRegistry.get(schema94);
     if (meta)
       Object.assign(result.schema, meta);
-    if (this.io === "input" && isTransforming(schema93)) {
+    if (this.io === "input" && isTransforming(schema94)) {
       delete result.schema.examples;
       delete result.schema.default;
     }
     if (this.io === "input" && result.schema._prefault)
       (_a = result.schema).default ?? (_a.default = result.schema._prefault);
     delete result.schema._prefault;
-    const _result = this.seen.get(schema93);
+    const _result = this.seen.get(schema94);
     return _result.schema;
   }
-  emit(schema93, _params) {
+  emit(schema94, _params) {
     const params = {
       cycles: _params?.cycles ?? "ref",
       reused: _params?.reused ?? "inline",
@@ -27581,7 +27581,7 @@ var JSONSchemaGenerator = class {
       // uri: _params?.uri ?? ((id) => `${id}`),
       external: _params?.external ?? void 0
     };
-    const root = this.seen.get(schema93);
+    const root = this.seen.get(schema94);
     if (!root)
       throw new Error("Unprocessed schema. This is a bug in Zod.");
     const makeURI = (entry) => {
@@ -27613,11 +27613,11 @@ var JSONSchemaGenerator = class {
       seen.def = { ...seen.schema };
       if (defId)
         seen.defId = defId;
-      const schema94 = seen.schema;
-      for (const key in schema94) {
-        delete schema94[key];
+      const schema95 = seen.schema;
+      for (const key in schema95) {
+        delete schema95[key];
       }
-      schema94.$ref = ref;
+      schema95.$ref = ref;
     };
     if (params.cycles === "throw") {
       for (const entry of this.seen.entries()) {
@@ -27631,13 +27631,13 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
     }
     for (const entry of this.seen.entries()) {
       const seen = entry[1];
-      if (schema93 === entry[0]) {
+      if (schema94 === entry[0]) {
         extractToDef(entry);
         continue;
       }
       if (params.external) {
         const ext = params.external.registry.get(entry[0])?.id;
-        if (schema93 !== entry[0] && ext) {
+        if (schema94 !== entry[0] && ext) {
           extractToDef(entry);
           continue;
         }
@@ -27660,8 +27660,8 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
     }
     const flattenRef = (zodSchema, params2) => {
       const seen = this.seen.get(zodSchema);
-      const schema94 = seen.def ?? seen.schema;
-      const _cached = { ...schema94 };
+      const schema95 = seen.def ?? seen.schema;
+      const _cached = { ...schema95 };
       if (seen.ref === null) {
         return;
       }
@@ -27671,17 +27671,17 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
         flattenRef(ref, params2);
         const refSchema = this.seen.get(ref).schema;
         if (refSchema.$ref && params2.target === "draft-7") {
-          schema94.allOf = schema94.allOf ?? [];
-          schema94.allOf.push(refSchema);
+          schema95.allOf = schema95.allOf ?? [];
+          schema95.allOf.push(refSchema);
         } else {
-          Object.assign(schema94, refSchema);
-          Object.assign(schema94, _cached);
+          Object.assign(schema95, refSchema);
+          Object.assign(schema95, _cached);
         }
       }
       if (!seen.isParent)
         this.override({
           zodSchema,
-          jsonSchema: schema94,
+          jsonSchema: schema95,
           path: seen.path ?? []
         });
     };
@@ -27697,7 +27697,7 @@ Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.
       console.warn(`Invalid target: ${this.target}`);
     }
     if (params.external?.uri) {
-      const id2 = params.external.registry.get(schema93)?.id;
+      const id2 = params.external.registry.get(schema94)?.id;
       if (!id2)
         throw new Error("Schema is missing an `id` property");
       result.$id = params.external.uri(id2);
@@ -27732,8 +27732,8 @@ function toJSONSchema(input, _params) {
     const gen2 = new JSONSchemaGenerator(_params);
     const defs = {};
     for (const entry of input._idmap.entries()) {
-      const [_, schema93] = entry;
-      gen2.process(schema93);
+      const [_, schema94] = entry;
+      gen2.process(schema94);
     }
     const schemas = {};
     const external = {
@@ -27742,8 +27742,8 @@ function toJSONSchema(input, _params) {
       defs
     };
     for (const entry of input._idmap.entries()) {
-      const [key, schema93] = entry;
-      schemas[key] = gen2.emit(schema93, {
+      const [key, schema94] = entry;
+      schemas[key] = gen2.emit(schema94, {
         ..._params,
         external
       });
@@ -27765,8 +27765,8 @@ function isTransforming(_schema, _ctx) {
   if (ctx.seen.has(_schema))
     return false;
   ctx.seen.add(_schema);
-  const schema93 = _schema;
-  const def = schema93._zod.def;
+  const schema94 = _schema;
+  const def = schema94._zod.def;
   switch (def.type) {
     case "string":
     case "number":
@@ -27908,8 +27908,8 @@ function object(shape, params) {
 
 // harnesses/mcp-servers/cascade-api/node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-compat.js
 function isZ4Schema(s) {
-  const schema93 = s;
-  return !!schema93._zod;
+  const schema94 = s;
+  return !!schema94._zod;
 }
 function objectFromShape(shape) {
   const values = Object.values(shape);
@@ -27923,33 +27923,33 @@ function objectFromShape(shape) {
     return objectType(shape);
   throw new Error("Mixed Zod versions detected in object shape.");
 }
-function safeParse2(schema93, data) {
-  if (isZ4Schema(schema93)) {
-    const result2 = safeParse(schema93, data);
+function safeParse2(schema94, data) {
+  if (isZ4Schema(schema94)) {
+    const result2 = safeParse(schema94, data);
     return result2;
   }
-  const v3Schema = schema93;
+  const v3Schema = schema94;
   const result = v3Schema.safeParse(data);
   return result;
 }
-async function safeParseAsync2(schema93, data) {
-  if (isZ4Schema(schema93)) {
-    const result2 = await safeParseAsync(schema93, data);
+async function safeParseAsync2(schema94, data) {
+  if (isZ4Schema(schema94)) {
+    const result2 = await safeParseAsync(schema94, data);
     return result2;
   }
-  const v3Schema = schema93;
+  const v3Schema = schema94;
   const result = await v3Schema.safeParseAsync(data);
   return result;
 }
-function getObjectShape(schema93) {
-  if (!schema93)
+function getObjectShape(schema94) {
+  if (!schema94)
     return void 0;
   let rawShape;
-  if (isZ4Schema(schema93)) {
-    const v4Schema = schema93;
+  if (isZ4Schema(schema94)) {
+    const v4Schema = schema94;
     rawShape = v4Schema._zod?.def?.shape;
   } else {
-    const v3Schema = schema93;
+    const v3Schema = schema94;
     rawShape = v3Schema.shape;
   }
   if (!rawShape)
@@ -27963,29 +27963,29 @@ function getObjectShape(schema93) {
   }
   return rawShape;
 }
-function normalizeObjectSchema(schema93) {
-  if (!schema93)
+function normalizeObjectSchema(schema94) {
+  if (!schema94)
     return void 0;
-  if (typeof schema93 === "object") {
-    const asV3 = schema93;
-    const asV4 = schema93;
+  if (typeof schema94 === "object") {
+    const asV3 = schema94;
+    const asV4 = schema94;
     if (!asV3._def && !asV4._zod) {
-      const values = Object.values(schema93);
+      const values = Object.values(schema94);
       if (values.length > 0 && values.every((v) => typeof v === "object" && v !== null && (v._def !== void 0 || v._zod !== void 0 || typeof v.parse === "function"))) {
-        return objectFromShape(schema93);
+        return objectFromShape(schema94);
       }
     }
   }
-  if (isZ4Schema(schema93)) {
-    const v4Schema = schema93;
+  if (isZ4Schema(schema94)) {
+    const v4Schema = schema94;
     const def = v4Schema._zod?.def;
     if (def && (def.type === "object" || def.shape !== void 0)) {
-      return schema93;
+      return schema94;
     }
   } else {
-    const v3Schema = schema93;
+    const v3Schema = schema94;
     if (v3Schema.shape !== void 0) {
-      return schema93;
+      return schema94;
     }
   }
   return void 0;
@@ -28009,23 +28009,23 @@ function getParseErrorMessage(error2) {
   }
   return String(error2);
 }
-function getSchemaDescription(schema93) {
-  return schema93.description;
+function getSchemaDescription(schema94) {
+  return schema94.description;
 }
-function isSchemaOptional(schema93) {
-  if (isZ4Schema(schema93)) {
-    const v4Schema = schema93;
+function isSchemaOptional(schema94) {
+  if (isZ4Schema(schema94)) {
+    const v4Schema = schema94;
     return v4Schema._zod?.def?.type === "optional";
   }
-  const v3Schema = schema93;
-  if (typeof schema93.isOptional === "function") {
-    return schema93.isOptional();
+  const v3Schema = schema94;
+  if (typeof schema94.isOptional === "function") {
+    return schema94.isOptional();
   }
   return v3Schema._def?.typeName === "ZodOptional";
 }
-function getLiteralValue(schema93) {
-  if (isZ4Schema(schema93)) {
-    const v4Schema = schema93;
+function getLiteralValue(schema94) {
+  if (isZ4Schema(schema94)) {
+    const v4Schema = schema94;
     const def2 = v4Schema._zod?.def;
     if (def2) {
       if (def2.value !== void 0)
@@ -28035,7 +28035,7 @@ function getLiteralValue(schema93) {
       }
     }
   }
-  const v3Schema = schema93;
+  const v3Schema = schema94;
   const def = v3Schema._def;
   if (def) {
     if (def.value !== void 0)
@@ -28044,7 +28044,7 @@ function getLiteralValue(schema93) {
       return def.values[0];
     }
   }
-  const directValue = schema93.value;
+  const directValue = schema94.value;
   if (directValue !== void 0)
     return directValue;
   return void 0;
@@ -28175,9 +28175,9 @@ var ZodType2 = /* @__PURE__ */ $constructor("ZodType", (inst, def) => {
   inst.catch = (params) => _catch(inst, params);
   inst.pipe = (target) => pipe(inst, target);
   inst.readonly = () => readonly(inst);
-  inst.describe = (description93) => {
+  inst.describe = (description94) => {
     const cl = inst.clone();
-    globalRegistry.add(cl, { description: description93 });
+    globalRegistry.add(cl, { description: description94 });
     return cl;
   };
   Object.defineProperty(inst, "description", {
@@ -28738,8 +28738,8 @@ function superRefine(fn) {
   });
   return ch;
 }
-function preprocess(fn, schema93) {
-  return pipe(transform(fn), schema93);
+function preprocess(fn, schema94) {
+  return pipe(transform(fn), schema94);
 }
 
 // harnesses/mcp-servers/cascade-api/node_modules/zod/v4/classic/external.js
@@ -30324,11 +30324,11 @@ var getRefs = (options) => {
     flags: { hasReferencedOpenAiAnyType: false },
     currentPath,
     propertyPath: void 0,
-    seen: new Map(Object.entries(_options.definitions).map(([name93, def]) => [
+    seen: new Map(Object.entries(_options.definitions).map(([name94, def]) => [
       def._def,
       {
         def: def._def,
-        path: [..._options.basePath, _options.definitionPath, name93],
+        path: [..._options.basePath, _options.definitionPath, name94],
         // Resolution of references will be forced even though seen, so it's ok that the schema is undefined here for now.
         jsonSchema: void 0
       }
@@ -30564,16 +30564,16 @@ function parseIntersectionDef(def, refs) {
   ].filter((x) => !!x);
   let unevaluatedProperties = refs.target === "jsonSchema2019-09" ? { unevaluatedProperties: false } : void 0;
   const mergedAllOf = [];
-  allOf.forEach((schema93) => {
-    if (isJsonSchema7AllOfType(schema93)) {
-      mergedAllOf.push(...schema93.allOf);
-      if (schema93.unevaluatedProperties === void 0) {
+  allOf.forEach((schema94) => {
+    if (isJsonSchema7AllOfType(schema94)) {
+      mergedAllOf.push(...schema94.allOf);
+      if (schema94.unevaluatedProperties === void 0) {
         unevaluatedProperties = void 0;
       }
     } else {
-      let nestedSchema = schema93;
-      if ("additionalProperties" in schema93 && schema93.additionalProperties === false) {
-        const { additionalProperties, ...rest } = schema93;
+      let nestedSchema = schema94;
+      if ("additionalProperties" in schema94 && schema94.additionalProperties === false) {
+        const { additionalProperties, ...rest } = schema94;
         nestedSchema = rest;
       } else {
         unevaluatedProperties = void 0;
@@ -30800,60 +30800,60 @@ function escapeNonAlphaNumeric(source) {
   }
   return result;
 }
-function addFormat(schema93, value, message, refs) {
-  if (schema93.format || schema93.anyOf?.some((x) => x.format)) {
-    if (!schema93.anyOf) {
-      schema93.anyOf = [];
+function addFormat(schema94, value, message, refs) {
+  if (schema94.format || schema94.anyOf?.some((x) => x.format)) {
+    if (!schema94.anyOf) {
+      schema94.anyOf = [];
     }
-    if (schema93.format) {
-      schema93.anyOf.push({
-        format: schema93.format,
-        ...schema93.errorMessage && refs.errorMessages && {
-          errorMessage: { format: schema93.errorMessage.format }
+    if (schema94.format) {
+      schema94.anyOf.push({
+        format: schema94.format,
+        ...schema94.errorMessage && refs.errorMessages && {
+          errorMessage: { format: schema94.errorMessage.format }
         }
       });
-      delete schema93.format;
-      if (schema93.errorMessage) {
-        delete schema93.errorMessage.format;
-        if (Object.keys(schema93.errorMessage).length === 0) {
-          delete schema93.errorMessage;
+      delete schema94.format;
+      if (schema94.errorMessage) {
+        delete schema94.errorMessage.format;
+        if (Object.keys(schema94.errorMessage).length === 0) {
+          delete schema94.errorMessage;
         }
       }
     }
-    schema93.anyOf.push({
+    schema94.anyOf.push({
       format: value,
       ...message && refs.errorMessages && { errorMessage: { format: message } }
     });
   } else {
-    setResponseValueAndErrors(schema93, "format", value, message, refs);
+    setResponseValueAndErrors(schema94, "format", value, message, refs);
   }
 }
-function addPattern(schema93, regex, message, refs) {
-  if (schema93.pattern || schema93.allOf?.some((x) => x.pattern)) {
-    if (!schema93.allOf) {
-      schema93.allOf = [];
+function addPattern(schema94, regex, message, refs) {
+  if (schema94.pattern || schema94.allOf?.some((x) => x.pattern)) {
+    if (!schema94.allOf) {
+      schema94.allOf = [];
     }
-    if (schema93.pattern) {
-      schema93.allOf.push({
-        pattern: schema93.pattern,
-        ...schema93.errorMessage && refs.errorMessages && {
-          errorMessage: { pattern: schema93.errorMessage.pattern }
+    if (schema94.pattern) {
+      schema94.allOf.push({
+        pattern: schema94.pattern,
+        ...schema94.errorMessage && refs.errorMessages && {
+          errorMessage: { pattern: schema94.errorMessage.pattern }
         }
       });
-      delete schema93.pattern;
-      if (schema93.errorMessage) {
-        delete schema93.errorMessage.pattern;
-        if (Object.keys(schema93.errorMessage).length === 0) {
-          delete schema93.errorMessage;
+      delete schema94.pattern;
+      if (schema94.errorMessage) {
+        delete schema94.errorMessage.pattern;
+        if (Object.keys(schema94.errorMessage).length === 0) {
+          delete schema94.errorMessage;
         }
       }
     }
-    schema93.allOf.push({
+    schema94.allOf.push({
       pattern: stringifyRegExpWithFlags(regex, refs),
       ...message && refs.errorMessages && { errorMessage: { pattern: message } }
     });
   } else {
-    setResponseValueAndErrors(schema93, "pattern", stringifyRegExpWithFlags(regex, refs), message, refs);
+    setResponseValueAndErrors(schema94, "pattern", stringifyRegExpWithFlags(regex, refs), message, refs);
   }
 }
 function stringifyRegExpWithFlags(regex, refs) {
@@ -30951,7 +30951,7 @@ function parseRecordDef(def, refs) {
       additionalProperties: refs.rejectedAdditionalProperties
     };
   }
-  const schema93 = {
+  const schema94 = {
     type: "object",
     additionalProperties: parseDef(def.valueType._def, {
       ...refs,
@@ -30959,17 +30959,17 @@ function parseRecordDef(def, refs) {
     }) ?? refs.allowedAdditionalProperties
   };
   if (refs.target === "openApi3") {
-    return schema93;
+    return schema94;
   }
   if (def.keyType?._def.typeName === ZodFirstPartyTypeKind.ZodString && def.keyType._def.checks?.length) {
     const { type, ...keyType } = parseStringDef(def.keyType._def, refs);
     return {
-      ...schema93,
+      ...schema94,
       propertyNames: keyType
     };
   } else if (def.keyType?._def.typeName === ZodFirstPartyTypeKind.ZodEnum) {
     return {
-      ...schema93,
+      ...schema94,
       propertyNames: {
         enum: def.keyType._def.values
       }
@@ -30977,11 +30977,11 @@ function parseRecordDef(def, refs) {
   } else if (def.keyType?._def.typeName === ZodFirstPartyTypeKind.ZodBranded && def.keyType._def.type._def.typeName === ZodFirstPartyTypeKind.ZodString && def.keyType._def.type._def.checks?.length) {
     const { type, ...keyType } = parseBrandedDef(def.keyType._def, refs);
     return {
-      ...schema93,
+      ...schema94,
       propertyNames: keyType
     };
   }
-  return schema93;
+  return schema94;
 }
 
 // harnesses/mcp-servers/cascade-api/node_modules/zod-to-json-schema/dist/esm/parsers/map.js
@@ -31254,9 +31254,9 @@ function decideAdditionalProperties(def, refs) {
       return refs.removeAdditionalStrategy === "strict" ? refs.allowedAdditionalProperties : refs.rejectedAdditionalProperties;
   }
 }
-function safeIsOptional(schema93) {
+function safeIsOptional(schema94) {
   try {
-    return schema93.isOptional();
+    return schema94.isOptional();
   } catch {
     return true;
   }
@@ -31312,18 +31312,18 @@ function parseSetDef(def, refs) {
     ...refs,
     currentPath: [...refs.currentPath, "items"]
   });
-  const schema93 = {
+  const schema94 = {
     type: "array",
     uniqueItems: true,
     items
   };
   if (def.minSize) {
-    setResponseValueAndErrors(schema93, "minItems", def.minSize.value, def.minSize.message, refs);
+    setResponseValueAndErrors(schema94, "minItems", def.minSize.value, def.minSize.message, refs);
   }
   if (def.maxSize) {
-    setResponseValueAndErrors(schema93, "maxItems", def.maxSize.value, def.maxSize.message, refs);
+    setResponseValueAndErrors(schema94, "maxItems", def.maxSize.value, def.maxSize.message, refs);
   }
-  return schema93;
+  return schema94;
 }
 
 // harnesses/mcp-servers/cascade-api/node_modules/zod-to-json-schema/dist/esm/parsers/tuple.js
@@ -31504,19 +31504,19 @@ var addMeta = (def, refs, jsonSchema) => {
 };
 
 // harnesses/mcp-servers/cascade-api/node_modules/zod-to-json-schema/dist/esm/zodToJsonSchema.js
-var zodToJsonSchema = (schema93, options) => {
+var zodToJsonSchema = (schema94, options) => {
   const refs = getRefs(options);
-  let definitions = typeof options === "object" && options.definitions ? Object.entries(options.definitions).reduce((acc, [name94, schema94]) => ({
+  let definitions = typeof options === "object" && options.definitions ? Object.entries(options.definitions).reduce((acc, [name95, schema95]) => ({
     ...acc,
-    [name94]: parseDef(schema94._def, {
+    [name95]: parseDef(schema95._def, {
       ...refs,
-      currentPath: [...refs.basePath, refs.definitionPath, name94]
+      currentPath: [...refs.basePath, refs.definitionPath, name95]
     }, true) ?? parseAnyDef(refs)
   }), {}) : void 0;
-  const name93 = typeof options === "string" ? options : options?.nameStrategy === "title" ? void 0 : options?.name;
-  const main2 = parseDef(schema93._def, name93 === void 0 ? refs : {
+  const name94 = typeof options === "string" ? options : options?.nameStrategy === "title" ? void 0 : options?.name;
+  const main2 = parseDef(schema94._def, name94 === void 0 ? refs : {
     ...refs,
-    currentPath: [...refs.basePath, refs.definitionPath, name93]
+    currentPath: [...refs.basePath, refs.definitionPath, name94]
   }, false) ?? parseAnyDef(refs);
   const title = typeof options === "object" && options.name !== void 0 && options.nameStrategy === "title" ? options.name : void 0;
   if (title !== void 0) {
@@ -31540,18 +31540,18 @@ var zodToJsonSchema = (schema93, options) => {
       };
     }
   }
-  const combined = name93 === void 0 ? definitions ? {
+  const combined = name94 === void 0 ? definitions ? {
     ...main2,
     [refs.definitionPath]: definitions
   } : main2 : {
     $ref: [
       ...refs.$refStrategy === "relative" ? [] : refs.basePath,
       refs.definitionPath,
-      name93
+      name94
     ].join("/"),
     [refs.definitionPath]: {
       ...definitions,
-      [name93]: main2
+      [name94]: main2
     }
   };
   if (refs.target === "jsonSchema7") {
@@ -31575,20 +31575,20 @@ function mapMiniTarget(t) {
     return "draft-2020-12";
   return "draft-7";
 }
-function toJsonSchemaCompat(schema93, opts) {
-  if (isZ4Schema(schema93)) {
-    return toJSONSchema(schema93, {
+function toJsonSchemaCompat(schema94, opts) {
+  if (isZ4Schema(schema94)) {
+    return toJSONSchema(schema94, {
       target: mapMiniTarget(opts?.target),
       io: opts?.pipeStrategy ?? "input"
     });
   }
-  return zodToJsonSchema(schema93, {
+  return zodToJsonSchema(schema94, {
     strictUnions: opts?.strictUnions ?? true,
     pipeStrategy: opts?.pipeStrategy ?? "input"
   });
 }
-function getMethodLiteral(schema93) {
-  const shape = getObjectShape(schema93);
+function getMethodLiteral(schema94) {
+  const shape = getObjectShape(schema94);
   const methodSchema = shape?.method;
   if (!methodSchema) {
     throw new Error("Schema is missing a method literal");
@@ -31599,8 +31599,8 @@ function getMethodLiteral(schema93) {
   }
   return value;
 }
-function parseWithCompat(schema93, data) {
-  const result = safeParse2(schema93, data);
+function parseWithCompat(schema94, data) {
+  const result = safeParse2(schema94, data);
   if (!result.success) {
     throw result.error;
   }
@@ -31830,25 +31830,25 @@ var Protocol = class {
     const error2 = McpError.fromError(ErrorCode.ConnectionClosed, "Connection closed");
     this._transport = void 0;
     this.onclose?.();
-    for (const handler93 of responseHandlers.values()) {
-      handler93(error2);
+    for (const handler94 of responseHandlers.values()) {
+      handler94(error2);
     }
   }
   _onerror(error2) {
     this.onerror?.(error2);
   }
   _onnotification(notification) {
-    const handler93 = this._notificationHandlers.get(notification.method) ?? this.fallbackNotificationHandler;
-    if (handler93 === void 0) {
+    const handler94 = this._notificationHandlers.get(notification.method) ?? this.fallbackNotificationHandler;
+    if (handler94 === void 0) {
       return;
     }
-    Promise.resolve().then(() => handler93(notification)).catch((error2) => this._onerror(new Error(`Uncaught error in notification handler: ${error2}`)));
+    Promise.resolve().then(() => handler94(notification)).catch((error2) => this._onerror(new Error(`Uncaught error in notification handler: ${error2}`)));
   }
   _onrequest(request, extra) {
-    const handler93 = this._requestHandlers.get(request.method) ?? this.fallbackRequestHandler;
+    const handler94 = this._requestHandlers.get(request.method) ?? this.fallbackRequestHandler;
     const capturedTransport = this._transport;
     const relatedTaskId = request.params?._meta?.[RELATED_TASK_META_KEY]?.taskId;
-    if (handler93 === void 0) {
+    if (handler94 === void 0) {
       const errorResponse = {
         jsonrpc: "2.0",
         id: request.id,
@@ -31912,7 +31912,7 @@ var Protocol = class {
       if (taskCreationParams) {
         this.assertTaskHandlerCapability(request.method);
       }
-    }).then(() => handler93(request, fullExtra)).then(async (result) => {
+    }).then(() => handler94(request, fullExtra)).then(async (result) => {
       if (abortController.signal.aborted) {
         return;
       }
@@ -31961,8 +31961,8 @@ var Protocol = class {
   _onprogress(notification) {
     const { progressToken, ...params } = notification.params;
     const messageId = Number(progressToken);
-    const handler93 = this._progressHandlers.get(messageId);
-    if (!handler93) {
+    const handler94 = this._progressHandlers.get(messageId);
+    if (!handler94) {
       this._onerror(new Error(`Received a progress notification for an unknown token: ${JSON.stringify(notification)}`));
       return;
     }
@@ -31979,7 +31979,7 @@ var Protocol = class {
         return;
       }
     }
-    handler93(params);
+    handler94(params);
   }
   _onresponse(response) {
     const messageId = Number(response.id);
@@ -31994,8 +31994,8 @@ var Protocol = class {
       }
       return;
     }
-    const handler93 = this._responseHandlers.get(messageId);
-    if (handler93 === void 0) {
+    const handler94 = this._responseHandlers.get(messageId);
+    if (handler94 === void 0) {
       this._onerror(new Error(`Received a response for an unknown message ID: ${JSON.stringify(response)}`));
       return;
     }
@@ -32016,10 +32016,10 @@ var Protocol = class {
       this._progressHandlers.delete(messageId);
     }
     if (isJSONRPCResultResponse(response)) {
-      handler93(response);
+      handler94(response);
     } else {
       const error2 = McpError.fromError(response.error.code, response.error.message, response.error.data);
-      handler93(error2);
+      handler94(error2);
     }
   }
   get transport() {
@@ -32107,7 +32107,7 @@ var Protocol = class {
           return;
         }
         const pollInterval = task2.pollInterval ?? this._options?.defaultTaskPollInterval ?? 1e3;
-        await new Promise((resolve4) => setTimeout(resolve4, pollInterval));
+        await new Promise((resolve5) => setTimeout(resolve5, pollInterval));
         options?.signal?.throwIfAborted();
       }
     } catch (error2) {
@@ -32124,7 +32124,7 @@ var Protocol = class {
    */
   request(request, resultSchema, options) {
     const { relatedRequestId, resumptionToken, onresumptiontoken, task, relatedTask } = options ?? {};
-    return new Promise((resolve4, reject) => {
+    return new Promise((resolve5, reject) => {
       const earlyReject = (error2) => {
         reject(error2);
       };
@@ -32202,7 +32202,7 @@ var Protocol = class {
           if (!parseResult.success) {
             reject(parseResult.error);
           } else {
-            resolve4(parseResult.data);
+            resolve5(parseResult.data);
           }
         } catch (error2) {
           reject(error2);
@@ -32217,9 +32217,9 @@ var Protocol = class {
       const relatedTaskId = relatedTask?.taskId;
       if (relatedTaskId) {
         const responseResolver = (response) => {
-          const handler93 = this._responseHandlers.get(messageId);
-          if (handler93) {
-            handler93(response);
+          const handler94 = this._responseHandlers.get(messageId);
+          if (handler94) {
+            handler94(response);
           } else {
             this._onerror(new Error(`Response handler missing for side-channeled request ${messageId}`));
           }
@@ -32356,12 +32356,12 @@ var Protocol = class {
    *
    * Note that this will replace any previous request handler for the same method.
    */
-  setRequestHandler(requestSchema, handler93) {
+  setRequestHandler(requestSchema, handler94) {
     const method = getMethodLiteral(requestSchema);
     this.assertRequestHandlerCapability(method);
     this._requestHandlers.set(method, (request, extra) => {
       const parsed = parseWithCompat(requestSchema, request);
-      return Promise.resolve(handler93(parsed, extra));
+      return Promise.resolve(handler94(parsed, extra));
     });
   }
   /**
@@ -32383,11 +32383,11 @@ var Protocol = class {
    *
    * Note that this will replace any previous notification handler for the same method.
    */
-  setNotificationHandler(notificationSchema, handler93) {
+  setNotificationHandler(notificationSchema, handler94) {
     const method = getMethodLiteral(notificationSchema);
     this._notificationHandlers.set(method, (notification) => {
       const parsed = parseWithCompat(notificationSchema, notification);
-      return Promise.resolve(handler93(parsed));
+      return Promise.resolve(handler94(parsed));
     });
   }
   /**
@@ -32463,12 +32463,12 @@ var Protocol = class {
       }
     } catch {
     }
-    return new Promise((resolve4, reject) => {
+    return new Promise((resolve5, reject) => {
       if (signal.aborted) {
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
         return;
       }
-      const timeoutId = setTimeout(resolve4, interval);
+      const timeoutId = setTimeout(resolve5, interval);
       signal.addEventListener("abort", () => {
         clearTimeout(timeoutId);
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
@@ -32608,8 +32608,8 @@ var AjvJsonSchemaValidator = class {
    * @param schema - Standard JSON Schema object
    * @returns A validator function that validates input data
    */
-  getValidator(schema93) {
-    const ajvValidator = "$id" in schema93 && typeof schema93.$id === "string" ? this._ajv.getSchema(schema93.$id) ?? this._ajv.compile(schema93) : this._ajv.compile(schema93);
+  getValidator(schema94) {
+    const ajvValidator = "$id" in schema94 && typeof schema94.$id === "string" ? this._ajv.getSchema(schema94.$id) ?? this._ajv.compile(schema94) : this._ajv.compile(schema94);
     return (input) => {
       const valid = ajvValidator(input);
       if (valid) {
@@ -32937,7 +32937,7 @@ var Server = class extends Protocol {
   /**
    * Override request handler registration to enforce server-side validation for tools/call.
    */
-  setRequestHandler(requestSchema, handler93) {
+  setRequestHandler(requestSchema, handler94) {
     const shape = getObjectShape(requestSchema);
     const methodSchema = shape?.method;
     if (!methodSchema) {
@@ -32965,7 +32965,7 @@ var Server = class extends Protocol {
           throw new McpError(ErrorCode.InvalidParams, `Invalid tools/call request: ${errorMessage}`);
         }
         const { params } = validatedRequest.data;
-        const result = await Promise.resolve(handler93(request, extra));
+        const result = await Promise.resolve(handler94(request, extra));
         if (params.task) {
           const taskValidationResult = safeParse2(CreateTaskResultSchema, result);
           if (!taskValidationResult.success) {
@@ -32983,7 +32983,7 @@ var Server = class extends Protocol {
       };
       return super.setRequestHandler(requestSchema, wrappedHandler);
     }
-    return super.setRequestHandler(requestSchema, handler93);
+    return super.setRequestHandler(requestSchema, handler94);
   }
   assertCapabilityForMethod(method) {
     switch (method) {
@@ -33259,11 +33259,11 @@ var Server = class extends Protocol {
 
 // harnesses/mcp-servers/cascade-api/node_modules/@modelcontextprotocol/sdk/dist/esm/server/completable.js
 var COMPLETABLE_SYMBOL = /* @__PURE__ */ Symbol.for("mcp.completable");
-function isCompletable(schema93) {
-  return !!schema93 && typeof schema93 === "object" && COMPLETABLE_SYMBOL in schema93;
+function isCompletable(schema94) {
+  return !!schema94 && typeof schema94 === "object" && COMPLETABLE_SYMBOL in schema94;
 }
-function getCompleter(schema93) {
-  const meta = schema93[COMPLETABLE_SYMBOL];
+function getCompleter(schema94) {
+  const meta = schema94[COMPLETABLE_SYMBOL];
   return meta?.complete;
 }
 var McpZodTypeKind;
@@ -33273,34 +33273,34 @@ var McpZodTypeKind;
 
 // harnesses/mcp-servers/cascade-api/node_modules/@modelcontextprotocol/sdk/dist/esm/shared/toolNameValidation.js
 var TOOL_NAME_REGEX = /^[A-Za-z0-9._-]{1,128}$/;
-function validateToolName(name93) {
+function validateToolName(name94) {
   const warnings = [];
-  if (name93.length === 0) {
+  if (name94.length === 0) {
     return {
       isValid: false,
       warnings: ["Tool name cannot be empty"]
     };
   }
-  if (name93.length > 128) {
+  if (name94.length > 128) {
     return {
       isValid: false,
-      warnings: [`Tool name exceeds maximum length of 128 characters (current: ${name93.length})`]
+      warnings: [`Tool name exceeds maximum length of 128 characters (current: ${name94.length})`]
     };
   }
-  if (name93.includes(" ")) {
+  if (name94.includes(" ")) {
     warnings.push("Tool name contains spaces, which may cause parsing issues");
   }
-  if (name93.includes(",")) {
+  if (name94.includes(",")) {
     warnings.push("Tool name contains commas, which may cause parsing issues");
   }
-  if (name93.startsWith("-") || name93.endsWith("-")) {
+  if (name94.startsWith("-") || name94.endsWith("-")) {
     warnings.push("Tool name starts or ends with a dash, which may cause parsing issues in some contexts");
   }
-  if (name93.startsWith(".") || name93.endsWith(".")) {
+  if (name94.startsWith(".") || name94.endsWith(".")) {
     warnings.push("Tool name starts or ends with a dot, which may cause parsing issues in some contexts");
   }
-  if (!TOOL_NAME_REGEX.test(name93)) {
-    const invalidChars = name93.split("").filter((char) => !/[A-Za-z0-9._-]/.test(char)).filter((char, index, arr) => arr.indexOf(char) === index);
+  if (!TOOL_NAME_REGEX.test(name94)) {
+    const invalidChars = name94.split("").filter((char) => !/[A-Za-z0-9._-]/.test(char)).filter((char, index, arr) => arr.indexOf(char) === index);
     warnings.push(`Tool name contains invalid characters: ${invalidChars.map((c) => `"${c}"`).join(", ")}`, "Allowed characters are: A-Z, a-z, 0-9, underscore (_), dash (-), and dot (.)");
     return {
       isValid: false,
@@ -33312,9 +33312,9 @@ function validateToolName(name93) {
     warnings
   };
 }
-function issueToolNameWarning(name93, warnings) {
+function issueToolNameWarning(name94, warnings) {
   if (warnings.length > 0) {
-    console.warn(`Tool name validation warning for "${name93}":`);
+    console.warn(`Tool name validation warning for "${name94}":`);
     for (const warning of warnings) {
       console.warn(`  - ${warning}`);
     }
@@ -33323,9 +33323,9 @@ function issueToolNameWarning(name93, warnings) {
     console.warn("See SEP: Specify Format for Tool Names (https://github.com/modelcontextprotocol/modelcontextprotocol/issues/986) for more details.");
   }
 }
-function validateAndWarnToolName(name93) {
-  const result = validateToolName(name93);
-  issueToolNameWarning(name93, result.warnings);
+function validateAndWarnToolName(name94) {
+  const result = validateToolName(name94);
+  issueToolNameWarning(name94, result.warnings);
   return result.isValid;
 }
 
@@ -33334,13 +33334,13 @@ var ExperimentalMcpServerTasks = class {
   constructor(_mcpServer) {
     this._mcpServer = _mcpServer;
   }
-  registerToolTask(name93, config2, handler93) {
+  registerToolTask(name94, config2, handler94) {
     const execution = { taskSupport: "required", ...config2.execution };
     if (execution.taskSupport === "forbidden") {
-      throw new Error(`Cannot register task-based tool '${name93}' with taskSupport 'forbidden'. Use registerTool() instead.`);
+      throw new Error(`Cannot register task-based tool '${name94}' with taskSupport 'forbidden'. Use registerTool() instead.`);
     }
     const mcpServerInternal = this._mcpServer;
-    return mcpServerInternal._createRegisteredTool(name93, config2.title, config2.description, config2.inputSchema, config2.outputSchema, config2.annotations, execution, config2._meta, handler93);
+    return mcpServerInternal._createRegisteredTool(name94, config2.title, config2.description, config2.inputSchema, config2.outputSchema, config2.annotations, execution, config2._meta, handler94);
   }
 };
 
@@ -33398,9 +33398,9 @@ var McpServer = class {
       }
     });
     this.server.setRequestHandler(ListToolsRequestSchema, () => ({
-      tools: Object.entries(this._registeredTools).filter(([, tool]) => tool.enabled).map(([name93, tool]) => {
+      tools: Object.entries(this._registeredTools).filter(([, tool]) => tool.enabled).map(([name94, tool]) => {
         const toolDefinition = {
-          name: name93,
+          name: name94,
           title: tool.title,
           description: tool.description,
           inputSchema: (() => {
@@ -33527,26 +33527,26 @@ var McpServer = class {
    * Executes a tool handler (either regular or task-based).
    */
   async executeToolHandler(tool, args, extra) {
-    const handler93 = tool.handler;
-    const isTaskHandler = "createTask" in handler93;
+    const handler94 = tool.handler;
+    const isTaskHandler = "createTask" in handler94;
     if (isTaskHandler) {
       if (!extra.taskStore) {
         throw new Error("No task store provided.");
       }
       const taskExtra = { ...extra, taskStore: extra.taskStore };
       if (tool.inputSchema) {
-        const typedHandler = handler93;
+        const typedHandler = handler94;
         return await Promise.resolve(typedHandler.createTask(args, taskExtra));
       } else {
-        const typedHandler = handler93;
+        const typedHandler = handler94;
         return await Promise.resolve(typedHandler.createTask(taskExtra));
       }
     }
     if (tool.inputSchema) {
-      const typedHandler = handler93;
+      const typedHandler = handler94;
       return await Promise.resolve(typedHandler(args, extra));
     } else {
-      const typedHandler = handler93;
+      const typedHandler = handler94;
       return await Promise.resolve(typedHandler(extra));
     }
   }
@@ -33558,17 +33558,17 @@ var McpServer = class {
       throw new Error("No task store provided for task-capable tool.");
     }
     const args = await this.validateToolInput(tool, request.params.arguments, request.params.name);
-    const handler93 = tool.handler;
+    const handler94 = tool.handler;
     const taskExtra = { ...extra, taskStore: extra.taskStore };
-    const createTaskResult = args ? await Promise.resolve(handler93.createTask(args, taskExtra)) : (
+    const createTaskResult = args ? await Promise.resolve(handler94.createTask(args, taskExtra)) : (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await Promise.resolve(handler93.createTask(taskExtra))
+      await Promise.resolve(handler94.createTask(taskExtra))
     );
     const taskId = createTaskResult.task.taskId;
     let task = createTaskResult.task;
     const pollInterval = task.pollInterval ?? 5e3;
     while (task.status !== "completed" && task.status !== "failed" && task.status !== "cancelled") {
-      await new Promise((resolve4) => setTimeout(resolve4, pollInterval));
+      await new Promise((resolve5) => setTimeout(resolve5, pollInterval));
       const updatedTask = await extra.taskStore.getTask(taskId);
       if (!updatedTask) {
         throw new McpError(ErrorCode.InternalError, `Task ${taskId} not found during polling`);
@@ -33672,8 +33672,8 @@ var McpServer = class {
       return { resources: [...resources, ...templateResources] };
     });
     this.server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
-      const resourceTemplates = Object.entries(this._registeredResourceTemplates).map(([name93, template]) => ({
-        name: name93,
+      const resourceTemplates = Object.entries(this._registeredResourceTemplates).map(([name94, template]) => ({
+        name: name94,
         uriTemplate: template.resourceTemplate.uriTemplate.toString(),
         ...template.metadata
       }));
@@ -33710,9 +33710,9 @@ var McpServer = class {
       }
     });
     this.server.setRequestHandler(ListPromptsRequestSchema, () => ({
-      prompts: Object.entries(this._registeredPrompts).filter(([, prompt]) => prompt.enabled).map(([name93, prompt]) => {
+      prompts: Object.entries(this._registeredPrompts).filter(([, prompt]) => prompt.enabled).map(([name94, prompt]) => {
         return {
-          name: name93,
+          name: name94,
           title: prompt.title,
           description: prompt.description,
           arguments: prompt.argsSchema ? promptArgumentsFromSchema(prompt.argsSchema) : void 0
@@ -33745,7 +33745,7 @@ var McpServer = class {
     });
     this._promptHandlersInitialized = true;
   }
-  resource(name93, uriOrTemplate, ...rest) {
+  resource(name94, uriOrTemplate, ...rest) {
     let metadata;
     if (typeof rest[0] === "object") {
       metadata = rest.shift();
@@ -33755,42 +33755,42 @@ var McpServer = class {
       if (this._registeredResources[uriOrTemplate]) {
         throw new Error(`Resource ${uriOrTemplate} is already registered`);
       }
-      const registeredResource = this._createRegisteredResource(name93, void 0, uriOrTemplate, metadata, readCallback);
+      const registeredResource = this._createRegisteredResource(name94, void 0, uriOrTemplate, metadata, readCallback);
       this.setResourceRequestHandlers();
       this.sendResourceListChanged();
       return registeredResource;
     } else {
-      if (this._registeredResourceTemplates[name93]) {
-        throw new Error(`Resource template ${name93} is already registered`);
+      if (this._registeredResourceTemplates[name94]) {
+        throw new Error(`Resource template ${name94} is already registered`);
       }
-      const registeredResourceTemplate = this._createRegisteredResourceTemplate(name93, void 0, uriOrTemplate, metadata, readCallback);
+      const registeredResourceTemplate = this._createRegisteredResourceTemplate(name94, void 0, uriOrTemplate, metadata, readCallback);
       this.setResourceRequestHandlers();
       this.sendResourceListChanged();
       return registeredResourceTemplate;
     }
   }
-  registerResource(name93, uriOrTemplate, config2, readCallback) {
+  registerResource(name94, uriOrTemplate, config2, readCallback) {
     if (typeof uriOrTemplate === "string") {
       if (this._registeredResources[uriOrTemplate]) {
         throw new Error(`Resource ${uriOrTemplate} is already registered`);
       }
-      const registeredResource = this._createRegisteredResource(name93, config2.title, uriOrTemplate, config2, readCallback);
+      const registeredResource = this._createRegisteredResource(name94, config2.title, uriOrTemplate, config2, readCallback);
       this.setResourceRequestHandlers();
       this.sendResourceListChanged();
       return registeredResource;
     } else {
-      if (this._registeredResourceTemplates[name93]) {
-        throw new Error(`Resource template ${name93} is already registered`);
+      if (this._registeredResourceTemplates[name94]) {
+        throw new Error(`Resource template ${name94} is already registered`);
       }
-      const registeredResourceTemplate = this._createRegisteredResourceTemplate(name93, config2.title, uriOrTemplate, config2, readCallback);
+      const registeredResourceTemplate = this._createRegisteredResourceTemplate(name94, config2.title, uriOrTemplate, config2, readCallback);
       this.setResourceRequestHandlers();
       this.sendResourceListChanged();
       return registeredResourceTemplate;
     }
   }
-  _createRegisteredResource(name93, title, uri, metadata, readCallback) {
+  _createRegisteredResource(name94, title, uri, metadata, readCallback) {
     const registeredResource = {
-      name: name93,
+      name: name94,
       title,
       metadata,
       readCallback,
@@ -33820,7 +33820,7 @@ var McpServer = class {
     this._registeredResources[uri] = registeredResource;
     return registeredResource;
   }
-  _createRegisteredResourceTemplate(name93, title, template, metadata, readCallback) {
+  _createRegisteredResourceTemplate(name94, title, template, metadata, readCallback) {
     const registeredResourceTemplate = {
       resourceTemplate: template,
       title,
@@ -33831,8 +33831,8 @@ var McpServer = class {
       enable: () => registeredResourceTemplate.update({ enabled: true }),
       remove: () => registeredResourceTemplate.update({ name: null }),
       update: (updates) => {
-        if (typeof updates.name !== "undefined" && updates.name !== name93) {
-          delete this._registeredResourceTemplates[name93];
+        if (typeof updates.name !== "undefined" && updates.name !== name94) {
+          delete this._registeredResourceTemplates[name94];
           if (updates.name)
             this._registeredResourceTemplates[updates.name] = registeredResourceTemplate;
         }
@@ -33849,7 +33849,7 @@ var McpServer = class {
         this.sendResourceListChanged();
       }
     };
-    this._registeredResourceTemplates[name93] = registeredResourceTemplate;
+    this._registeredResourceTemplates[name94] = registeredResourceTemplate;
     const variableNames = template.uriTemplate.variableNames;
     const hasCompleter = Array.isArray(variableNames) && variableNames.some((v) => !!template.completeCallback(v));
     if (hasCompleter) {
@@ -33857,10 +33857,10 @@ var McpServer = class {
     }
     return registeredResourceTemplate;
   }
-  _createRegisteredPrompt(name93, title, description93, argsSchema, callback) {
+  _createRegisteredPrompt(name94, title, description94, argsSchema, callback) {
     const registeredPrompt = {
       title,
-      description: description93,
+      description: description94,
       argsSchema: argsSchema === void 0 ? void 0 : objectFromShape(argsSchema),
       callback,
       enabled: true,
@@ -33868,8 +33868,8 @@ var McpServer = class {
       enable: () => registeredPrompt.update({ enabled: true }),
       remove: () => registeredPrompt.update({ name: null }),
       update: (updates) => {
-        if (typeof updates.name !== "undefined" && updates.name !== name93) {
-          delete this._registeredPrompts[name93];
+        if (typeof updates.name !== "undefined" && updates.name !== name94) {
+          delete this._registeredPrompts[name94];
           if (updates.name)
             this._registeredPrompts[updates.name] = registeredPrompt;
         }
@@ -33886,7 +33886,7 @@ var McpServer = class {
         this.sendPromptListChanged();
       }
     };
-    this._registeredPrompts[name93] = registeredPrompt;
+    this._registeredPrompts[name94] = registeredPrompt;
     if (argsSchema) {
       const hasCompletable = Object.values(argsSchema).some((field) => {
         const inner = field instanceof ZodOptional ? field._def?.innerType : field;
@@ -33898,27 +33898,27 @@ var McpServer = class {
     }
     return registeredPrompt;
   }
-  _createRegisteredTool(name93, title, description93, inputSchema, outputSchema, annotations, execution, _meta, handler93) {
-    validateAndWarnToolName(name93);
+  _createRegisteredTool(name94, title, description94, inputSchema, outputSchema, annotations, execution, _meta, handler94) {
+    validateAndWarnToolName(name94);
     const registeredTool = {
       title,
-      description: description93,
+      description: description94,
       inputSchema: getZodSchemaObject(inputSchema),
       outputSchema: getZodSchemaObject(outputSchema),
       annotations,
       execution,
       _meta,
-      handler: handler93,
+      handler: handler94,
       enabled: true,
       disable: () => registeredTool.update({ enabled: false }),
       enable: () => registeredTool.update({ enabled: true }),
       remove: () => registeredTool.update({ name: null }),
       update: (updates) => {
-        if (typeof updates.name !== "undefined" && updates.name !== name93) {
+        if (typeof updates.name !== "undefined" && updates.name !== name94) {
           if (typeof updates.name === "string") {
             validateAndWarnToolName(updates.name);
           }
-          delete this._registeredTools[name93];
+          delete this._registeredTools[name94];
           if (updates.name)
             this._registeredTools[updates.name] = registeredTool;
         }
@@ -33941,7 +33941,7 @@ var McpServer = class {
         this.sendToolListChanged();
       }
     };
-    this._registeredTools[name93] = registeredTool;
+    this._registeredTools[name94] = registeredTool;
     this.setToolRequestHandlers();
     this.sendToolListChanged();
     return registeredTool;
@@ -33949,16 +33949,16 @@ var McpServer = class {
   /**
    * tool() implementation. Parses arguments passed to overrides defined above.
    */
-  tool(name93, ...rest) {
-    if (this._registeredTools[name93]) {
-      throw new Error(`Tool ${name93} is already registered`);
+  tool(name94, ...rest) {
+    if (this._registeredTools[name94]) {
+      throw new Error(`Tool ${name94} is already registered`);
     }
-    let description93;
+    let description94;
     let inputSchema;
     let outputSchema;
     let annotations;
     if (typeof rest[0] === "string") {
-      description93 = rest.shift();
+      description94 = rest.shift();
     }
     if (rest.length > 1) {
       const firstArg = rest[0];
@@ -33969,38 +33969,38 @@ var McpServer = class {
         }
       } else if (typeof firstArg === "object" && firstArg !== null) {
         if (Object.values(firstArg).some((v) => typeof v === "object" && v !== null)) {
-          throw new Error(`Tool ${name93} expected a Zod schema or ToolAnnotations, but received an unrecognized object`);
+          throw new Error(`Tool ${name94} expected a Zod schema or ToolAnnotations, but received an unrecognized object`);
         }
         annotations = rest.shift();
       }
     }
     const callback = rest[0];
-    return this._createRegisteredTool(name93, void 0, description93, inputSchema, outputSchema, annotations, { taskSupport: "forbidden" }, void 0, callback);
+    return this._createRegisteredTool(name94, void 0, description94, inputSchema, outputSchema, annotations, { taskSupport: "forbidden" }, void 0, callback);
   }
   /**
    * Registers a tool with a config object and callback.
    */
-  registerTool(name93, config2, cb) {
-    if (this._registeredTools[name93]) {
-      throw new Error(`Tool ${name93} is already registered`);
+  registerTool(name94, config2, cb) {
+    if (this._registeredTools[name94]) {
+      throw new Error(`Tool ${name94} is already registered`);
     }
-    const { title, description: description93, inputSchema, outputSchema, annotations, _meta } = config2;
-    return this._createRegisteredTool(name93, title, description93, inputSchema, outputSchema, annotations, { taskSupport: "forbidden" }, _meta, cb);
+    const { title, description: description94, inputSchema, outputSchema, annotations, _meta } = config2;
+    return this._createRegisteredTool(name94, title, description94, inputSchema, outputSchema, annotations, { taskSupport: "forbidden" }, _meta, cb);
   }
-  prompt(name93, ...rest) {
-    if (this._registeredPrompts[name93]) {
-      throw new Error(`Prompt ${name93} is already registered`);
+  prompt(name94, ...rest) {
+    if (this._registeredPrompts[name94]) {
+      throw new Error(`Prompt ${name94} is already registered`);
     }
-    let description93;
+    let description94;
     if (typeof rest[0] === "string") {
-      description93 = rest.shift();
+      description94 = rest.shift();
     }
     let argsSchema;
     if (rest.length > 1) {
       argsSchema = rest.shift();
     }
     const cb = rest[0];
-    const registeredPrompt = this._createRegisteredPrompt(name93, void 0, description93, argsSchema, cb);
+    const registeredPrompt = this._createRegisteredPrompt(name94, void 0, description94, argsSchema, cb);
     this.setPromptRequestHandlers();
     this.sendPromptListChanged();
     return registeredPrompt;
@@ -34008,12 +34008,12 @@ var McpServer = class {
   /**
    * Registers a prompt with a config object and callback.
    */
-  registerPrompt(name93, config2, cb) {
-    if (this._registeredPrompts[name93]) {
-      throw new Error(`Prompt ${name93} is already registered`);
+  registerPrompt(name94, config2, cb) {
+    if (this._registeredPrompts[name94]) {
+      throw new Error(`Prompt ${name94} is already registered`);
     }
-    const { title, description: description93, argsSchema } = config2;
-    const registeredPrompt = this._createRegisteredPrompt(name93, title, description93, argsSchema, cb);
+    const { title, description: description94, argsSchema } = config2;
+    const registeredPrompt = this._createRegisteredPrompt(name94, title, description94, argsSchema, cb);
     this.setPromptRequestHandlers();
     this.sendPromptListChanged();
     return registeredPrompt;
@@ -34082,34 +34082,34 @@ function isZodRawShapeCompat(obj) {
   }
   return Object.values(obj).some(isZodTypeLike);
 }
-function getZodSchemaObject(schema93) {
-  if (!schema93) {
+function getZodSchemaObject(schema94) {
+  if (!schema94) {
     return void 0;
   }
-  if (isZodRawShapeCompat(schema93)) {
-    return objectFromShape(schema93);
+  if (isZodRawShapeCompat(schema94)) {
+    return objectFromShape(schema94);
   }
-  if (!isZodSchemaInstance(schema93)) {
+  if (!isZodSchemaInstance(schema94)) {
     throw new Error("inputSchema must be a Zod schema or raw shape, received an unrecognized object");
   }
-  return schema93;
+  return schema94;
 }
-function promptArgumentsFromSchema(schema93) {
-  const shape = getObjectShape(schema93);
+function promptArgumentsFromSchema(schema94) {
+  const shape = getObjectShape(schema94);
   if (!shape)
     return [];
-  return Object.entries(shape).map(([name93, field]) => {
-    const description93 = getSchemaDescription(field);
+  return Object.entries(shape).map(([name94, field]) => {
+    const description94 = getSchemaDescription(field);
     const isOptional = isSchemaOptional(field);
     return {
-      name: name93,
-      description: description93,
+      name: name94,
+      description: description94,
       required: !isOptional
     };
   });
 }
-function getMethodValue(schema93) {
-  const shape = getObjectShape(schema93);
+function getMethodValue(schema94) {
+  const shape = getObjectShape(schema94);
   const methodSchema = shape?.method;
   if (!methodSchema) {
     throw new Error("Schema is missing a method literal");
@@ -34217,12 +34217,12 @@ var StdioServerTransport = class {
     this.onclose?.();
   }
   send(message) {
-    return new Promise((resolve4) => {
+    return new Promise((resolve5) => {
       const json = serializeMessage(message);
       if (this._stdout.write(json)) {
-        resolve4();
+        resolve5();
       } else {
-        this._stdout.once("drain", resolve4);
+        this._stdout.once("drain", resolve5);
       }
     });
   }
@@ -34288,18 +34288,18 @@ var PostgrestError = class extends Error {
   }
 };
 function sleep(ms, signal) {
-  return new Promise((resolve4) => {
+  return new Promise((resolve5) => {
     if (signal === null || signal === void 0 ? void 0 : signal.aborted) {
-      resolve4();
+      resolve5();
       return;
     }
     const id2 = setTimeout(() => {
       signal === null || signal === void 0 || signal.removeEventListener("abort", onAbort);
-      resolve4();
+      resolve5();
     }, ms);
     function onAbort() {
       clearTimeout(id2);
-      resolve4();
+      resolve5();
     }
     signal === null || signal === void 0 || signal.addEventListener("abort", onAbort);
   });
@@ -34436,9 +34436,9 @@ var PostgrestBuilder = class {
   * @category Database
   * @subcategory Using modifiers
   */
-  setHeader(name93, value) {
+  setHeader(name94, value) {
     this.headers = new Headers(this.headers);
-    this.headers.set(name93, value);
+    this.headers.set(name94, value);
     return this;
   }
   /**
@@ -37410,10 +37410,10 @@ var PostgrestQueryBuilder = class {
   * )
   * ```
   */
-  constructor(url, { headers = {}, schema: schema93, fetch: fetch$1, urlLengthLimit = 8e3, retry }) {
+  constructor(url, { headers = {}, schema: schema94, fetch: fetch$1, urlLengthLimit = 8e3, retry }) {
     this.url = url;
     this.headers = new Headers(headers);
-    this.schema = schema93;
+    this.schema = schema94;
     this.fetch = fetch$1;
     this.urlLengthLimit = urlLengthLimit;
     this.retry = retry;
@@ -39040,10 +39040,10 @@ var PostgrestClient = class PostgrestClient2 {
   * })
   * ```
   */
-  constructor(url, { headers = {}, schema: schema93, fetch: fetch$1, timeout, urlLengthLimit = 8e3, retry } = {}) {
+  constructor(url, { headers = {}, schema: schema94, fetch: fetch$1, timeout, urlLengthLimit = 8e3, retry } = {}) {
     this.url = url;
     this.headers = new Headers(headers);
-    this.schemaName = schema93;
+    this.schemaName = schema94;
     this.urlLengthLimit = urlLengthLimit;
     const originalFetch = fetch$1 !== null && fetch$1 !== void 0 ? fetch$1 : globalThis.fetch;
     if (timeout !== void 0 && timeout > 0) this.fetch = (input, init) => {
@@ -39096,10 +39096,10 @@ var PostgrestClient = class PostgrestClient2 {
   *
   * @category Database
   */
-  schema(schema93) {
+  schema(schema94) {
     return new PostgrestClient2(this.url, {
       headers: this.headers,
-      schema: schema93,
+      schema: schema94,
       fetch: this.fetch,
       urlLengthLimit: this.urlLengthLimit,
       retry: this.retry
@@ -39282,8 +39282,8 @@ var PostgrestClient = class PostgrestClient2 {
       body = args;
     } else if (head2 || get2) {
       method = head2 ? "HEAD" : "GET";
-      Object.entries(args).filter(([_, value]) => value !== void 0).map(([name93, value]) => [name93, Array.isArray(value) ? `{${value.join(",")}}` : `${value}`]).forEach(([name93, value]) => {
-        url.searchParams.append(name93, value);
+      Object.entries(args).filter(([_, value]) => value !== void 0).map(([name94, value]) => [name94, Array.isArray(value) ? `{${value.join(",")}}` : `${value}`]).forEach(([name94, value]) => {
+        url.searchParams.append(name94, value);
       });
     } else {
       method = "POST";
@@ -39932,9 +39932,9 @@ var StorageUnknownError = class extends StorageError {
     this.originalError = originalError;
   }
 };
-function setHeader(headers, name93, value) {
+function setHeader(headers, name94, value) {
   const result = _objectSpread22({}, headers);
-  const nameLower = name93.toLowerCase();
+  const nameLower = name94.toLowerCase();
   for (const key of Object.keys(result)) if (key.toLowerCase() === nameLower) delete result[key];
   result[nameLower] = value;
   return result;
@@ -40016,7 +40016,7 @@ var _getRequestParams = (method, options, parameters, body) => {
   return _objectSpread22(_objectSpread22({}, params), parameters);
 };
 async function _handleRequest(fetcher, method, url, options, parameters, body, namespace) {
-  return new Promise((resolve4, reject) => {
+  return new Promise((resolve5, reject) => {
     fetcher(url, _getRequestParams(method, options, parameters, body)).then((result) => {
       if (!result.ok) throw result;
       if (options === null || options === void 0 ? void 0 : options.noResolveJson) return result;
@@ -40026,7 +40026,7 @@ async function _handleRequest(fetcher, method, url, options, parameters, body, n
         if (!contentType || !contentType.includes("application/json")) return {};
       }
       return result.json();
-    }).then((data) => resolve4(data)).catch((error2) => handleError(error2, reject, options, namespace));
+    }).then((data) => resolve5(data)).catch((error2) => handleError(error2, reject, options, namespace));
   });
 }
 function createFetchApi(namespace = "storage") {
@@ -40084,8 +40084,8 @@ var BaseApiClient = class {
   * @param value - Header value
   * @returns this - For method chaining
   */
-  setHeader(name93, value) {
-    this.headers = setHeader(this.headers, name93, value);
+  setHeader(name94, value) {
+    this.headers = setHeader(this.headers, name94, value);
     return this;
   }
   /**
@@ -41552,10 +41552,10 @@ var StorageAnalyticsClient = class extends BaseApiClient {
   * - Creates a new analytics bucket using Iceberg tables
   * - Analytics buckets are optimized for analytical queries and data processing
   */
-  async createBucket(name93) {
+  async createBucket(name94) {
     var _this = this;
     return _this.handleOperation(async () => {
-      return await post(_this.fetch, `${_this.url}/bucket`, { name: name93 }, { headers: _this.headers });
+      return await post(_this.fetch, `${_this.url}/bucket`, { name: name94 }, { headers: _this.headers });
     });
   }
   /**
@@ -42569,11 +42569,11 @@ var DEFAULT_TRACE_PROPAGATION_OPTIONS = {
 };
 function __awaiter2(thisArg, _arguments, P, generator) {
   function adopt(value) {
-    return value instanceof P ? value : new P(function(resolve4) {
-      resolve4(value);
+    return value instanceof P ? value : new P(function(resolve5) {
+      resolve5(value);
     });
   }
-  return new (P || (P = Promise))(function(resolve4, reject) {
+  return new (P || (P = Promise))(function(resolve5, reject) {
     function fulfilled(value) {
       try {
         step(generator.next(value));
@@ -42589,7 +42589,7 @@ function __awaiter2(thisArg, _arguments, P, generator) {
       }
     }
     function step(result) {
-      result.done ? resolve4(result.value) : adopt(result.value).then(fulfilled, rejected);
+      result.done ? resolve5(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
@@ -43103,8 +43103,8 @@ var SupabaseClient = class {
   *
   * @param schema - The schema to query
   */
-  schema(schema93) {
-    return this.rest.schema(schema93);
+  schema(schema94) {
+    return this.rest.schema(schema94);
   }
   /**
   * Perform a function call.
@@ -43144,8 +43144,8 @@ var SupabaseClient = class {
   *
   * @category Realtime
   */
-  channel(name93, opts = { config: {} }) {
-    return this.realtime.channel(name93, opts);
+  channel(name94, opts = { config: {} }) {
+    return this.realtime.channel(name94, opts);
   }
   /**
   * Returns all Realtime channels.
@@ -43944,12 +43944,12 @@ function loadEnvFile(filepath) {
     if (!existsSync2(filepath)) return;
     const content = readFileSync2(filepath, "utf-8");
     for (const line of content.split("\n")) {
-      const trimmed2 = line.trim();
-      if (!trimmed2 || trimmed2.startsWith("#")) continue;
-      const eqIdx = trimmed2.indexOf("=");
+      const trimmed3 = line.trim();
+      if (!trimmed3 || trimmed3.startsWith("#")) continue;
+      const eqIdx = trimmed3.indexOf("=");
       if (eqIdx === -1) continue;
-      const key = trimmed2.slice(0, eqIdx).trim();
-      let value = trimmed2.slice(eqIdx + 1).trim();
+      const key = trimmed3.slice(0, eqIdx).trim();
+      let value = trimmed3.slice(eqIdx + 1).trim();
       if (value.startsWith('"') && value.endsWith('"') || value.startsWith("'") && value.endsWith("'")) {
         value = value.slice(1, -1);
       }
@@ -44434,6 +44434,11 @@ var TOOL_CATALOG = {
     ],
     core: false
   },
+  cascade_canvas: {
+    category: "creative",
+    keywords: ["canvas", "work", "module", "bring", "focus", "zoom", "dismiss", "show", "side", "overview", "go"],
+    core: false
+  },
   cascade_environment_focus: {
     category: "creative",
     keywords: [
@@ -44883,8 +44888,8 @@ var STOPWORDS = /* @__PURE__ */ new Set([
   "how",
   "do"
 ]);
-function nameTokens(name93) {
-  return name93.replace(/^cascade_/, "").split("_").filter(Boolean);
+function nameTokens(name94) {
+  return name94.replace(/^cascade_/, "").split("_").filter(Boolean);
 }
 function tokenizeQuery(query) {
   return String(query || "").toLowerCase().split(/[^a-z0-9]+/).filter((t) => t.length > 0 && !STOPWORDS.has(t));
@@ -44893,8 +44898,8 @@ function searchCatalog(query, limit = 12) {
   const tokens = tokenizeQuery(query);
   if (tokens.length === 0) return [];
   const results = [];
-  for (const [name93, entry] of Object.entries(TOOL_CATALOG)) {
-    const nTokens = nameTokens(name93);
+  for (const [name94, entry] of Object.entries(TOOL_CATALOG)) {
+    const nTokens = nameTokens(name94);
     const keywords = entry.keywords;
     const category = entry.category;
     let score = 0;
@@ -44916,14 +44921,14 @@ function searchCatalog(query, limit = 12) {
       }
     }
     if (score > 0) {
-      results.push({ name: name93, category, score });
+      results.push({ name: name94, category, score });
     }
   }
   results.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
   return results.slice(0, limit);
 }
 function coreToolNames() {
-  return Object.entries(TOOL_CATALOG).filter(([, entry]) => entry.core).map(([name93]) => name93);
+  return Object.entries(TOOL_CATALOG).filter(([, entry]) => entry.core).map(([name94]) => name94);
 }
 function isLeanMode(env = process.env) {
   const v = String(env.CASCADE_MCP_TOOL_SEARCH ?? "").trim().toLowerCase();
@@ -44934,8 +44939,8 @@ function isLeanMode(env = process.env) {
 var TOOL_SEARCH_NAME = "cascade_tool_search";
 function paramNames(handle) {
   try {
-    const schema93 = handle?.inputSchema;
-    const shape = schema93?.shape ?? schema93?._def?.shape?.();
+    const schema94 = handle?.inputSchema;
+    const shape = schema94?.shape ?? schema94?._def?.shape?.();
     if (shape && typeof shape === "object") return Object.keys(shape);
   } catch {
   }
@@ -44960,12 +44965,12 @@ function registerToolSearch(server2, handles2) {
         if (lean && handle && !handle.enabled) {
           handle.enable();
         }
-        const description93 = (handle?.description ?? "").slice(0, 200);
+        const description94 = (handle?.description ?? "").slice(0, 200);
         return {
           name: r.name,
           category: r.category,
           score: r.score,
-          description: description93,
+          description: description94,
           params: paramNames(handle)
         };
       });
@@ -45042,6 +45047,9 @@ var TOOLSETS = Object.freeze({
       // Bring one rack unit / pedal / room station into the Environments
       // focus view. Verifies the target in-org first; never edits it.
       "cascade_environment_focus",
+      // Drive the Work Canvas beside the chat: bring / focus / zoom_out /
+      // dismiss modules. Verifies every target in-org first; no Accept (UI only).
+      "cascade_canvas",
       // Drive the LightCraft photo editor at /creator/lightcraft (request/
       // reply over the local bridge). Destructive ids need confirm:true.
       "cascade_lightcraft",
@@ -45161,11 +45169,11 @@ function warnToStderr(message) {
   } catch {
   }
 }
-function resolveToolset(name93, inventory2 = [], options = {}) {
+function resolveToolset(name94, inventory2 = [], options = {}) {
   const warn = options.warn ?? warnToStderr;
   const registry2 = options.registry ?? TOOLSETS;
   const full = Array.isArray(inventory2) ? [...inventory2] : [];
-  const requested = typeof name93 === "string" ? name93.trim() : "";
+  const requested = typeof name94 === "string" ? name94.trim() : "";
   if (requested === "") {
     return { tools: full, toolset: ALL_TOOLSET, fellBack: false };
   }
@@ -45180,10 +45188,10 @@ function resolveToolset(name93, inventory2 = [], options = {}) {
   const tools = set.tools.filter((t) => available.has(t));
   return { tools, toolset: requested, fellBack: false };
 }
-function resolveSurface(name93, options = {}) {
+function resolveSurface(name94, options = {}) {
   const warn = options.warn ?? warnToStderr;
   const surfaces = options.surfaces ?? SURFACES;
-  const requested = typeof name93 === "string" ? name93.trim() : "";
+  const requested = typeof name94 === "string" ? name94.trim() : "";
   if (requested === "") {
     return { surface: null, orientation: null, fellBack: false };
   }
@@ -48329,8 +48337,8 @@ async function resolveAssignee(client, orgId, assignee) {
   const { data: members } = await client.from("organization_members").select("user_id, profiles!inner(display_name)").eq("org_id", orgId).limit(50);
   if (members) {
     const match = members.find((m2) => {
-      const name93 = m2.profiles?.display_name;
-      return name93 && name93.toLowerCase() === assignee.toLowerCase();
+      const name94 = m2.profiles?.display_name;
+      return name94 && name94.toLowerCase() === assignee.toLowerCase();
     });
     if (match)
       return match.user_id;
@@ -50753,9 +50761,9 @@ function parseSongSpec(input) {
           errors.push(`instruments.${key} must be a string patch id`);
           continue;
         }
-        const trimmed2 = v.trim().slice(0, SONG_INSTRUMENT_ID_MAX_LENGTH);
-        if (trimmed2)
-          instruments[key] = trimmed2;
+        const trimmed3 = v.trim().slice(0, SONG_INSTRUMENT_ID_MAX_LENGTH);
+        if (trimmed3)
+          instruments[key] = trimmed3;
       }
       carryUnknownKeys(raw, instruments, SONG_INSTRUMENT_CHANNELS);
     }
@@ -50985,10 +50993,10 @@ function parseInsertSlot(raw) {
   const max = SONG_AU_ROUTING_FIELD_MAX_LENGTH;
   const auManufacturer = clampSongString(r.auManufacturer, max);
   const auSubtype = clampSongString(r.auSubtype, max);
-  const name93 = clampSongString(r.name, max);
-  if (!auManufacturer || !auSubtype || !name93)
+  const name94 = clampSongString(r.name, max);
+  if (!auManufacturer || !auSubtype || !name94)
     return void 0;
-  const slot = { auType: r.auType, auManufacturer, auSubtype, name: name93 };
+  const slot = { auType: r.auType, auManufacturer, auSubtype, name: name94 };
   if (typeof r.bypassed === "boolean")
     slot.bypassed = r.bypassed;
   const presetPath = clampSongString(r.capturedPresetPath, max);
@@ -52495,7 +52503,7 @@ function parseGearProfileSpecOrThrow(raw) {
   if (raw.version !== void 0 && raw.version !== GEAR_PROFILE_SPEC_VERSION) {
     fail(`unsupported gear profile spec version: ${String(raw.version)}`);
   }
-  const name93 = parseText(raw.name, "name", GEAR_MAX_NAME_LENGTH);
+  const name94 = parseText(raw.name, "name", GEAR_MAX_NAME_LENGTH);
   const deviceClass = isDeviceClass(raw.deviceClass) ? raw.deviceClass : "other";
   let tier = null;
   if (raw.tier !== void 0 && raw.tier !== null) {
@@ -52513,7 +52521,7 @@ function parseGearProfileSpecOrThrow(raw) {
   const spec = {
     version: GEAR_PROFILE_SPEC_VERSION,
     deviceClass,
-    name: name93,
+    name: name94,
     appearance: parseAppearance(raw.appearance),
     tier,
     transports: parseTransports(raw.transports),
@@ -52855,10 +52863,10 @@ var BACKLOG_VERBS = [
 ];
 var OBJECTIVE_WORD_CAP = 14;
 function wordCountOf(text4) {
-  const trimmed2 = text4.trim();
-  if (!trimmed2)
+  const trimmed3 = text4.trim();
+  if (!trimmed3)
     return 0;
-  return trimmed2.split(/\s+/).length;
+  return trimmed3.split(/\s+/).length;
 }
 function detectObjectiveIssues(title) {
   const text4 = title ?? "";
@@ -53668,13 +53676,13 @@ function normalizeDescribed(raw, path3, seen, repairs) {
     return null;
   }
   seen.add(id2);
-  const name93 = optionalText2(raw.name, SHOTS_MAX_FIELD_LENGTH);
-  if (name93 === null && raw.name !== void 0 && raw.name !== null && typeof raw.name !== "string") {
+  const name94 = optionalText2(raw.name, SHOTS_MAX_FIELD_LENGTH);
+  if (name94 === null && raw.name !== void 0 && raw.name !== null && typeof raw.name !== "string") {
     repairs.push(`${path3}.name was not a string \u2014 replaced with the id`);
   }
   return carryUnknownKeys2(raw, {
     id: id2,
-    name: name93 ?? id2,
+    name: name94 ?? id2,
     description: textField(raw.description, `${path3}.description`, repairs)
   }, SHOTS_DESCRIBED_KEYS);
 }
@@ -54323,7 +54331,8 @@ var LANE_MANIFEST_KEYS = [
   "lightcraft",
   "photocraft",
   "blueprint",
-  "engine"
+  "engine",
+  "work"
 ];
 
 // packages/substrate-core/build/studioTypes.js
@@ -56267,8 +56276,8 @@ function parseBinding(raw, where) {
       if (componentId.slice(0, 4) !== raw.auType) {
         fail3(`${where} binding auType ${raw.auType} does not match componentId type ${componentId.slice(0, 4)}`);
       }
-      const name93 = parseText2(raw.name, `${where} binding name`, RACK_MAX_NAME_LENGTH);
-      return carryUnknownKeys(raw, { kind: "plugin", componentId, name: name93, auType: raw.auType }, BINDING_KEYS.plugin);
+      const name94 = parseText2(raw.name, `${where} binding name`, RACK_MAX_NAME_LENGTH);
+      return carryUnknownKeys(raw, { kind: "plugin", componentId, name: name94, auType: raw.auType }, BINDING_KEYS.plugin);
     }
     case "gear": {
       if (typeof raw.profileId !== "string" || !RACK_SAFE_ARTIFACT_ID.test(raw.profileId)) {
@@ -56641,8 +56650,8 @@ function parseBinding2(raw, where) {
       if (componentId.slice(0, 4) !== raw.auType) {
         fail4(`${where} binding auType ${raw.auType} does not match componentId type ${componentId.slice(0, 4)}`);
       }
-      const name93 = parseText3(raw.name, `${where} binding name`, ROOM_LAYOUT_MAX_NAME_LENGTH);
-      return carryUnknownKeys(raw, { kind: "plugin", componentId, name: name93, auType: raw.auType }, KNOWN_BINDING_KEYS.plugin);
+      const name94 = parseText3(raw.name, `${where} binding name`, ROOM_LAYOUT_MAX_NAME_LENGTH);
+      return carryUnknownKeys(raw, { kind: "plugin", componentId, name: name94, auType: raw.auType }, KNOWN_BINDING_KEYS.plugin);
     }
     default:
       return failVocab2(raw.kind, `${where} binding has unknown kind: ${String(raw.kind)}`);
@@ -56921,10 +56930,10 @@ function degreeLabelSemitones(label) {
   const octave = Math.floor((n - 1) / 7);
   return NATURAL_DEGREE_SEMITONES[(n - 1) % 7] + 12 * octave + acc;
 }
-function scale(id2, name93, family, labels, aliases) {
+function scale(id2, name94, family, labels, aliases) {
   const degreeLabels = labels.split(" ");
   const intervals = degreeLabels.map(degreeLabelSemitones);
-  const def = { id: id2, name: name93, intervals, degreeLabels, family };
+  const def = { id: id2, name: name94, intervals, degreeLabels, family };
   if (aliases && aliases.length)
     def.aliases = aliases;
   return def;
@@ -60934,14 +60943,14 @@ Return ONLY a single JSON object (no markdown fences, no commentary):
 
 THEME (which Scout lane this belongs in): "architecture" (system design/infra/data models), "code" (implementation/tooling/libraries), "strategy" (business strategy/moats), "product" (product design/UX), "competitive" (competitor moves/model releases/market intel), "operations" (process/hiring/running the company), else "other".`;
 function stripFences(text4) {
-  let trimmed2 = text4.trim();
-  if (trimmed2.startsWith("```")) {
-    const firstNewline = trimmed2.indexOf("\n");
-    if (firstNewline > -1) trimmed2 = trimmed2.slice(firstNewline + 1);
-    const lastFence = trimmed2.lastIndexOf("```");
-    if (lastFence > -1) trimmed2 = trimmed2.slice(0, lastFence);
+  let trimmed3 = text4.trim();
+  if (trimmed3.startsWith("```")) {
+    const firstNewline = trimmed3.indexOf("\n");
+    if (firstNewline > -1) trimmed3 = trimmed3.slice(firstNewline + 1);
+    const lastFence = trimmed3.lastIndexOf("```");
+    if (lastFence > -1) trimmed3 = trimmed3.slice(0, lastFence);
   }
-  return trimmed2.trim();
+  return trimmed3.trim();
 }
 async function extractWithHaiku(apiKey, content, sourceType, sourceUrl, sourceTitle, refs) {
   const sourceLine = sourceUrl ? `Source: ${sourceType} \u2014 ${sourceUrl}` : `Source: ${sourceType}`;
@@ -61148,13 +61157,13 @@ async function tryPythonTranscriptFallback(videoId) {
       }
     });
     if (!script) return null;
-    const out = await new Promise((resolve4) => {
+    const out = await new Promise((resolve5) => {
       let stdout = "";
       let settled = false;
       const finish = (v) => {
         if (!settled) {
           settled = true;
-          resolve4(v);
+          resolve5(v);
         }
       };
       try {
@@ -62564,8 +62573,8 @@ async function resolveAssigneeId2(assignee, auth) {
   const { data: members } = await auth.supabase.from("organization_members").select("user_id, profiles!inner(display_name)").eq("org_id", auth.orgId).limit(10);
   if (members) {
     const match = members.find((m2) => {
-      const name93 = m2.profiles?.display_name;
-      return name93 && name93.toLowerCase() === assignee.toLowerCase();
+      const name94 = m2.profiles?.display_name;
+      return name94 && name94.toLowerCase() === assignee.toLowerCase();
     });
     if (match) return match.user_id;
   }
@@ -62878,8 +62887,8 @@ async function resolveAssignee2(assignee, auth) {
   const { data: members } = await auth.supabase.from("org_memberships").select("user_id, profiles!inner(id, display_name, email)").eq("org_id", auth.orgId);
   if (members) {
     const match = members.find((m2) => {
-      const name93 = m2.profiles?.display_name;
-      return name93 && name93.toLowerCase() === assignee.toLowerCase();
+      const name94 = m2.profiles?.display_name;
+      return name94 && name94.toLowerCase() === assignee.toLowerCase();
     });
     if (match) {
       const profile = match.profiles;
@@ -65267,9 +65276,9 @@ function sanitizeVerdictSummary(raw) {
   }
   const match = TOOL_CALL_LEAK_MARKER.exec(raw);
   if (!match) {
-    const trimmed2 = raw.trim();
+    const trimmed3 = raw.trim();
     return {
-      summary: trimmed2.length > 0 ? trimmed2 : null,
+      summary: trimmed3.length > 0 ? trimmed3 : null,
       leaked: false,
       recoveredExecutionId: null
     };
@@ -66601,19 +66610,19 @@ function scoreSkill(query, skill) {
   const q = query.toLowerCase().trim();
   if (!q) return 0;
   const tokens = q.split(/[^a-z0-9]+/i).filter((t) => t.length >= 2);
-  const name93 = skill.name.toLowerCase();
+  const name94 = skill.name.toLowerCase();
   const command = skill.command.toLowerCase();
   const desc = (skill.description || "").toLowerCase();
   const wtu = (skill.when_to_use || "").toLowerCase();
-  const haystack = `${name93} ${command} ${desc} ${wtu}`;
+  const haystack = `${name94} ${command} ${desc} ${wtu}`;
   let score = 0;
-  if (name93 === q || command === `/cse:${q}`) score += 100;
-  if (name93.includes(q)) score += 25;
+  if (name94 === q || command === `/cse:${q}`) score += 100;
+  if (name94.includes(q)) score += 25;
   if (wtu.includes(q)) score += 12;
   if (desc.includes(q)) score += 10;
   for (const tok of tokens) {
-    if (name93 === tok) score += 20;
-    else if (name93.includes(tok)) score += 8;
+    if (name94 === tok) score += 20;
+    else if (name94.includes(tok)) score += 8;
     if (wtu.includes(tok)) score += 4;
     if (desc.includes(tok)) score += 3;
     else if (haystack.includes(tok)) score += 1;
@@ -67533,12 +67542,12 @@ var handleResult2 = (ctx, result) => {
 function processCreateParams2(params) {
   if (!params)
     return {};
-  const { errorMap: errorMap3, invalid_type_error, required_error, description: description93 } = params;
+  const { errorMap: errorMap3, invalid_type_error, required_error, description: description94 } = params;
   if (errorMap3 && (invalid_type_error || required_error)) {
     throw new Error(`Can't use "invalid_type_error" or "required_error" in conjunction with custom error map.`);
   }
   if (errorMap3)
-    return { errorMap: errorMap3, description: description93 };
+    return { errorMap: errorMap3, description: description94 };
   const customMap = (iss, ctx) => {
     const { message } = params;
     if (iss.code === "invalid_enum_value") {
@@ -67551,7 +67560,7 @@ function processCreateParams2(params) {
       return { message: ctx.defaultError };
     return { message: message ?? invalid_type_error ?? ctx.defaultError };
   };
-  return { errorMap: customMap, description: description93 };
+  return { errorMap: customMap, description: description94 };
 }
 var ZodType3 = class {
   get description() {
@@ -67816,11 +67825,11 @@ var ZodType3 = class {
       typeName: ZodFirstPartyTypeKind2.ZodCatch
     });
   }
-  describe(description93) {
+  describe(description94) {
     const This = this.constructor;
     return new This({
       ...this._def,
-      description: description93
+      description: description94
     });
   }
   pipe(target) {
@@ -69230,9 +69239,9 @@ var ZodArray3 = class _ZodArray extends ZodType3 {
     return this.min(1, message);
   }
 };
-ZodArray3.create = (schema93, params) => {
+ZodArray3.create = (schema94, params) => {
   return new ZodArray3({
-    type: schema93,
+    type: schema94,
     minLength: null,
     maxLength: null,
     exactLength: null,
@@ -69240,30 +69249,30 @@ ZodArray3.create = (schema93, params) => {
     ...processCreateParams2(params)
   });
 };
-function deepPartialify2(schema93) {
-  if (schema93 instanceof ZodObject3) {
+function deepPartialify2(schema94) {
+  if (schema94 instanceof ZodObject3) {
     const newShape = {};
-    for (const key in schema93.shape) {
-      const fieldSchema = schema93.shape[key];
+    for (const key in schema94.shape) {
+      const fieldSchema = schema94.shape[key];
       newShape[key] = ZodOptional3.create(deepPartialify2(fieldSchema));
     }
     return new ZodObject3({
-      ...schema93._def,
+      ...schema94._def,
       shape: () => newShape
     });
-  } else if (schema93 instanceof ZodArray3) {
+  } else if (schema94 instanceof ZodArray3) {
     return new ZodArray3({
-      ...schema93._def,
-      type: deepPartialify2(schema93.element)
+      ...schema94._def,
+      type: deepPartialify2(schema94.element)
     });
-  } else if (schema93 instanceof ZodOptional3) {
-    return ZodOptional3.create(deepPartialify2(schema93.unwrap()));
-  } else if (schema93 instanceof ZodNullable3) {
-    return ZodNullable3.create(deepPartialify2(schema93.unwrap()));
-  } else if (schema93 instanceof ZodTuple2) {
-    return ZodTuple2.create(schema93.items.map((item) => deepPartialify2(item)));
+  } else if (schema94 instanceof ZodOptional3) {
+    return ZodOptional3.create(deepPartialify2(schema94.unwrap()));
+  } else if (schema94 instanceof ZodNullable3) {
+    return ZodNullable3.create(deepPartialify2(schema94.unwrap()));
+  } else if (schema94 instanceof ZodTuple2) {
+    return ZodTuple2.create(schema94.items.map((item) => deepPartialify2(item)));
   } else {
-    return schema93;
+    return schema94;
   }
 }
 var ZodObject3 = class _ZodObject extends ZodType3 {
@@ -69479,8 +69488,8 @@ var ZodObject3 = class _ZodObject extends ZodType3 {
   //   }) as any;
   //   return merged;
   // }
-  setKey(key, schema93) {
-    return this.augment({ [key]: schema93 });
+  setKey(key, schema94) {
+    return this.augment({ [key]: schema94 });
   }
   // merge<Incoming extends AnyZodObject>(
   //   merging: Incoming
@@ -69926,10 +69935,10 @@ var ZodTuple2 = class _ZodTuple extends ZodType3 {
       status.dirty();
     }
     const items = [...ctx.data].map((item, itemIndex) => {
-      const schema93 = this._def.items[itemIndex] || this._def.rest;
-      if (!schema93)
+      const schema94 = this._def.items[itemIndex] || this._def.rest;
+      if (!schema94)
         return null;
-      return schema93._parse(new ParseInputLazyPath2(ctx, item, ctx.path, itemIndex));
+      return schema94._parse(new ParseInputLazyPath2(ctx, item, ctx.path, itemIndex));
     }).filter((x) => !!x);
     if (ctx.common.async) {
       return Promise.all(items).then((results) => {
@@ -70443,9 +70452,9 @@ var ZodPromise2 = class extends ZodType3 {
     }));
   }
 };
-ZodPromise2.create = (schema93, params) => {
+ZodPromise2.create = (schema94, params) => {
   return new ZodPromise2({
-    type: schema93,
+    type: schema94,
     typeName: ZodFirstPartyTypeKind2.ZodPromise,
     ...processCreateParams2(params)
   });
@@ -70573,17 +70582,17 @@ var ZodEffects2 = class extends ZodType3 {
     util2.assertNever(effect);
   }
 };
-ZodEffects2.create = (schema93, effect, params) => {
+ZodEffects2.create = (schema94, effect, params) => {
   return new ZodEffects2({
-    schema: schema93,
+    schema: schema94,
     typeName: ZodFirstPartyTypeKind2.ZodEffects,
     effect,
     ...processCreateParams2(params)
   });
 };
-ZodEffects2.createWithPreprocess = (preprocess2, schema93, params) => {
+ZodEffects2.createWithPreprocess = (preprocess2, schema94, params) => {
   return new ZodEffects2({
-    schema: schema93,
+    schema: schema94,
     effect: { type: "preprocess", transform: preprocess2 },
     typeName: ZodFirstPartyTypeKind2.ZodEffects,
     ...processCreateParams2(params)
@@ -73951,11 +73960,11 @@ function list2(opts) {
     migrateLegacy(opts);
     const p = paths(opts);
     const out = [];
-    for (const name93 of safeReaddir(p.pending)) {
+    for (const name94 of safeReaddir(p.pending)) {
       try {
-        if (!/\.json$/i.test(name93)) continue;
-        const key = name93.replace(/\.json$/i, "");
-        const full = join6(p.pending, name93);
+        if (!/\.json$/i.test(name94)) continue;
+        const key = name94.replace(/\.json$/i, "");
+        const full = join6(p.pending, name94);
         const entry = readEntryFile(full, key);
         if (entry) out.push(entry);
       } catch {
@@ -75668,6 +75677,174 @@ async function handler80(args, auth, deps = DEFAULT_DEPS7) {
   }
 }
 
+// harnesses/mcp-servers/cascade-api/src/tools/canvas.ts
+import { randomUUID as randomUUID6 } from "node:crypto";
+var CASCADE_CANVAS_TOOL_NAME = "cascade_canvas";
+var name81 = CASCADE_CANVAS_TOOL_NAME;
+var CANVAS_ACTIONS = ["bring", "focus", "zoom_out", "dismiss", "observe"];
+var WORK_CANVAS_BRIDGE_TYPE = "work-canvas-op";
+var WORK_CANVAS_EVENT = "op";
+var workCanvasTopic = (userId) => `work-canvas:${userId}`;
+var CANVAS_MAX_REASON = 120;
+var CANVAS_MAX_MODULES = 12;
+var CANVAS_MAX_SESSION_KEY = 200;
+var CANVAS_KIND_RE = /^[A-Za-z][A-Za-z0-9_.-]{0,63}$/;
+var UUID_RE6 = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+var description81 = "Drive the Work Canvas beside the chat \u2014 the zoomable map of every module in play (blueprint, script, images, PhotoCraft, LightCraft, reel, export\u2026). action: 'bring' (add modules to the canvas, e.g. side by side), 'focus' (zoom into ONE module: 'let's go over to LightCraft'), 'zoom_out' (back to the overview), 'dismiss' (let modules recede), 'observe' (what is on the canvas \u2014 that state is already in your per-turn context, so this sends nothing). modules = [{kind, target?, reason?}]: kind is the module kind, target the artifact id it shows (checked to exist in this org first \u2014 an unknown or foreign id is an error and nothing is sent), reason one short line (at most 120 characters). sessionKey is the chat session the canvas belongs to. No confirmation is needed: showing UI is reversible. The op is SENT to the canvas; the canvas may not be open, so say you sent it there, not that the user is now looking at it.";
+var schema81 = {
+  action: external_exports.enum(CANVAS_ACTIONS).describe("bring | focus | zoom_out | dismiss | observe"),
+  sessionKey: external_exports.string().describe("The chat session key the canvas is keyed by."),
+  modules: external_exports.array(
+    external_exports.object({
+      kind: external_exports.string().describe("Module kind, e.g. 'lightcraft', 'reel', 'blueprint'."),
+      target: external_exports.string().uuid().optional().describe("Artifact id the module shows (verified in-org)."),
+      reason: external_exports.string().max(CANVAS_MAX_REASON).optional().describe("One short line on why (<=120 chars).")
+    })
+  ).optional().describe("Modules the op applies to. Required for bring / focus (exactly one) / dismiss.")
+};
+function errMsg7(e) {
+  return e instanceof Error ? e.message : String(e);
+}
+async function findArtifact(client, orgId, id2) {
+  try {
+    const { data, error: error2 } = await client.from("packages").select("id, title").eq("id", id2).eq("org_id", orgId).eq("kind", "artifact").eq("is_deleted", false).limit(1);
+    if (error2) return { ok: false, error: error2.message };
+    const row = (data ?? [])[0];
+    if (!row || typeof row.id !== "string") return { ok: true, artifact: null };
+    return { ok: true, artifact: { id: row.id, title: typeof row.title === "string" ? row.title : null } };
+  } catch (e) {
+    return { ok: false, error: errMsg7(e) };
+  }
+}
+var DEFAULT_DEPS8 = {
+  findArtifact,
+  // Late-bound so a stubbed global fetch is honoured.
+  fetch: (url, init) => fetch(url, init),
+  emitBridge: emitBridgeMessage,
+  newOpId: () => randomUUID6(),
+  now: () => Date.now()
+};
+function textResult(text4) {
+  return { content: [{ type: "text", text: text4 }] };
+}
+function errorResult8(text4) {
+  return { content: [{ type: "text", text: text4 }], isError: true };
+}
+function trimmed2(v) {
+  return typeof v === "string" ? v.trim() : "";
+}
+var OBSERVE_NOTE = "The Work Canvas state (which modules are on it, which one the user is zoomed into, and what each is doing) is reported in your per-turn context \u2014 read it there. observe makes no round trip and sends nothing.";
+async function handler81(args, auth, deps = DEFAULT_DEPS8) {
+  const refuse = (why) => errorResult8(`Error: ${why}. Nothing was sent.`);
+  try {
+    const action = trimmed2(args?.action);
+    if (!CANVAS_ACTIONS.includes(action)) {
+      return refuse(`action must be one of ${CANVAS_ACTIONS.join(", ")} (got "${action}")`);
+    }
+    if (action === "observe") return textResult(OBSERVE_NOTE);
+    if (!auth?.orgId) return refuse("No active organization");
+    if (!UUID_RE6.test(trimmed2(auth.userId))) {
+      return refuse(
+        "cascade_canvas targets your own Work Canvas and needs a logged-in user (run `cascade login`); it can't be sent in service-role mode"
+      );
+    }
+    const orgId = auth.orgId;
+    const userId = trimmed2(auth.userId);
+    const sessionKey = trimmed2(args?.sessionKey);
+    if (sessionKey === "") return refuse("sessionKey is required");
+    if (sessionKey.length > CANVAS_MAX_SESSION_KEY) {
+      return refuse(`sessionKey is ${sessionKey.length} characters; at most ${CANVAS_MAX_SESSION_KEY}`);
+    }
+    const rawModules = Array.isArray(args?.modules) ? args.modules : [];
+    if (action === "zoom_out" && rawModules.length > 0) {
+      return refuse("zoom_out takes no modules (it returns to the overview)");
+    }
+    if ((action === "bring" || action === "dismiss") && rawModules.length === 0) {
+      return refuse(`${action} needs at least one module`);
+    }
+    if (action === "focus" && rawModules.length !== 1) {
+      return refuse(`focus takes exactly one module (got ${rawModules.length})`);
+    }
+    if (rawModules.length > CANVAS_MAX_MODULES) {
+      return refuse(`at most ${CANVAS_MAX_MODULES} modules per op (got ${rawModules.length})`);
+    }
+    const modules = [];
+    for (const [i, m2] of rawModules.entries()) {
+      const kind = trimmed2(m2?.kind);
+      if (!CANVAS_KIND_RE.test(kind)) {
+        return refuse(`modules[${i}].kind "${kind}" is not a valid module kind (letters, digits, '_', '-', '.')`);
+      }
+      const mod = { kind };
+      if (m2?.target !== void 0 && m2?.target !== null) {
+        const target = trimmed2(m2.target);
+        if (!UUID_RE6.test(target)) return refuse(`modules[${i}].target must be an artifact uuid`);
+        mod.target = target;
+      }
+      if (m2?.reason !== void 0 && m2?.reason !== null) {
+        const reason = trimmed2(m2.reason);
+        if (reason.length > CANVAS_MAX_REASON) {
+          return refuse(`modules[${i}].reason is ${reason.length} characters; at most ${CANVAS_MAX_REASON}`);
+        }
+        if (reason !== "") mod.reason = reason;
+      }
+      modules.push(mod);
+    }
+    const titles = [];
+    for (const [i, mod] of modules.entries()) {
+      if (!mod.target) {
+        titles.push(mod.kind);
+        continue;
+      }
+      const found = await deps.findArtifact(auth.supabase, orgId, mod.target);
+      if (!found.ok) return refuse(`could not read modules[${i}].target ${mod.target}: ${found.error}`);
+      if (!found.artifact) {
+        return refuse(`modules[${i}].target ${mod.target} is not an artifact in this organization`);
+      }
+      titles.push(found.artifact.title ? `${mod.kind} "${found.artifact.title}"` : mod.kind);
+    }
+    const payload = {
+      opId: deps.newOpId(),
+      orgId,
+      sessionKey,
+      action,
+      modules,
+      sentAt: deps.now()
+    };
+    deps.emitBridge(WORK_CANVAS_BRIDGE_TYPE, payload);
+    const topic = workCanvasTopic(userId);
+    let broadcastError = null;
+    try {
+      const res = await deps.fetch(`${SUPABASE_URL}/realtime/v1/api/broadcast`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ messages: [{ topic, event: WORK_CANVAS_EVENT, payload }] })
+      });
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        log(`cascade_canvas broadcast failed: ${res.status} ${body.slice(0, 200)}`);
+        broadcastError = `HTTP ${res.status}`;
+      }
+    } catch (e) {
+      broadcastError = errMsg7(e);
+    }
+    const what = action === "zoom_out" ? "zoom out" : `${action} ${titles.join(", ")}`;
+    if (broadcastError) {
+      return errorResult8(
+        `Error: the realtime broadcast of "${what}" failed (${broadcastError}). The op (${payload.opId}) was handed to the local bridge best-effort only, so it reaches the canvas only if the bridge is listening.`
+      );
+    }
+    return textResult(
+      `\u2192 Sent "${what}" to the canvas (op ${payload.opId}). It reaches the Work Canvas only if it is open; nothing was changed in any artifact.`
+    );
+  } catch (e) {
+    return refuse(errMsg7(e));
+  }
+}
+
 // harnesses/mcp-servers/cascade-api/src/tools/bridge-request.ts
 var CONNECT_TIMEOUT_MS = 1500;
 var requestCounter = 0;
@@ -75702,12 +75879,12 @@ async function bridgeRequest(requestType, replyType, payload, timeoutMs, opts = 
   return { ok: false, error: last, reachedBridge: false };
 }
 function attemptOnce(url, requestType, replyType, payload, timeoutMs) {
-  return new Promise((resolve4) => {
+  return new Promise((resolve5) => {
     let socket;
     try {
       socket = new WebSocket(url);
     } catch (err13) {
-      resolve4({
+      resolve5({
         ok: false,
         reachedBridge: false,
         error: transportError(`Could not open ${url}: ${err13 instanceof Error ? err13.message : String(err13)}`)
@@ -75725,7 +75902,7 @@ function attemptOnce(url, requestType, replyType, payload, timeoutMs) {
         socket.close();
       } catch {
       }
-      resolve4(result);
+      resolve5(result);
     };
     const connectTimer = setTimeout(() => {
       if (opened) return;
@@ -75805,9 +75982,115 @@ function unref(timer) {
   if (typeof t.unref === "function") t.unref();
 }
 
+// harnesses/mcp-servers/cascade-api/src/tools/local-image-import.ts
+import { readFile, stat } from "node:fs/promises";
+import { homedir as homedir5 } from "node:os";
+import { basename as basename2, resolve as resolve4 } from "node:path";
+var LOCAL_IMAGE_MAX_BYTES = 50 * 1024 * 1024;
+function sniffImageType(bytes) {
+  const b = bytes;
+  if (b.length >= 8 && b[0] === 137 && b[1] === 80 && b[2] === 78 && b[3] === 71 && b[4] === 13 && b[5] === 10 && b[6] === 26 && b[7] === 10) {
+    return "image/png";
+  }
+  if (b.length >= 3 && b[0] === 255 && b[1] === 216 && b[2] === 255) return "image/jpeg";
+  if (b.length >= 12 && b[0] === 82 && b[1] === 73 && b[2] === 70 && b[3] === 70 && // RIFF
+  b[8] === 87 && b[9] === 69 && b[10] === 66 && b[11] === 80) {
+    return "image/webp";
+  }
+  return null;
+}
+function resolveLocalPath(p) {
+  const t = p.trim();
+  if (t === "~") return homedir5();
+  if (t.startsWith("~/")) return resolve4(homedir5(), t.slice(2));
+  return resolve4(t);
+}
+function titleFromPath(abs) {
+  const name94 = basename2(abs).replace(/\.[^.]+$/, "").trim();
+  return name94 || "Imported image";
+}
+async function importLocalImage(rawPath, auth, opts = {}, deps = {}) {
+  if (typeof rawPath !== "string" || rawPath.trim() === "") {
+    return { ok: false, message: "import `path` must be a non-empty file path." };
+  }
+  if (!auth?.orgId) return { ok: false, message: "No active organization \u2014 sign the MCP server into an org first." };
+  const abs = resolveLocalPath(rawPath);
+  let st;
+  try {
+    st = await stat(abs);
+  } catch (err13) {
+    const code = err13?.code;
+    if (code === "ENOENT" || code === "ENOTDIR") return { ok: false, message: `No file at ${abs}.` };
+    if (code === "EACCES" || code === "EPERM") return { ok: false, message: `Cannot read ${abs}: permission denied.` };
+    return { ok: false, message: `Cannot read ${abs}: ${err13 instanceof Error ? err13.message : String(err13)}` };
+  }
+  if (st.isDirectory()) return { ok: false, message: `${abs} is a directory, not an image file.` };
+  if (!st.isFile()) return { ok: false, message: `${abs} is not a regular file.` };
+  if (st.size === 0) return { ok: false, message: `${abs} is empty.` };
+  if (st.size > LOCAL_IMAGE_MAX_BYTES) {
+    return {
+      ok: false,
+      message: `${abs} is ${st.size} bytes \u2014 the image import limit is ${LOCAL_IMAGE_MAX_BYTES} bytes (50 MB).`
+    };
+  }
+  let bytes;
+  try {
+    bytes = await readFile(abs);
+  } catch (err13) {
+    return { ok: false, message: `Cannot read ${abs}: ${err13 instanceof Error ? err13.message : String(err13)}` };
+  }
+  if (bytes.byteLength > LOCAL_IMAGE_MAX_BYTES) {
+    return { ok: false, message: `${abs} exceeds the image import limit of ${LOCAL_IMAGE_MAX_BYTES} bytes (50 MB).` };
+  }
+  const mimeType = sniffImageType(bytes);
+  if (!mimeType) {
+    return {
+      ok: false,
+      message: `${abs} is not a JPEG, PNG or WebP image (checked by its contents, not its extension).`
+    };
+  }
+  const title = opts.title?.trim() || titleFromPath(abs);
+  const create = deps.createArtifact ?? createArtifact;
+  const created = await create(
+    auth.supabase,
+    { orgId: auth.orgId, userId: auth.userId },
+    {
+      title,
+      content: "",
+      bodyBytes: new Uint8Array(bytes.buffer, bytes.byteOffset, bytes.byteLength),
+      contentType: mimeType,
+      renderer: "image",
+      tags: ["image", "imported"],
+      typeData: { image_meta: { source: "local-file", fileName: basename2(abs), mimeType, bytes: bytes.byteLength } },
+      provenance: {
+        surface: "mcp",
+        agent: "claude-code",
+        user: auth.userId,
+        source: "cascade_craft.import.path",
+        metadata: { fileName: basename2(abs), mimeType, bytes: bytes.byteLength }
+      }
+    }
+  );
+  if ("error" in created) {
+    const what = created.stage === "storage" ? "upload the image to storage" : `create the image artifact (${created.stage})`;
+    return { ok: false, message: `Could not ${what}: ${created.error}` };
+  }
+  log(`Imported local image ${basename2(abs)} as artifact ${created.artifactId} (${mimeType}, ${bytes.byteLength} bytes)`);
+  return {
+    ok: true,
+    artifactId: created.artifactId,
+    versionId: created.versionId,
+    versionNo: created.versionNo,
+    mimeType,
+    bytes: bytes.byteLength,
+    path: abs,
+    title
+  };
+}
+
 // harnesses/mcp-servers/cascade-api/src/tools/craft.ts
 var CASCADE_CRAFT_TOOL_NAME = "cascade_craft";
-var name81 = CASCADE_CRAFT_TOOL_NAME;
+var name82 = CASCADE_CRAFT_TOOL_NAME;
 var ALL_ACTIONS = [
   "list_controls",
   "list_commands",
@@ -76079,7 +76362,7 @@ var SUPPORTED_APPS = Object.keys(CRAFT_APPS);
 function getCraftApp(app) {
   return typeof app === "string" && has2(CRAFT_APPS, app) ? CRAFT_APPS[app] : null;
 }
-var description81 = "Drive a Craft editor embedded in the Cascade desktop app. app: 'lightcraft' (photo develop, at /creator/lightcraft) or 'photocraft' (layered image editor, at /creator/photocraft). The page must be open, under the same org this MCP server is signed into. Actions (both apps unless noted): list_commands {filter?} lists the command registry \u2014 call it before running an id you have not seen; run {id, params?} runs one command; batch {steps:[{id,params?}], stopOnError?} runs several in order; inspect {} returns the editor state (PhotoCraft: the active document); render {longEdge?=1024} returns the current photo/document as an image \u2014 render before your first edit; save {title?, cleanupRunId?} saves it to Cascade as a versioned artifact; import {artifactId} loads a Cascade image. LightCraft only: list_controls {section?} lists develop sliders (call before develop.set), and render/save take photoId?. PhotoCraft works on the ACTIVE document only; use save, not file.saveAs (which retargets the document). Destructive commands (deleting history states, purges, library deletes, preference resets, closing or reverting documents, overwriting files, writing outside the editor's virtual file system; LightCraft deletes and keyword merges) are refused with needs-confirm unless you pass confirm:true \u2014 ask the user first. Quit, help links, new windows and theme commands are blocked (the editor follows Cascade's theme). Edits are undoable with run {id:'edit.undo'}. A 'timeout' error means the editor took the action but had not finished \u2014 check inspect before retrying; 'not-open' means no page took it.";
+var description82 = "Drive a Craft editor embedded in the Cascade desktop app. app: 'lightcraft' (photo develop, at /creator/lightcraft) or 'photocraft' (layered image editor, at /creator/photocraft). The page must be open, under the same org this MCP server is signed into. Actions (both apps unless noted): list_commands {filter?} lists the command registry \u2014 call it before running an id you have not seen; run {id, params?} runs one command; batch {steps:[{id,params?}], stopOnError?} runs several in order; inspect {} returns the editor state (PhotoCraft: the active document); render {longEdge?=1024} returns the current photo/document as an image \u2014 render before your first edit; save {title?, cleanupRunId?} saves it to Cascade as a versioned artifact; import {artifactId} loads a Cascade image, or import {path, title?} reads a JPEG/PNG/WebP file on this computer (~ allowed, max 50 MB), stores it as a new Cascade image artifact and loads that \u2014 pass one of path or artifactId, not both. LightCraft only: list_controls {section?} lists develop sliders (call before develop.set), and render/save take photoId?. PhotoCraft works on the ACTIVE document only; use save, not file.saveAs (which retargets the document). Destructive commands (deleting history states, purges, library deletes, preference resets, closing or reverting documents, overwriting files, writing outside the editor's virtual file system; LightCraft deletes and keyword merges) are refused with needs-confirm unless you pass confirm:true \u2014 ask the user first. Quit, help links, new windows and theme commands are blocked (the editor follows Cascade's theme). Edits are undoable with run {id:'edit.undo'}. A 'timeout' error means the editor took the action but had not finished \u2014 check inspect before retrying; 'not-open' means no page took it.";
 var stepSchema = external_exports.object({
   id: external_exports.string().describe("Registry command id, e.g. 'develop.set' or 'layer.new.layer'."),
   params: external_exports.record(external_exports.unknown()).optional().describe("Command params, as list_commands documents them.")
@@ -76094,16 +76377,19 @@ var commonSchema = {
   confirm: external_exports.boolean().optional().describe("run/batch: REQUIRED true for destructive commands. Only set it after the user has agreed."),
   photoId: external_exports.union([external_exports.string(), external_exports.number()]).optional().describe("render/save (LightCraft): which photo (default: the active one)."),
   longEdge: external_exports.number().int().positive().optional().describe("render: long edge in px (default 1024)."),
-  title: external_exports.string().optional().describe("save: artifact title."),
+  title: external_exports.string().optional().describe("save: artifact title. import {path}: title of the new image artifact (default: the file name)."),
   cleanupRunId: external_exports.string().regex(/^[A-Za-z0-9_-]{6,64}$/).optional().describe(
     `save (reel Clean-up bench only): the clean-up run id from the user's request ("Clean up the reel photos \u2014 run <id>"). The new version is stamped provenance.craft.cleanupRunId = this id, which is what a resumed run skips on.`
   ),
   artifactId: external_exports.string().optional().describe("import: the Cascade image artifact to load."),
+  path: external_exports.string().optional().describe(
+    "import: a JPEG/PNG/WebP file on this computer (absolute, relative, or ~/...; max 50 MB). It is stored as a new Cascade image artifact, then loaded. Use instead of artifactId, never with it."
+  ),
   timeoutMs: external_exports.number().int().optional().describe(
     "Override the editor's working budget (ms, clamped 1000\u2013120000). Default 15000; render/import 60000; save 120000 (the whole save \u2014 exports and upload \u2014 fits in it). The call itself waits up to ~17 s longer."
   )
 };
-var schema81 = {
+var schema82 = {
   // A plain string (not an enum) so an unknown app reaches the handler and gets
   // an error that lists the supported apps.
   app: external_exports.string().describe(`Which Craft editor: ${SUPPORTED_APPS.map((a) => `'${a}'`).join(" | ")}.`),
@@ -76194,7 +76480,21 @@ function buildArgs(app, args) {
         }
       };
     case "import":
-      if (!args.artifactId) return { ok: false, message: "import needs `artifactId` (a Cascade image artifact)." };
+      if (args.path !== void 0 && args.artifactId !== void 0) {
+        return { ok: false, message: "import takes `path` OR `artifactId`, not both." };
+      }
+      if (args.path !== void 0) {
+        if (typeof args.path !== "string" || args.path.trim() === "") {
+          return { ok: false, message: "import `path` must be a non-empty file path." };
+        }
+        return { ok: true, fields: {} };
+      }
+      if (!args.artifactId) {
+        return {
+          ok: false,
+          message: "import needs `artifactId` (a Cascade image artifact) or `path` (an image file on this computer)."
+        };
+      }
       return { ok: true, fields: { artifactId: args.artifactId } };
     default:
       return { ok: false, message: `Unknown action '${String(args.action)}'.` };
@@ -76255,6 +76555,13 @@ async function runCraft(appId, args, auth, toolName = CASCADE_CRAFT_TOOL_NAME) {
         { gated }
       );
     }
+    let imported = null;
+    if (args.action === "import" && args.path !== void 0) {
+      const res = await (_test.importLocalImage ?? importLocalImage)(args.path, auth, { title: args.title });
+      if (!res.ok) return fail6("invalid", res.message, { maxBytes: LOCAL_IMAGE_MAX_BYTES });
+      imported = res;
+      built.fields.artifactId = res.artifactId;
+    }
     const timeoutMs = resolveTimeout(args.action, args.timeoutMs);
     const bridgeTimeoutMs = timeoutMs + BRIDGE_GRACE_MS;
     const payload = {
@@ -76266,6 +76573,32 @@ async function runCraft(appId, args, auth, toolName = CASCADE_CRAFT_TOOL_NAME) {
       bridgeTimeoutMs,
       ...built.fields
     };
+    const result = await sendToPage(app, args, auth, orgId, payload, bridgeTimeoutMs);
+    return imported ? withImported(result, imported) : result;
+  } catch (err13) {
+    return fail6("invalid", `${toolName} failed unexpectedly: ${err13 instanceof Error ? err13.message : String(err13)}`);
+  }
+}
+var _test = {};
+function withImported(res, imp) {
+  const info = { artifactId: imp.artifactId, versionNo: imp.versionNo, mimeType: imp.mimeType, bytes: imp.bytes, path: imp.path, title: imp.title };
+  const content = res.content.map((c) => {
+    if (c.type !== "text") return c;
+    try {
+      const parsed = JSON.parse(c.text);
+      return text2({
+        ...parsed,
+        importedFromPath: info,
+        ...res.isError ? { hint: `The file is already stored as artifact ${imp.artifactId}; retry with import {artifactId:'${imp.artifactId}'}.` } : {}
+      });
+    } catch {
+      return c;
+    }
+  });
+  return { ...res, content };
+}
+async function sendToPage(app, args, auth, orgId, payload, bridgeTimeoutMs) {
+  {
     const outcome = await bridgeRequest(
       app.requestType,
       app.replyType,
@@ -76295,11 +76628,9 @@ async function runCraft(appId, args, auth, toolName = CASCADE_CRAFT_TOOL_NAME) {
     }
     if (args.action === "render") return renderResult(app, reply.result);
     return ok8({ ok: true, ...app.appInPayload ? { app: app.id } : {}, action: args.action, result: reply.result ?? null });
-  } catch (err13) {
-    return fail6("invalid", `${toolName} failed unexpectedly: ${err13 instanceof Error ? err13.message : String(err13)}`);
   }
 }
-async function handler81(args, auth) {
+async function handler82(args, auth) {
   const { app, ...rest } = args ?? {};
   return runCraft(app, rest, auth, CASCADE_CRAFT_TOOL_NAME);
 }
@@ -76330,15 +76661,15 @@ function renderResult(app, result) {
 
 // harnesses/mcp-servers/cascade-api/src/tools/lightcraft.ts
 var CASCADE_LIGHTCRAFT_TOOL_NAME = "cascade_lightcraft";
-var name82 = CASCADE_LIGHTCRAFT_TOOL_NAME;
+var name83 = CASCADE_LIGHTCRAFT_TOOL_NAME;
 var APP = CRAFT_APPS.lightcraft;
 var REQUEST_TYPE = APP.requestType;
 var REPLY_TYPE = APP.replyType;
 var LIGHTCRAFT_ROUTE = APP.route;
 var ACTIONS = ALL_ACTIONS;
 var GRANTED_TIMEOUT_MESSAGE = grantedTimeoutMessage(APP);
-var description82 = "Drive the LightCraft photo editor open at /creator/lightcraft in the Cascade desktop app (the page must be open, under the same org this MCP server is signed into). Same as cascade_craft with app 'lightcraft'. Actions: list_controls {section?} lists every develop slider with its range, default and current value \u2014 ALWAYS call list_controls before develop.set so you use real control ids and ranges; list_commands {filter?} lists the command registry; run {id, params?} runs one command (e.g. id 'develop.set', params {control:'light.exposure', value:0.8}); batch {steps:[{id,params?}], stopOnError?} runs several in order; inspect {} returns library info, current develop settings and up to 50 photos; render {photoId?, longEdge?=1024} returns the current photo as an image; save {photoId?, title?} saves the edited photo to Cascade as a versioned artifact; import {artifactId} loads a Cascade image into LightCraft. Destructive commands (deletes, clearing history, forgetting photos, merging keywords, overwriting exports, and params like discard/reset or mode:'move') are refused with needs-confirm unless you pass confirm:true \u2014 ask the user first. Edits are undoable with run {id:'edit.undo'}. A 'timeout' error means LightCraft took the action but had not finished \u2014 check inspect before retrying; 'not-open' means no page took it.";
-var schema82 = {
+var description83 = "Drive the LightCraft photo editor open at /creator/lightcraft in the Cascade desktop app (the page must be open, under the same org this MCP server is signed into). Same as cascade_craft with app 'lightcraft'. Actions: list_controls {section?} lists every develop slider with its range, default and current value \u2014 ALWAYS call list_controls before develop.set so you use real control ids and ranges; list_commands {filter?} lists the command registry; run {id, params?} runs one command (e.g. id 'develop.set', params {control:'light.exposure', value:0.8}); batch {steps:[{id,params?}], stopOnError?} runs several in order; inspect {} returns library info, current develop settings and up to 50 photos; render {photoId?, longEdge?=1024} returns the current photo as an image; save {photoId?, title?} saves the edited photo to Cascade as a versioned artifact; import {artifactId} loads a Cascade image into LightCraft, or import {path, title?} reads a JPEG/PNG/WebP file on this computer (~ allowed, max 50 MB), stores it as a new Cascade image artifact and loads that \u2014 pass one of path or artifactId, not both. Destructive commands (deletes, clearing history, forgetting photos, merging keywords, overwriting exports, and params like discard/reset or mode:'move') are refused with needs-confirm unless you pass confirm:true \u2014 ask the user first. Edits are undoable with run {id:'edit.undo'}. A 'timeout' error means LightCraft took the action but had not finished \u2014 check inspect before retrying; 'not-open' means no page took it.";
+var schema83 = {
   action: external_exports.enum(ACTIONS).describe("What to do \u2014 see the tool description."),
   ...commonSchema,
   section: external_exports.string().optional().describe("list_controls: limit to one develop section (e.g. 'light')."),
@@ -76347,7 +76678,7 @@ var schema82 = {
     "Override LightCraft's working budget (ms, clamped 1000\u2013120000). Default 15000; render/import 60000; save 120000. The call itself waits up to ~17 s longer."
   )
 };
-async function handler82(args, auth) {
+async function handler83(args, auth) {
   return runCraft("lightcraft", args, auth, CASCADE_LIGHTCRAFT_TOOL_NAME);
 }
 
@@ -76388,8 +76719,8 @@ async function postDaemon(path3, body, timeoutMs, options = {}) {
       signal: AbortSignal.timeout(scaled)
     });
   } catch (err13) {
-    const name93 = err13 instanceof Error ? err13.name : "";
-    if (name93 === "TimeoutError" || name93 === "AbortError") {
+    const name94 = err13 instanceof Error ? err13.name : "";
+    if (name94 === "TimeoutError" || name94 === "AbortError") {
       return {
         ok: false,
         kind: "timeout",
@@ -76415,10 +76746,10 @@ async function postDaemon(path3, body, timeoutMs, options = {}) {
 
 // harnesses/mcp-servers/cascade-api/src/tools/plugin.ts
 var CASCADE_PLUGIN_TOOL_NAME = "cascade_plugin";
-var name83 = CASCADE_PLUGIN_TOOL_NAME;
+var name84 = CASCADE_PLUGIN_TOOL_NAME;
 var ACTIONS2 = ["list", "open", "load_preset", "snapshot"];
-var description83 = "Work with the Audio Unit plugins (instruments and effects) installed on this Mac, through the local Cascade daemon's live plugin host. Actions: list {filter?} returns each installed plugin as {name, componentId, auType, hasFaceplate, hasSnapshot, snapshotPreset?}; open {componentId | name} starts the live host (reusing a running one and an already-hosted copy), loads the plugin if needed and opens its own editor window \u2014 returns the instrumentId every other action takes; load_preset {instrumentId, preset, pack?} loads an Arturia preset by its EXACT name from that instrument's own library; snapshot {instrumentId} captures the open editor and returns it as an image so you can see the plugin's current look. Snapshot images are LOCAL ONLY: they come straight from this Mac's daemon to you and are never stored to Cascade cloud. Needs the Cascade desktop app running.";
-var schema83 = {
+var description84 = "Work with the Audio Unit plugins (instruments and effects) installed on this Mac, through the local Cascade daemon's live plugin host. Actions: list {filter?} returns each installed plugin as {name, componentId, auType, hasFaceplate, hasSnapshot, snapshotPreset?}; open {componentId | name} starts the live host (reusing a running one and an already-hosted copy), loads the plugin if needed and opens its own editor window \u2014 returns the instrumentId every other action takes; load_preset {instrumentId, preset, pack?} loads an Arturia preset by its EXACT name from that instrument's own library; snapshot {instrumentId} captures the open editor and returns it as an image so you can see the plugin's current look. Snapshot images are LOCAL ONLY: they come straight from this Mac's daemon to you and are never stored to Cascade cloud. Needs the Cascade desktop app running.";
+var schema84 = {
   action: external_exports.enum(ACTIONS2).describe("What to do \u2014 see the tool description."),
   filter: external_exports.string().optional().describe("list: only plugins whose name contains this (case-insensitive)."),
   componentId: external_exports.string().optional().describe("open: the plugin's component id 'type:SUBT:MANU' (e.g. 'aumu:JUP4:Artu'), from list."),
@@ -76688,7 +77019,7 @@ async function doSnapshot(args, opts) {
     ]
   };
 }
-async function handler83(args, opts = {}) {
+async function handler84(args, opts = {}) {
   try {
     switch (args.action) {
       case "list":
@@ -76708,9 +77039,9 @@ async function handler83(args, opts = {}) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/read-thread.ts
-var name84 = "cascade_read_thread";
-var description84 = "Read the org's team thread \u2014 ordered messages (oldest->newest) with author and embedded-artifact refs. Use this at end-of-task to check whether something was posted ('did X land yet?') or to recall recent discussion. Org-scoped and RLS-respecting; no realtime dependency. Filter with since (ISO timestamp) and/or mentions (a package id) for recall ('what did we say about package X').";
-var schema84 = {
+var name85 = "cascade_read_thread";
+var description85 = "Read the org's team thread \u2014 ordered messages (oldest->newest) with author and embedded-artifact refs. Use this at end-of-task to check whether something was posted ('did X land yet?') or to recall recent discussion. Org-scoped and RLS-respecting; no realtime dependency. Filter with since (ISO timestamp) and/or mentions (a package id) for recall ('what did we say about package X').";
+var schema85 = {
   since: external_exports.string().optional().describe("ISO timestamp \u2014 only return messages strictly newer than this"),
   mentions: external_exports.string().optional().describe("Only return messages that @-mention this package id"),
   thread_id: external_exports.string().optional().describe("Optional thread id; defaults to the org's 'org_general' thread"),
@@ -76720,7 +77051,7 @@ var MISSING_TABLE_HINT2 = "Team messaging tables are not present yet. Apply migr
 function isMissingTable2(msg) {
   return /does not exist|relation .* does not exist|could not find the table|schema cache/i.test(msg);
 }
-async function handler84(args, auth) {
+async function handler85(args, auth) {
   try {
     if (!auth.orgId) {
       return {
@@ -77241,13 +77572,13 @@ async function reviseSpec(store, input) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/sync-spec-draft.ts
-var name85 = "cascade_sync_spec_draft";
-var description85 = "Persist your MUTABLE working draft of a spec WITHOUT publishing a new version (the git working-tree, not a commit). Keyed per-user by spec lineage, so concurrent editors never clobber each other and no spec_artifacts version is minted. Use this to autosave/iterate a spec conversationally; call cascade_revise_spec to publish an immutable version when ready.";
-var schema85 = {
+var name86 = "cascade_sync_spec_draft";
+var description86 = "Persist your MUTABLE working draft of a spec WITHOUT publishing a new version (the git working-tree, not a commit). Keyed per-user by spec lineage, so concurrent editors never clobber each other and no spec_artifacts version is minted. Use this to autosave/iterate a spec conversationally; call cascade_revise_spec to publish an immutable version when ready.";
+var schema86 = {
   spec_id: external_exports.string().uuid().describe("Any spec_artifacts id in the lineage you are editing (usually the package HEAD spec)."),
   draft_body: external_exports.record(external_exports.string(), external_exports.any()).describe("The full working spec body (intent, mustHaves, assumptions, executionPlan, \u2026) to save as your draft.")
 };
-async function handler85({ spec_id, draft_body }, auth) {
+async function handler86({ spec_id, draft_body }, auth) {
   try {
     if (!auth.userId) {
       return {
@@ -77290,16 +77621,16 @@ async function handler85({ spec_id, draft_body }, auth) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/revise-spec.ts
-var name86 = "cascade_revise_spec";
-var description86 = "Publish an IMMUTABLE new spec version from a working draft (or an explicit body). Mints spec_artifacts v(n+1) with parent_spec_id, computes content_hash, requires a non-empty revision_context, rejects a no-op (content == HEAD) and a stale base (HEAD advanced \u2014 optimistic concurrency), writes a structured typed-diff revision record, and repoints the package to the new HEAD. Embedding regeneration is best-effort/non-blocking. This is the only safe way to commit spec changes so a delegate's preflight gate sees the new canonical HEAD.";
-var schema86 = {
+var name87 = "cascade_revise_spec";
+var description87 = "Publish an IMMUTABLE new spec version from a working draft (or an explicit body). Mints spec_artifacts v(n+1) with parent_spec_id, computes content_hash, requires a non-empty revision_context, rejects a no-op (content == HEAD) and a stale base (HEAD advanced \u2014 optimistic concurrency), writes a structured typed-diff revision record, and repoints the package to the new HEAD. Embedding regeneration is best-effort/non-blocking. This is the only safe way to commit spec changes so a delegate's preflight gate sees the new canonical HEAD.";
+var schema87 = {
   draft_id: external_exports.string().uuid().optional().describe("Publish from this stored working draft (preferred)."),
   spec_id: external_exports.string().uuid().optional().describe("Or publish against this spec lineage using new_body."),
   new_body: external_exports.record(external_exports.string(), external_exports.any()).optional().describe("The new spec body to publish (required when using spec_id; overrides draft body if both given)."),
   base_version: external_exports.number().int().optional().describe("The HEAD version your edit was based on (optimistic-concurrency base). Defaults to the draft's base_version."),
   revision_context: external_exports.string().min(1).describe("REQUIRED: why this revision exists (what changed and why). Empty is rejected.")
 };
-async function handler86({
+async function handler87({
   draft_id,
   spec_id,
   new_body,
@@ -77669,9 +78000,9 @@ async function editImage(args) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/generate-image.ts
-var name87 = "cascade_generate_image";
-var description87 = "Generate an image with OpenAI's GPT Image models and store it as a versioned Cascade image artifact (kind:artifact package, renderer 'image', PNG in the 'artifacts' bucket) \u2014 or, with source_artifact_id, iterate on an existing image artifact by appending a new edited version. Requires an OpenAI API key (env OPENAI_API_KEY or an org 'openai' key) and respects the org's monthly cloud spend cap.";
-var schema87 = {
+var name88 = "cascade_generate_image";
+var description88 = "Generate an image with OpenAI's GPT Image models and store it as a versioned Cascade image artifact (kind:artifact package, renderer 'image', PNG in the 'artifacts' bucket) \u2014 or, with source_artifact_id, iterate on an existing image artifact by appending a new edited version. Requires an OpenAI API key (env OPENAI_API_KEY or an org 'openai' key) and respects the org's monthly cloud spend cap.";
+var schema88 = {
   prompt: external_exports.string().describe("The image prompt (generate mode) or edit instruction (edit mode)"),
   title: external_exports.string().optional().describe("Artifact title (generate mode only; defaults to the first ~60 chars of the prompt)"),
   source_artifact_id: external_exports.string().optional().describe("EDIT MODE: id of an existing image artifact to iterate on (appends a new version)"),
@@ -77690,7 +78021,7 @@ var schema87 = {
   objective_id: external_exports.string().optional().describe("Optional objective to attach the artifact to (generate mode)"),
   tags: external_exports.array(external_exports.string()).optional().describe("Optional tags (the 'artifact' and 'image' tags are always added; generate mode)")
 };
-var _test = {};
+var _test2 = {};
 function deriveTitle(prompt) {
   const collapsed = prompt.trim().replace(/\s+/g, " ");
   if (collapsed.length <= 60) return collapsed || "Generated image";
@@ -77734,33 +78065,33 @@ async function checkImageSpendCap(supabase, orgId, estimatedUsd) {
     return null;
   }
 }
-function errorResult8(text4) {
+function errorResult9(text4) {
   return {
     content: [{ type: "text", text: text4 }],
     isError: true
   };
 }
-async function handler87(args, auth) {
+async function handler88(args, auth) {
   try {
     if (!auth.orgId) {
-      return errorResult8("Error: No active organization.");
+      return errorResult9("Error: No active organization.");
     }
     const orgId = auth.orgId;
     let params;
     try {
       params = validateImageParams({ model: args.model, quality: args.quality, size: args.size });
     } catch (e) {
-      return errorResult8(`Error: ${e instanceof Error ? e.message : String(e)}`);
+      return errorResult9(`Error: ${e instanceof Error ? e.message : String(e)}`);
     }
     const resolvedKey = await resolveOpenAIKey(auth.supabase, orgId);
     if (!resolvedKey) {
-      return errorResult8(
+      return errorResult9(
         "No OpenAI API key available. Set OPENAI_API_KEY or store an org 'openai' key in Settings."
       );
     }
     const estimated = estimateCostUsd(params.model, params.quality, params.size);
     const refusal = await checkImageSpendCap(auth.supabase, orgId, estimated);
-    if (refusal) return errorResult8(refusal);
+    if (refusal) return errorResult9(refusal);
     const mode = args.source_artifact_id ? "edit" : "generate";
     let sourcePkg = null;
     let sourceBytes = null;
@@ -77769,29 +78100,29 @@ async function handler87(args, auth) {
       const sourceId = args.source_artifact_id;
       const { data: versions, error: verReadErr } = await auth.supabase.from("artifact_versions").select("version_no, renderer, storage_path, org_id").eq("artifact_id", sourceId).order("version_no", { ascending: false });
       if (verReadErr) {
-        if (isMissingTableError(verReadErr.message)) return errorResult8(MIGRATION_PENDING_MESSAGE);
-        return errorResult8(`Error reading source artifact versions: ${verReadErr.message}`);
+        if (isMissingTableError(verReadErr.message)) return errorResult9(MIGRATION_PENDING_MESSAGE);
+        return errorResult9(`Error reading source artifact versions: ${verReadErr.message}`);
       }
       const rows = versions ?? [];
       if (rows.length === 0 || rows[0].org_id !== orgId) {
-        return errorResult8(`Error: artifact ${sourceId} not found in your organization.`);
+        return errorResult9(`Error: artifact ${sourceId} not found in your organization.`);
       }
       nextVersionNo2 = rows[0].version_no + 1;
       const imageVersions = rows.filter((r) => r.renderer === "image");
       const source = args.source_version_no != null ? imageVersions.find((r) => r.version_no === args.source_version_no) : imageVersions[0];
       if (!source) {
-        return errorResult8(
+        return errorResult9(
           args.source_version_no != null ? `Error: artifact ${sourceId} has no image version ${args.source_version_no}.` : `Error: artifact ${sourceId} has no image versions to edit.`
         );
       }
       if (!source.storage_path) {
-        return errorResult8(
+        return errorResult9(
           `Error: image version ${source.version_no} of artifact ${sourceId} has no stored PNG (missing storage_path).`
         );
       }
       const { data: pkg, error: pkgReadErr } = await auth.supabase.from("packages").select("title, type_data, execution_cost_usd").eq("id", sourceId).eq("org_id", orgId).single();
       if (pkgReadErr || !pkg) {
-        return errorResult8(
+        return errorResult9(
           `Error: artifact package ${sourceId} not found: ${pkgReadErr?.message ?? "no row"}`
         );
       }
@@ -77802,7 +78133,7 @@ async function handler87(args, auth) {
       };
       const { data: blob, error: dlErr } = await auth.supabase.storage.from("artifacts").download(source.storage_path);
       if (dlErr || !blob) {
-        return errorResult8(
+        return errorResult9(
           `Error downloading source image from storage: ${dlErr?.message ?? "no data"}`
         );
       }
@@ -77817,7 +78148,7 @@ async function handler87(args, auth) {
         model: params.model,
         quality: params.quality,
         size: params.size,
-        fetchImpl: _test.fetchImpl
+        fetchImpl: _test2.fetchImpl
       });
     } else {
       result = await generateImage({
@@ -77826,7 +78157,7 @@ async function handler87(args, auth) {
         model: params.model,
         quality: params.quality,
         size: params.size,
-        fetchImpl: _test.fetchImpl
+        fetchImpl: _test2.fetchImpl
       });
     }
     const imageMeta = {
@@ -77867,16 +78198,16 @@ async function handler87(args, auth) {
       );
       if ("error" in created) {
         if (created.stage === "workspace") {
-          return errorResult8(`Error: ${created.error}`);
+          return errorResult9(`Error: ${created.error}`);
         }
         if (created.stage === "storage") {
-          return errorResult8(`Error: Failed to upload image to storage: ${created.error}`);
+          return errorResult9(`Error: Failed to upload image to storage: ${created.error}`);
         }
         if (created.stage === "version" && isMissingTableError(created.error)) {
-          return errorResult8(MIGRATION_PENDING_MESSAGE);
+          return errorResult9(MIGRATION_PENDING_MESSAGE);
         }
         const label = created.stage === "package" ? "Error creating artifact package" : "Error creating artifact version";
-        return errorResult8(`${label}: ${created.error}`);
+        return errorResult9(`${label}: ${created.error}`);
       }
       artifactId = created.artifactId;
       versionId = created.versionId;
@@ -77899,10 +78230,10 @@ async function handler87(args, auth) {
       );
       if ("error" in appended) {
         if (appended.stage === "storage") {
-          return errorResult8(`Error: Failed to upload image to storage: ${appended.error}`);
+          return errorResult9(`Error: Failed to upload image to storage: ${appended.error}`);
         }
-        if (isMissingTableError(appended.error)) return errorResult8(MIGRATION_PENDING_MESSAGE);
-        return errorResult8(`Error creating artifact version: ${appended.error}`);
+        if (isMissingTableError(appended.error)) return errorResult9(MIGRATION_PENDING_MESSAGE);
+        return errorResult9(`Error creating artifact version: ${appended.error}`);
       }
       versionId = appended.versionId;
       storagePath = appended.storagePath;
@@ -77984,9 +78315,9 @@ async function handler87(args, auth) {
   } catch (err13) {
     const msg = err13 instanceof Error ? err13.message : String(err13);
     if (isMissingTableError(msg)) {
-      return errorResult8(MIGRATION_PENDING_MESSAGE);
+      return errorResult9(MIGRATION_PENDING_MESSAGE);
     }
-    return errorResult8(`Error: ${msg}`);
+    return errorResult9(`Error: ${msg}`);
   }
 }
 
@@ -79019,9 +79350,9 @@ async function resolveOrgSigner(supabase, orgId) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/generate-video.ts
-var name88 = "cascade_generate_video";
-var description88 = "Generate a high-fidelity video (default Sora-2-Pro image-to-video, or Veo-3 via the model param) with an optional Topaz 4K upscale, stored as a versioned Cascade video artifact (kind:artifact package, renderer 'video', MP4 in the 'artifacts' bucket, content-hashed + best-effort Ed25519-signed, origin-linked to a project). No-surprise-spend: WITHOUT confirm it returns only the cost estimate; WITH confirm it runs the paid pipeline. Requires an OpenAI key (Sora) and/or a Replicate token (Veo + Topaz), and respects the org's monthly cloud spend cap.";
-var schema88 = {
+var name89 = "cascade_generate_video";
+var description89 = "Generate a high-fidelity video (default Sora-2-Pro image-to-video, or Veo-3 via the model param) with an optional Topaz 4K upscale, stored as a versioned Cascade video artifact (kind:artifact package, renderer 'video', MP4 in the 'artifacts' bucket, content-hashed + best-effort Ed25519-signed, origin-linked to a project). No-surprise-spend: WITHOUT confirm it returns only the cost estimate; WITH confirm it runs the paid pipeline. Requires an OpenAI key (Sora) and/or a Replicate token (Veo + Topaz), and respects the org's monthly cloud spend cap.";
+var schema89 = {
   prompt: external_exports.string().describe("The video prompt (drives Sora/Veo generation)."),
   title: external_exports.string().optional().describe("Artifact title (defaults to the first ~60 chars of the prompt)."),
   model: external_exports.enum([...VIDEO_MODELS]).optional().describe(`Generator model (default: ${DEFAULT_VIDEO_MODEL}). sora-2-pro = faithful image-to-video; veo-3 = google/veo-3 on Replicate.`),
@@ -79034,13 +79365,13 @@ var schema88 = {
   objective_id: external_exports.string().optional().describe("Optional objective to attach the artifact to."),
   tags: external_exports.array(external_exports.string()).optional().describe("Optional tags (the 'artifact' and 'video' tags are always added).")
 };
-var _test2 = {};
+var _test3 = {};
 function deriveTitle2(prompt) {
   const collapsed = prompt.trim().replace(/\s+/g, " ");
   if (collapsed.length <= 60) return collapsed || "Generated video";
   return `${collapsed.slice(0, 57).trimEnd()}...`;
 }
-function errorResult9(text4) {
+function errorResult10(text4) {
   return { content: [{ type: "text", text: text4 }], isError: true };
 }
 async function checkVideoSpendCap(supabase, orgId, estimatedUsd) {
@@ -79099,15 +79430,15 @@ async function loadReferenceImage(supabase, orgId, artifactId) {
   if (dlErr || !blob) return { error: `Error downloading reference image: ${dlErr?.message ?? "no data"}` };
   return { bytes: new Uint8Array(await blob.arrayBuffer()) };
 }
-async function handler88(args, auth) {
+async function handler89(args, auth) {
   try {
-    if (!auth.orgId) return errorResult9("Error: No active organization.");
+    if (!auth.orgId) return errorResult10("Error: No active organization.");
     const orgId = auth.orgId;
     let model;
     try {
       model = validateVideoModel(args.model);
     } catch (e) {
-      return errorResult9(`Error: ${e instanceof Error ? e.message : String(e)}`);
+      return errorResult10(`Error: ${e instanceof Error ? e.message : String(e)}`);
     }
     const upscale = args.upscale ?? true;
     const seconds = args.seconds ?? 8;
@@ -79131,32 +79462,32 @@ async function handler88(args, auth) {
     const usesReplicate = model === "veo-3" || upscale;
     let openaiKey = null;
     let replicateKey = null;
-    if (!_test2.generator) {
+    if (!_test3.generator) {
       if (usesOpenAI) {
         const k2 = await resolveOpenAIKey(auth.supabase, orgId);
-        if (!k2) return errorResult9("No OpenAI API key available. Set OPENAI_API_KEY or store an org 'openai' key.");
+        if (!k2) return errorResult10("No OpenAI API key available. Set OPENAI_API_KEY or store an org 'openai' key.");
         openaiKey = k2.key;
       }
       if (usesReplicate) {
         const k2 = await resolveReplicateKey(auth.supabase, orgId);
         if (!k2)
-          return errorResult9(
+          return errorResult10(
             "No Replicate API token available. Set REPLICATE_API_TOKEN or store an org 'replicate' key (needed for Veo-3 and the Topaz 4K upscale)."
           );
         replicateKey = k2.key;
       }
     }
     const refusal = await checkVideoSpendCap(auth.supabase, orgId, estimate.totalUsd);
-    if (refusal) return errorResult9(refusal);
+    if (refusal) return errorResult10(refusal);
     let referenceImage;
     if (args.reference_image_artifact_id) {
       const ref = await loadReferenceImage(auth.supabase, orgId, args.reference_image_artifact_id);
-      if ("error" in ref) return errorResult9(ref.error);
+      if ("error" in ref) return errorResult10(ref.error);
       referenceImage = ref.bytes;
     }
-    const generator = _test2.generator ?? (model === "sora-2-pro" ? makeSoraGenerator({ apiKey: openaiKey }) : makeVeoGenerator({ apiKey: replicateKey }));
-    const upscaler = upscale ? _test2.upscaler ?? makeTopazUpscaler({ apiKey: replicateKey }) : void 0;
-    const hostForUpscale = _test2.hostForUpscale ?? (async (bytes) => {
+    const generator = _test3.generator ?? (model === "sora-2-pro" ? makeSoraGenerator({ apiKey: openaiKey }) : makeVeoGenerator({ apiKey: replicateKey }));
+    const upscaler = upscale ? _test3.upscaler ?? makeTopazUpscaler({ apiKey: replicateKey }) : void 0;
+    const hostForUpscale = _test3.hostForUpscale ?? (async (bytes) => {
       const key = `${orgId}/_upscale-src/${cryptoRandom()}.mp4`;
       const copy = new Uint8Array(bytes.byteLength);
       copy.set(bytes);
@@ -79202,8 +79533,8 @@ async function handler88(args, auth) {
       }
     );
     if ("error" in landedBase) {
-      if (isMissingTableError(landedBase.error)) return errorResult9(MIGRATION_PENDING_MESSAGE);
-      return errorResult9(`Error landing video artifact (${landedBase.stage}): ${landedBase.error}`);
+      if (isMissingTableError(landedBase.error)) return errorResult10(MIGRATION_PENDING_MESSAGE);
+      return errorResult10(`Error landing video artifact (${landedBase.stage}): ${landedBase.error}`);
     }
     const artifactId = landedBase.artifactId;
     const landedVersions = [landedBase.version];
@@ -79290,8 +79621,8 @@ async function handler88(args, auth) {
     };
   } catch (err13) {
     const msg = err13 instanceof Error ? err13.message : String(err13);
-    if (isMissingTableError(msg)) return errorResult9(MIGRATION_PENDING_MESSAGE);
-    return errorResult9(`Error: ${msg}`);
+    if (isMissingTableError(msg)) return errorResult10(MIGRATION_PENDING_MESSAGE);
+    return errorResult10(`Error: ${msg}`);
   }
 }
 function cryptoRandom() {
@@ -79728,10 +80059,10 @@ function applyPriorsToSubjects(subjects, priors) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/okr-intake.ts
-var name89 = "cascade_okr_reclassify";
-var description89 = "Reclassify OKR intake results by talking, and TEACH the system the correction so the next run honors it without being told again. Give it a natural-language correction ('a bunch of stuff got classified as security work but it's really about User Experience and the KRs around magic-link login') and it does BOTH halves: (1) RE-POINTS the affected machine-written kr_evidence_links onto the right key result (provenance='okr_intake' + a fresh intake_run_id, so undoIntakeRun/revokeAppliedLink/listAppliedLinks reverse it as one unit), and (2) QUEUES an okr_suggester_prior draft (okr_proposals kind='suggester_prior' \u2014 an EXISTING kind) that a later routing pass reads to route the same signals correctly. Actions: 'preview' (default, writes NOTHING \u2014 shows the parse, the links it would move and the prior it would queue), 'reclassify' (needs apply:true to write), 'list_priors' (the accepted intake routing priors), 'route_preview' (run subjects through the accepted priors and see which theme each one now routes to \u2014 the proof a prior is being honored). TO MOVE LINKS YOU MUST NAME THE SET: key_result_id is a DESTINATION, not a selector \u2014 pass at least one of link_ids, package_ids or from_key_result_id alongside it. A call carrying only a destination is REFUSED rather than re-pointing every machine link in the org. NEVER creates objectives, key results or initiatives, and NEVER touches a human-created evidence link.";
+var name90 = "cascade_okr_reclassify";
+var description90 = "Reclassify OKR intake results by talking, and TEACH the system the correction so the next run honors it without being told again. Give it a natural-language correction ('a bunch of stuff got classified as security work but it's really about User Experience and the KRs around magic-link login') and it does BOTH halves: (1) RE-POINTS the affected machine-written kr_evidence_links onto the right key result (provenance='okr_intake' + a fresh intake_run_id, so undoIntakeRun/revokeAppliedLink/listAppliedLinks reverse it as one unit), and (2) QUEUES an okr_suggester_prior draft (okr_proposals kind='suggester_prior' \u2014 an EXISTING kind) that a later routing pass reads to route the same signals correctly. Actions: 'preview' (default, writes NOTHING \u2014 shows the parse, the links it would move and the prior it would queue), 'reclassify' (needs apply:true to write), 'list_priors' (the accepted intake routing priors), 'route_preview' (run subjects through the accepted priors and see which theme each one now routes to \u2014 the proof a prior is being honored). TO MOVE LINKS YOU MUST NAME THE SET: key_result_id is a DESTINATION, not a selector \u2014 pass at least one of link_ids, package_ids or from_key_result_id alongside it. A call carrying only a destination is REFUSED rather than re-pointing every machine link in the org. NEVER creates objectives, key results or initiatives, and NEVER touches a human-created evidence link.";
 var THEME_ENUM = external_exports.enum(ROLLING_OBJECTIVE_THEMES);
-var schema89 = {
+var schema90 = {
   action: external_exports.enum(["preview", "reclassify", "list_priors", "route_preview"]).default("preview").describe(
     "preview = compute everything, write nothing (default). reclassify = do it (also needs apply:true). list_priors = the accepted intake routing priors. route_preview = show which theme the accepted priors dictate for the given subjects."
   ),
@@ -79917,7 +80248,7 @@ async function countHumanLinksAt(auth, keyResultId) {
   if (error2) return null;
   return typeof count === "number" ? count : null;
 }
-async function handler89(args, auth) {
+async function handler90(args, auth) {
   try {
     if (!auth.orgId) return err9("No active organization.");
     const action = args.action ?? "preview";
@@ -80241,8 +80572,8 @@ async function handler89(args, auth) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/okr-reconcile.ts
-var name90 = "cascade_okr_reconcile";
-var description90 = "ONE call that answers 'where are we with the OKRs?' for your organization. READ-ONLY \u2014 it never writes anything. Returns a structured report with five sections: (1) LADDER \u2014 org pillars -> surfaces -> seams built from objectives.parent_objective_id, each node carrying its key-result / package / evidence counts; (2) UNPARENTED \u2014 active surface/seam objectives with no parent, or whose parent is missing, cross-org, inactive, or at the wrong level (seam must ladder to surface, surface to org); (3) PILLARS \u2014 TWO DISTINCT READINGS, never conflated: 'pillars with no surface children' (a structural note \u2014 outcome pillars legitimately skip the surface tier) and 'unbacked pillars' (no surface/seam child AND no objective_packages AND no kr_evidence_links \u2014 no work reaches it by ANY path); (4) UNLINKED \u2014 objectives with no objective_packages rows; (5) RETROACTIVE \u2014 key results whose measure was stamped AFTER the evidence it counts (key_results.retroactive_measure, mig 386, falling back to the same derivation). Plus the headline counters: how many key results carry NO evidence at all, how many objectives are unparented, how many pillars are unbacked. The retroactive mark is a LABEL, never a gate \u2014 this tool only reports it. To FIX a parent edge use cascade_manage_objective set_parent / clear_parent; this tool never writes one.";
+var name91 = "cascade_okr_reconcile";
+var description91 = "ONE call that answers 'where are we with the OKRs?' for your organization. READ-ONLY \u2014 it never writes anything. Returns a structured report with five sections: (1) LADDER \u2014 org pillars -> surfaces -> seams built from objectives.parent_objective_id, each node carrying its key-result / package / evidence counts; (2) UNPARENTED \u2014 active surface/seam objectives with no parent, or whose parent is missing, cross-org, inactive, or at the wrong level (seam must ladder to surface, surface to org); (3) PILLARS \u2014 TWO DISTINCT READINGS, never conflated: 'pillars with no surface children' (a structural note \u2014 outcome pillars legitimately skip the surface tier) and 'unbacked pillars' (no surface/seam child AND no objective_packages AND no kr_evidence_links \u2014 no work reaches it by ANY path); (4) UNLINKED \u2014 objectives with no objective_packages rows; (5) RETROACTIVE \u2014 key results whose measure was stamped AFTER the evidence it counts (key_results.retroactive_measure, mig 386, falling back to the same derivation). Plus the headline counters: how many key results carry NO evidence at all, how many objectives are unparented, how many pillars are unbacked. The retroactive mark is a LABEL, never a gate \u2014 this tool only reports it. To FIX a parent edge use cascade_manage_objective set_parent / clear_parent; this tool never writes one.";
 var REQUIRED_PARENT_LEVEL2 = {
   seam: "surface",
   surface: "org"
@@ -80255,9 +80586,9 @@ var RETROACTIVE_SOURCE_OF_TRUTH = "cascade-web/src/lib/objectives/retroactive.ts
 function parseTimestamp2(value) {
   if (typeof value === "number") return Number.isFinite(value) ? value : null;
   if (typeof value !== "string") return null;
-  const trimmed2 = value.trim();
-  if (!trimmed2) return null;
-  const ms = Date.parse(trimmed2);
+  const trimmed3 = value.trim();
+  if (!trimmed3) return null;
+  const ms = Date.parse(trimmed3);
   return Number.isNaN(ms) ? null : ms;
 }
 function resolveEvidenceTimestamp(evidence) {
@@ -80700,7 +81031,7 @@ function analyzeReconciliation(corpus, options = {}) {
     `${retroactiveKrs.length} key results are marked retroactive (${persistedCount} of ${keyResults.length} KRs carry a persisted verdict; ${derivedRetroactive} of the marks were derived; ${undecidable} KRs are undecidable and are reported as NOT retroactive).`
   ];
   const report = {
-    tool: name90,
+    tool: name91,
     org_id: orgId,
     read_only: true,
     headline,
@@ -80791,7 +81122,7 @@ function findCycles(active, anyById) {
     detail: loop.length === 1 ? "objective is its own parent" : `parent cycle of ${loop.length}: ${loop.map(short2).join(" -> ")} -> ${short2(loop[0])}`
   }));
 }
-var schema90 = {
+var schema91 = {
   sections: external_exports.array(external_exports.enum(RECONCILE_SECTIONS)).optional().describe(
     "Which sections to include. Omit for ALL FIVE (ladder, unparented, pillars, unlinked, retroactive) \u2014 the default is the whole picture, because the point of this tool is one call. Narrow it only to keep a very large org's response small. Note that 'pillars' always emits BOTH readings (no_surface_children AND unbacked); they cannot be requested separately, because reporting one without the other is what produces false alarms."
   ),
@@ -80805,7 +81136,7 @@ function ok11(payload) {
 function err10(message) {
   return { content: [{ type: "text", text: `Error: ${message}` }], isError: true };
 }
-async function handler90(args, auth) {
+async function handler91(args, auth) {
   try {
     if (!auth?.orgId) {
       return err10(
@@ -80880,9 +81211,9 @@ function specPullHandoff(findingPackageId) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/log-finding.ts
-var name91 = "cascade_log_finding";
-var description91 = "Log a defect, misalignment or debt marker you noticed IN PASSING \u2014 from any session, in one call. Creates a DRAFT work-candidate package on the findings substrate (type_data.package_type='finding', source='session_incidental'), deduped by (org, seam topic, normalized title) so re-reporting the same thing updates the open draft instead of doubling it. Returns the /cse:spec-pull handoff so the finding goes from noticed to being fixed in ONE action, plus the taxonomy RoutingSubject payload (two-axis: rolling org objective x seam, laddered by the existing objective_contributions edge). NEVER auto-executes anything, and NEVER creates an objective or key result \u2014 findings stay draft until a human picks them up. Use whenever you hit something broken that is not what you were asked to work on.";
-var schema91 = {
+var name92 = "cascade_log_finding";
+var description92 = "Log a defect, misalignment or debt marker you noticed IN PASSING \u2014 from any session, in one call. Creates a DRAFT work-candidate package on the findings substrate (type_data.package_type='finding', source='session_incidental'), deduped by (org, seam topic, normalized title) so re-reporting the same thing updates the open draft instead of doubling it. Returns the /cse:spec-pull handoff so the finding goes from noticed to being fixed in ONE action, plus the taxonomy RoutingSubject payload (two-axis: rolling org objective x seam, laddered by the existing objective_contributions edge). NEVER auto-executes anything, and NEVER creates an objective or key result \u2014 findings stay draft until a human picks them up. Use whenever you hit something broken that is not what you were asked to work on.";
+var schema92 = {
   title: external_exports.string().describe("One-line statement of the defect. Half of the dedup identity \u2014 keep it stable."),
   description: external_exports.string().optional().describe("What is wrong and why it matters. The failure mode, not the fix."),
   importance: external_exports.enum(FINDING_IMPORTANCE_LEVELS).default("normal").describe("critical > high > normal \u2014 the /work band ranks on this."),
@@ -80969,7 +81300,7 @@ async function resolveDefaultWorkspaceId(auth) {
   }
   return { workspaceId: id2 };
 }
-async function handler91(args, auth) {
+async function handler92(args, auth) {
   try {
     if (!auth.orgId) return err11("No active organization.");
     const title = (args.title ?? "").trim();
@@ -81169,7 +81500,7 @@ async function handler91(args, auth) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/verification.ts
-import { randomUUID as randomUUID6 } from "node:crypto";
+import { randomUUID as randomUUID7 } from "node:crypto";
 
 // harnesses/mcp-servers/cascade-api/src/lib/verification-verdict.ts
 var UNKNOWABLE_STATES = ["unresolved", "abstained"];
@@ -81332,8 +81663,8 @@ function detectWaveOverlap(executionPlan) {
 }
 
 // harnesses/mcp-servers/cascade-api/src/tools/verification.ts
-var name92 = "cascade_verify";
-var description92 = "VERIFICATION INSTRUMENTS \u2014 two pure, read-only computations over a CSE run. NO database writes, no auth needed. mode='verdict': turn per-must-have results into the three-state verification verdict (passed | gaps_found | human_needed) with precedence human_needed > gaps_found > passed. 'passed' is UNREACHABLE while any must-have is unresolved or abstained, and an EMPTY must-have list is human_needed, never passed \u2014 'nothing was checked' is a statement about the harness, not about the code. The response also EMITS a ready-to-record gate_run payload mapping passed->'pass', gaps_found->'fail', human_needed->'uncertain'. That mapping is what makes an unverifiable must-have BLOCK package close-out: check_release_gates (migration 240) computes v_satisfied := v_verdict IN ('pass','waived'), so 'uncertain' reads RED and `cascade spec complete` exits non-zero \u2014 with NO new migration. This tool does NOT persist the gate run; pass the returned `record_gate_call` to cascade_workflow mode='record_gate', which stays the single writer. mode='wave_overlap': ADVISORY report of artifact paths claimed by 2+ tasks INSIDE the same wave (same wave = concurrent agents in one worktree = silent last-writer-wins). Cross-wave reuse is legitimate and is never flagged. Report-only: no severity, no threshold, no gate_run, and nothing in execution branches on it.";
+var name93 = "cascade_verify";
+var description93 = "VERIFICATION INSTRUMENTS \u2014 two pure, read-only computations over a CSE run. NO database writes, no auth needed. mode='verdict': turn per-must-have results into the three-state verification verdict (passed | gaps_found | human_needed) with precedence human_needed > gaps_found > passed. 'passed' is UNREACHABLE while any must-have is unresolved or abstained, and an EMPTY must-have list is human_needed, never passed \u2014 'nothing was checked' is a statement about the harness, not about the code. The response also EMITS a ready-to-record gate_run payload mapping passed->'pass', gaps_found->'fail', human_needed->'uncertain'. That mapping is what makes an unverifiable must-have BLOCK package close-out: check_release_gates (migration 240) computes v_satisfied := v_verdict IN ('pass','waived'), so 'uncertain' reads RED and `cascade spec complete` exits non-zero \u2014 with NO new migration. This tool does NOT persist the gate run; pass the returned `record_gate_call` to cascade_workflow mode='record_gate', which stays the single writer. mode='wave_overlap': ADVISORY report of artifact paths claimed by 2+ tasks INSIDE the same wave (same wave = concurrent agents in one worktree = silent last-writer-wins). Cross-wave reuse is legitimate and is never flagged. Report-only: no severity, no threshold, no gate_run, and nothing in execution branches on it.";
 var VERDICT_TO_GATE_VERDICT = Object.freeze({
   passed: "pass",
   gaps_found: "fail",
@@ -81347,7 +81678,7 @@ var DEFAULT_GATE_NAME = "must-have verification";
 function buildGateRun(results, options = {}) {
   const verdict = computeVerdict(results);
   return {
-    gate_id: options.gateId ?? randomUUID6(),
+    gate_id: options.gateId ?? randomUUID7(),
     category: options.gateCategory ?? DEFAULT_GATE_CATEGORY,
     name: options.gateName ?? DEFAULT_GATE_NAME,
     verdict: gateVerdictFor(verdict),
@@ -81367,7 +81698,7 @@ var mustHaveSchema = external_exports.object({
   truth: external_exports.string().optional().describe("The must-have truth statement, verbatim."),
   note: external_exports.string().optional().describe("Why it failed, or why the evaluator abstained.")
 });
-var schema92 = {
+var schema93 = {
   mode: external_exports.enum(["verdict", "wave_overlap"]).describe(
     "verdict: compute the three-state verification verdict from must-have results and emit the gate_run payload. wave_overlap: ADVISORY scan of an execution plan for artifact paths claimed twice inside one wave."
   ),
@@ -81397,7 +81728,7 @@ function ok13(payload) {
 function err12(message) {
   return { content: [{ type: "text", text: message }], isError: true };
 }
-async function handler92(args) {
+async function handler93(args) {
   try {
     if (args.mode === "wave_overlap") {
       const report = detectWaveOverlap(args.execution_plan);
@@ -81496,14 +81827,14 @@ function applyAuthDirectiveToToolResult(result) {
     ]
   };
 }
-function wrapWithAuthErrorPath(name93, handler93) {
+function wrapWithAuthErrorPath(name94, handler94) {
   return async (...handlerArgs) => {
     try {
-      return applyAuthDirectiveToToolResult(await handler93(...handlerArgs));
+      return applyAuthDirectiveToToolResult(await handler94(...handlerArgs));
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
       if (isAuthFailureMessage(message)) {
-        log(`Auth failure in ${name93}: ${message}`);
+        log(`Auth failure in ${name94}: ${message}`);
         return {
           content: [{ type: "text", text: withAuthDirective(message) }],
           isError: true
@@ -81544,33 +81875,33 @@ var SKIPPED_TOOL_HANDLE = {
   },
   enabled: false
 };
-var registerTool = ((name93, ...rest) => {
-  if (allowedTools && !allowedTools.has(name93)) {
+var registerTool = ((name94, ...rest) => {
+  if (allowedTools && !allowedTools.has(name94)) {
     toolsSkippedByToolset++;
     return SKIPPED_TOOL_HANDLE;
   }
   const handlerIdx = rest.length - 1;
   if (typeof rest[handlerIdx] === "function") {
     rest[handlerIdx] = wrapWithAuthErrorPath(
-      name93,
+      name94,
       rest[handlerIdx]
     );
   }
-  if (WRITE_TOOLS.has(name93) && typeof rest[handlerIdx] === "function") {
-    const handler93 = rest[handlerIdx];
+  if (WRITE_TOOLS.has(name94) && typeof rest[handlerIdx] === "function") {
+    const handler94 = rest[handlerIdx];
     rest[handlerIdx] = async (...handlerArgs) => {
       try {
         const auth = await getAuth();
-        const rejection = await phiGuard(name93, handlerArgs[0], auth.orgId);
+        const rejection = await phiGuard(name94, handlerArgs[0], auth.orgId);
         if (rejection) return rejection;
       } catch (e) {
-        log(`phi-guard pre-check error for ${name93} (passing through):`, e);
+        log(`phi-guard pre-check error for ${name94} (passing through):`, e);
       }
-      return handler93(...handlerArgs);
+      return handler94(...handlerArgs);
     };
   }
-  const handle = server.tool(name93, ...rest);
-  handles.set(name93, handle);
+  const handle = server.tool(name94, ...rest);
+  handles.set(name94, handle);
   return handle;
 });
 function registeredToolNames() {
@@ -82214,12 +82545,12 @@ registerTool(
   }
 );
 registerTool(
-  name82,
-  description82,
-  schema82,
+  name81,
+  description81,
+  schema81,
   async (args) => {
     const auth = await getAuth();
-    return capResponse(await handler82(args, auth));
+    return capResponse(await handler81(args, auth));
   }
 );
 registerTool(
@@ -82227,16 +82558,25 @@ registerTool(
   description83,
   schema83,
   async (args) => {
-    return capResponse(await handler83(args));
+    const auth = await getAuth();
+    return capResponse(await handler83(args, auth));
   }
 );
 registerTool(
-  name81,
-  description81,
-  schema81,
+  name84,
+  description84,
+  schema84,
+  async (args) => {
+    return capResponse(await handler84(args));
+  }
+);
+registerTool(
+  name82,
+  description82,
+  schema82,
   async (args) => {
     const auth = await getAuth();
-    return capResponse(await handler81(args, auth));
+    return capResponse(await handler82(args, auth));
   }
 );
 registerTool(
@@ -82312,15 +82652,6 @@ registerTool(
   }
 );
 registerTool(
-  name84,
-  description84,
-  schema84,
-  async (args) => {
-    const auth = await getAuth();
-    return capResponse(await handler84(args, auth));
-  }
-);
-registerTool(
   name85,
   description85,
   schema85,
@@ -82339,21 +82670,21 @@ registerTool(
   }
 );
 registerTool(
-  name71,
-  description71,
-  schema71,
-  async (args) => {
-    const auth = await getAuth();
-    return capResponse(await handler71(args, auth));
-  }
-);
-registerTool(
   name87,
   description87,
   schema87,
   async (args) => {
     const auth = await getAuth();
     return capResponse(await handler87(args, auth));
+  }
+);
+registerTool(
+  name71,
+  description71,
+  schema71,
+  async (args) => {
+    const auth = await getAuth();
+    return capResponse(await handler71(args, auth));
   }
 );
 registerTool(
@@ -82375,12 +82706,21 @@ registerTool(
   }
 );
 registerTool(
-  name91,
-  description91,
-  schema91,
+  name90,
+  description90,
+  schema90,
   async (args) => {
     const auth = await getAuth();
-    return capResponse(await handler91(args, auth));
+    return capResponse(await handler90(args, auth));
+  }
+);
+registerTool(
+  name92,
+  description92,
+  schema92,
+  async (args) => {
+    const auth = await getAuth();
+    return capResponse(await handler92(args, auth));
   }
 );
 registerTool(
@@ -82438,20 +82778,20 @@ registerTool(
   }
 );
 registerTool(
-  name92,
-  description92,
-  schema92,
+  name93,
+  description93,
+  schema93,
   async (args) => {
-    return capResponse(await handler92(args));
+    return capResponse(await handler93(args));
   }
 );
 registerTool(
-  name90,
-  description90,
-  schema90,
+  name91,
+  description91,
+  schema91,
   async (args) => {
     const auth = await getAuth();
-    return capResponse(await handler90(args, auth));
+    return capResponse(await handler91(args, auth));
   }
 );
 registerTool(
@@ -82570,8 +82910,8 @@ if (activeSurfaceSelection.surface) {
 if (isLeanMode()) {
   const core = new Set(coreToolNames());
   let disabled = 0;
-  for (const [name93, handle] of handles) {
-    if (!core.has(name93)) {
+  for (const [name94, handle] of handles) {
+    if (!core.has(name94)) {
       handle.disable();
       disabled++;
     }
