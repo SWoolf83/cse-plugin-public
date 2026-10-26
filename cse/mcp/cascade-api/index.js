@@ -44990,6 +44990,28 @@ function registerToolSearch(server2, handles2) {
   );
 }
 
+// harnesses/mcp-servers/cascade-api/src/always-load.ts
+var ALWAYS_LOAD_ENV = "CASCADE_MCP_ALWAYS_LOAD";
+var ALWAYS_LOAD_META_KEY = "anthropic/alwaysLoad";
+function resolveAlwaysLoad(raw) {
+  const out = /* @__PURE__ */ new Set();
+  for (const part of (raw ?? "").split(",")) {
+    const name94 = part.trim();
+    if (/^[A-Za-z][A-Za-z0-9_]{0,127}$/.test(name94)) out.add(name94);
+  }
+  return out;
+}
+function applyAlwaysLoad(handles2, names) {
+  const marked = [];
+  for (const name94 of names) {
+    const h = handles2.get(name94);
+    if (!h) continue;
+    h._meta = { ...h._meta ?? {}, [ALWAYS_LOAD_META_KEY]: true };
+    marked.push(name94);
+  }
+  return marked;
+}
+
 // harnesses/mcp-servers/cascade-api/src/toolsets.ts
 var CASCADE_TOOLSET_ENV = "CASCADE_TOOLSET";
 var CASCADE_SURFACE_ENV = "CASCADE_SURFACE";
@@ -75684,13 +75706,18 @@ var name81 = CASCADE_CANVAS_TOOL_NAME;
 var CANVAS_ACTIONS = ["bring", "focus", "zoom_out", "dismiss", "observe"];
 var WORK_CANVAS_BRIDGE_TYPE = "work-canvas-op";
 var WORK_CANVAS_EVENT = "op";
+var WORK_CANVAS_ACK_EVENT = "ack";
+var ACK_WAIT_MS = 3e3;
+var ACK_LISTEN_WAIT_MS = 2e3;
+var RESULT_SHOWN = "Shown on the canvas";
+var RESULT_UNCONFIRMED = "Sent; no open canvas confirmed it within 3s";
 var workCanvasTopic = (userId) => `work-canvas:${userId}`;
 var CANVAS_MAX_REASON = 120;
 var CANVAS_MAX_MODULES = 12;
 var CANVAS_MAX_SESSION_KEY = 200;
 var CANVAS_KIND_RE = /^[A-Za-z][A-Za-z0-9_.-]{0,63}$/;
 var UUID_RE6 = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-var description81 = "Drive the Work Canvas beside the chat \u2014 the zoomable map of every module in play (blueprint, script, images, PhotoCraft, LightCraft, reel, export\u2026). action: 'bring' (add modules to the canvas, e.g. side by side), 'focus' (zoom into ONE module: 'let's go over to LightCraft'), 'zoom_out' (back to the overview), 'dismiss' (let modules recede), 'observe' (what is on the canvas \u2014 that state is already in your per-turn context, so this sends nothing). modules = [{kind, target?, reason?}]: kind is the module kind, target the artifact id it shows (checked to exist in this org first \u2014 an unknown or foreign id is an error and nothing is sent), reason one short line (at most 120 characters). sessionKey is the chat session the canvas belongs to. No confirmation is needed: showing UI is reversible. The op is SENT to the canvas; the canvas may not be open, so say you sent it there, not that the user is now looking at it.";
+var description81 = "Drive the Work Canvas beside the chat \u2014 the zoomable map of this work's modules (blueprint, script, images, PhotoCraft, LightCraft, reel, export\u2026). action: 'bring' (add modules), 'focus' (zoom into ONE module), 'zoom_out' (back to the overview), 'dismiss' (let modules recede), 'observe' (sends nothing; the canvas state is in your per-turn context). modules = [{kind, target?, reason?}]: kind is the module kind, target the artifact id it shows (checked to exist in this org first; an unknown or foreign id is an error and nothing is sent), reason one short line (at most 120 characters). sessionKey is the chat session the canvas belongs to. No confirmation is needed: showing UI is reversible. The result reports what the open canvas confirmed: shown, offered as a chip (the user is busy), or unconfirmed within 3s.";
 var schema81 = {
   action: external_exports.enum(CANVAS_ACTIONS).describe("bring | focus | zoom_out | dismiss | observe"),
   sessionKey: external_exports.string().describe("The chat session key the canvas is keyed by."),
@@ -75702,6 +75729,16 @@ var schema81 = {
     })
   ).optional().describe("Modules the op applies to. Required for bring / focus (exactly one) / dismiss.")
 };
+var CANVAS_ACK_OUTCOMES = ["shown", "chipped", "unknown_module", "dropped"];
+function parseCanvasAck(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  let r = raw;
+  if (r.opId === void 0 && r.payload && typeof r.payload === "object") r = r.payload;
+  if (typeof r.opId !== "string" || r.opId === "" || r.opId.length > 256) return null;
+  if (typeof r.sessionKey !== "string" || r.sessionKey === "") return null;
+  if (typeof r.outcome !== "string" || !CANVAS_ACK_OUTCOMES.includes(r.outcome)) return null;
+  return { opId: r.opId, sessionKey: r.sessionKey, outcome: r.outcome };
+}
 function errMsg7(e) {
   return e instanceof Error ? e.message : String(e);
 }
@@ -75716,13 +75753,103 @@ async function findArtifact(client, orgId, id2) {
     return { ok: false, error: errMsg7(e) };
   }
 }
+var ACK_BUFFER_CAP = 64;
+function createRealtimeAckSource(makeClient = () => createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+})) {
+  let client = null;
+  const joined = /* @__PURE__ */ new Map();
+  const buffer = /* @__PURE__ */ new Map();
+  const waiters = /* @__PURE__ */ new Map();
+  const deliver = (raw) => {
+    const ack = parseCanvasAck(raw);
+    if (!ack) return;
+    const w = waiters.get(ack.opId);
+    if (w) {
+      waiters.delete(ack.opId);
+      w(ack);
+      return;
+    }
+    buffer.set(ack.opId, ack);
+    if (buffer.size > ACK_BUFFER_CAP) {
+      const oldest = buffer.keys().next().value;
+      if (oldest !== void 0) buffer.delete(oldest);
+    }
+  };
+  return {
+    listen(userId, ms) {
+      let p = joined.get(userId);
+      if (!p) {
+        p = new Promise((resolve5) => {
+          try {
+            client ??= makeClient();
+            client.channel(workCanvasTopic(userId)).on("broadcast", { event: WORK_CANVAS_ACK_EVENT }, (msg) => deliver(msg?.payload)).subscribe((status) => {
+              if (status === "SUBSCRIBED") resolve5(true);
+              else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+                joined.delete(userId);
+                resolve5(false);
+              }
+            });
+          } catch (e) {
+            log(`cascade_canvas ack listener failed: ${errMsg7(e)}`);
+            joined.delete(userId);
+            resolve5(false);
+          }
+        });
+        joined.set(userId, p);
+      }
+      return raceTimeout(p, ms, false);
+    },
+    waitFor(opId, ms) {
+      const hit = buffer.get(opId);
+      if (hit) {
+        buffer.delete(opId);
+        return Promise.resolve(hit);
+      }
+      return new Promise((resolve5) => {
+        const t = setTimeout(() => {
+          waiters.delete(opId);
+          resolve5(null);
+        }, ms);
+        waiters.set(opId, (a) => {
+          clearTimeout(t);
+          resolve5(a);
+        });
+      });
+    }
+  };
+}
+function raceTimeout(p, ms, fallback) {
+  return new Promise((resolve5) => {
+    const t = setTimeout(() => resolve5(fallback), ms);
+    p.then(
+      (v) => {
+        clearTimeout(t);
+        resolve5(v);
+      },
+      () => {
+        clearTimeout(t);
+        resolve5(fallback);
+      }
+    );
+  });
+}
+var sharedAckSource = null;
+function defaultAckSource() {
+  return sharedAckSource ??= createRealtimeAckSource();
+}
 var DEFAULT_DEPS8 = {
   findArtifact,
   // Late-bound so a stubbed global fetch is honoured.
   fetch: (url, init) => fetch(url, init),
   emitBridge: emitBridgeMessage,
   newOpId: () => randomUUID6(),
-  now: () => Date.now()
+  now: () => Date.now(),
+  // Lazy: the realtime client is built on the first cascade_canvas call.
+  acks: {
+    listen: (userId, ms) => defaultAckSource().listen(userId, ms),
+    waitFor: (opId, ms) => defaultAckSource().waitFor(opId, ms)
+  }
 };
 function textResult(text4) {
   return { content: [{ type: "text", text: text4 }] };
@@ -75734,6 +75861,18 @@ function trimmed2(v) {
   return typeof v === "string" ? v.trim() : "";
 }
 var OBSERVE_NOTE = "The Work Canvas state (which modules are on it, which one the user is zoomed into, and what each is doing) is reported in your per-turn context \u2014 read it there. observe makes no round trip and sends nothing.";
+function ackResultText(outcome, what, modules, opId) {
+  switch (outcome) {
+    case "shown":
+      return `${RESULT_SHOWN}: ${what}. It is in front of the user now (op ${opId}).`;
+    case "chipped":
+      return `The user is busy on the canvas \u2014 offered as a "look here" chip for ${what}; it is theirs to click (op ${opId}).`;
+    case "unknown_module":
+      return `The canvas has no view for ${modules.map((m2) => `"${m2.kind}"`).join(", ") || "that op"}; nothing changed on it (op ${opId}). Use a module kind from the manifest.`;
+    case "dropped":
+      return `The canvas already took its new views for this turn, so ${what} was not placed (op ${opId}). Bring it next turn.`;
+  }
+}
 async function handler81(args, auth, deps = DEFAULT_DEPS8) {
   const refuse = (why) => errorResult8(`Error: ${why}. Nothing was sent.`);
   try {
@@ -75810,6 +75949,7 @@ async function handler81(args, auth, deps = DEFAULT_DEPS8) {
       modules,
       sentAt: deps.now()
     };
+    const listening = deps.acks ? await deps.acks.listen(userId, ACK_LISTEN_WAIT_MS) : false;
     deps.emitBridge(WORK_CANVAS_BRIDGE_TYPE, payload);
     const topic = workCanvasTopic(userId);
     let broadcastError = null;
@@ -75831,14 +75971,17 @@ async function handler81(args, auth, deps = DEFAULT_DEPS8) {
     } catch (e) {
       broadcastError = errMsg7(e);
     }
+    const ack = listening && deps.acks ? await deps.acks.waitFor(payload.opId, ACK_WAIT_MS) : null;
+    const confirmed = ack && ack.sessionKey === sessionKey ? ack : null;
     const what = action === "zoom_out" ? "zoom out" : `${action} ${titles.join(", ")}`;
+    if (confirmed) return textResult(ackResultText(confirmed.outcome, what, modules, payload.opId));
     if (broadcastError) {
       return errorResult8(
-        `Error: the realtime broadcast of "${what}" failed (${broadcastError}). The op (${payload.opId}) was handed to the local bridge best-effort only, so it reaches the canvas only if the bridge is listening.`
+        `Error: the realtime broadcast of "${what}" failed (${broadcastError}). The op (${payload.opId}) was handed to the local bridge best-effort only, and no open canvas confirmed it.`
       );
     }
     return textResult(
-      `\u2192 Sent "${what}" to the canvas (op ${payload.opId}). It reaches the Work Canvas only if it is open; nothing was changed in any artifact.`
+      `${RESULT_UNCONFIRMED} ("${what}", op ${payload.opId}). Describe the work in words; nothing was changed in any artifact.`
     );
   } catch (e) {
     return refuse(errMsg7(e));
@@ -82919,6 +83062,13 @@ if (isLeanMode()) {
   log(
     `Lean mode ON (CASCADE_MCP_TOOL_SEARCH): advertising ${core.size} core tools + cascade_tool_search; ${disabled} tools deferred (revealed on search via tools/list_changed).`
   );
+}
+{
+  const wanted = resolveAlwaysLoad(process.env[ALWAYS_LOAD_ENV]);
+  if (wanted.size > 0) {
+    const marked = applyAlwaysLoad(handles, wanted);
+    log(`${ALWAYS_LOAD_ENV}: loaded up front (no ToolSearch): ${marked.join(", ") || "none matched"}`);
+  }
 }
 async function main() {
   log("Starting Cascade API MCP server...");
