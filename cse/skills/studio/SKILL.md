@@ -32,9 +32,10 @@ table and the four safety rules; they bind you.
    - Arturia → `arturia render … --aupreset "<Name>.aupreset" --name "<Name>"` then `arturia install-aupreset` for Logic
      (User Presets in the plugin header), or write the preset file under `/Library/Arturia/Presets/<Instrument>/User/<Bank>/`
      (the in-plugin browser needs the `db.db3` row — `registerUserPreset`, only while no Arturia app is running).
-   - Helix → write the `.hlx`; the human imports it in HX Edit (drag onto a slot). Snapshots/presets can be recalled by MIDI.
-   - Octatrack → `octatrack chain … --out <Set>/AUDIO/<name>` on the mounted card (USB DISK MODE), then `octatrack slots
-     <Project>/project.work --assign FLEX:../AUDIO/<name>.wav --write` (writes `.work` AND `.strd`).
+   - Helix → write the `.hlx` through `writeHelixWithBackup` (see *Device writes*); the human imports it in HX Edit (drag
+     onto a slot). Snapshots/presets can be recalled by MIDI.
+   - Octatrack → `octatrack write` on the mounted card (USB DISK MODE) — see *Device writes*. Do not hand-chain
+     `octatrack chain` + `octatrack slots --write` onto a card: that path takes no backup.
    - Pro 3 → `pro3 patch … --to edit-buffer` to audition; `--to program --bank U --program N` **overwrites that slot on
      receipt** — say so and ask before sending it.
 6. **Save the record locally.** `store save --device … --params '{…}' --raw <file> --based-on <source>` prints
@@ -60,6 +61,40 @@ table and the four safety rules; they bind you.
    naming what is missing. Say which refusal you hit; do not fall back to a guess. `action: "advise"` answers from the
    params alone; `action: "search"` looks across stored presets. **None of the `/presets` web surface is GUI-verified yet**
    — do not tell the human what the page looks like; give them the route.
+
+## Device writes (Octatrack, Helix)
+
+**Only through the backup-wrapped writers.** Nothing else writes to a card or a device file.
+- studio-io: `planChainWrite` → `writeChainToCard(plan)` (Octatrack: chain `.wav` + `.ot` into the Set's `AUDIO/`, slot
+  assigned in `project.work` AND `project.strd`) and `writeHelixWithBackup(dest, preset)` — both in
+  `packages/studio-io/src/octatrack/cardWrite.ts`, built on `withBackup` / `restore` / `list` in `src/safety/backup.ts`.
+- Daemon (`src/daemon/studio-gear-routes.ts`): `GET /api/studio/octatrack/cards`, `POST /api/studio/octatrack/{search,plan,write}`,
+  `POST /api/studio/helix/write`, `GET /api/studio/backups`, `POST /api/studio/backups/restore`, `GET /api/studio/mod-readiness`.
+- CLI: `octatrack cards [--volumes-root /Volumes]`; `octatrack write --card <vol> --set <SET> --project <PROJ> --name "<Name>"
+  [--slot-type flex|static] [--slot N] [--bpm 120] [--sample-folder <dir>] [--declared-mod x] <sources...>` prints the
+  plan only — add `--yes` to back up and write; `backups list --device octatrack|helix`; `backups restore <snapshotId>`.
+  Show the plan to the human before re-running with `--yes`.
+
+**Backup first, always.** Every write snapshots `project.work`/`.strd` plus every touched file, with a SHA256 manifest,
+to `~/.cascade/studio/backups/<device>/<id>/`. Backup failure = nothing written (`stage: 'backup'`). A failed write
+auto-restores. Give the human the `snapshotId`; restore is one call and verifies hashes.
+
+**Firmware is read, never touched.** Version comes from the device's own files (`project.work` `OS_VERSION`, `.hlx`
+`device_version`; `detectFirmware` in `src/safety/firmware.ts`) and is classified `stock` or `unknown`. Mod readiness
+comes from the curated, cited catalog `packages/studio-io/data/mod-catalog/*.json` (`readiness()`). A non-stock OS or an
+owner-declared mod (`--declared-mod`) does not block: warn with the exact text **"unverified OS — backup taken, restore
+available"**, back up, then write.
+
+**Samples only from the owner's folder** — `studio.sampleFolder` in `~/.cascade/studio/config.json`
+(`getSampleFolder`/`setSampleFolder`; `searchSamples` and the writer both refuse paths outside it). If unset, ask for it.
+
+**Say what is unverified.** HX Stomp / Stomp XL output (`helix/stomp.ts` `target()`) is hardware-unverified and its
+block limit is unconfirmed from a primary source (`STOMP_BLOCK_LIMIT_CONFIRMED = false`) — say both. NAM audition plays
+the owner's own `.nam` captures only, and the engine wasm is held back pending the MPL-2.0 (Eigen) license decision —
+the panel reports that; do not claim it plays.
+
+**Hard lines.** Never fetch, link, bundle or patch firmware, stock or community. No plugin cloning or reverse
+engineering. No generative audio. No GPL/AGPL code shipped.
 
 ## Never
 - Send SysEx or CC to a device without showing the bytes/message list first (`--dry-run` exists for this).
