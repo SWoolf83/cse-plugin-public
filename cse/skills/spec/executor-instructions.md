@@ -43,6 +43,7 @@ Execute the spec wave by wave. For each wave in `executionPlan.waves`:
      - Scope boundaries from the spec
      - Deviation rules (copy from the file you read)
      - Commit protocol: `task(<task-id>): <description>`
+     - **The shared-worktree rules from step 6, verbatim** — every agent in the wave shares ONE worktree and ONE git index
 
 4. **Post-wave check:** After all tasks in a wave complete:
    - Verify expected artifacts exist via Glob
@@ -58,6 +59,11 @@ Execute the spec wave by wave. For each wave in `executionPlan.waves`:
    - Each task makes atomic commits: `task(<task-id>): <description>`
    - Never commit node_modules, .env files, or build artifacts
    - For single-task waves executed directly, commit after completing the task
+   - **Parallel agents in a wave share ONE worktree and ONE git index (finding 187034b6).** The intra-wave overlap detector only sees declared artifact paths, so it cannot catch these collisions. Every agent in a multi-task wave must:
+     1. **Write its commit message to a file named after its task id** (`$SCRATCH/commit-msg-<task-id>.txt`), or use `git commit -m`. Never a shared name like `msg.txt` — two agents writing it landed one agent's message on the other's commit.
+     2. **`git add` by explicit path, only its own artifacts.** Never `git add -A`, `git add .`, `git add <dir>` or `git commit -a` — a broad add sweeps a sibling's untracked files into your commit.
+     3. **Commit with a pathspec naming only its own paths:** `git commit -F "$SCRATCH/commit-msg-<task-id>.txt" -- <own paths>`. A bare `git commit` commits the WHOLE shared index, so whatever a sibling has staged at that moment lands in your commit even when you added only your own files. With `-- <paths>` git commits only those paths and leaves the sibling's staged entries staged. New files still need step 2's `git add <path>` first.
+     4. **Never `git commit --amend`, `git reset HEAD~…` or any history rewrite.** A sibling may have committed since your last commit, so `--amend` rewrites THEIR commit. A mistake gets a new follow-up commit.
 
 ---
 

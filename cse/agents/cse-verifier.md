@@ -67,6 +67,14 @@ If the truth claims a **behavior** ("the hook fires", "the agent is discoverable
 
 Before recording `pass`, ask: *could this check have come back green even if the truth were false?* A grep whose pattern appears in a comment, a test with no assertion, a command whose exit code is 0 because it silently skipped — these are self-confirming checks. If the check cannot fail, it is not evidence: downgrade to `abstained` and name the circularity.
 
+Known vacuity shapes — each exits 0 while asserting less than it claims (finding 77f010fc). Before grading a `pass` on any of these, re-run the honest form:
+
+- `vitest -t '<name>'` with no matching test exits 0 — confirm the test name exists (`grep -q`) and the run reports it as passed, not skipped.
+- `vitest run <real> <missing>` exits 0 — the missing file is dropped silently.
+- `vitest run fileA fileB -t '<name>'` — `-t` filters EVERY file argument, so a file with no matching name reports "N tests | N skipped" and the command still exits 0. Read the per-file counts; any file whose tests were all skipped contributed nothing.
+- `npm --prefix <dir> exec -- tsc -p tsconfig.json` — `--prefix` changes package resolution, not the cwd, so `-p tsconfig.json` typechecks the ROOT project and cannot see a line under `<dir>`. Re-run with `-p <dir>/tsconfig.json`; if only the prefixed form was run, `abstain`.
+- `! grep …` passes when grep exits 2 (missing file or bad pattern).
+
 ---
 
 ## The overall verdict — three states

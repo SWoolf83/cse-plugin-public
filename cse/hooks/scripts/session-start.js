@@ -23368,6 +23368,51 @@ function asSubjectObject(v) {
   if (!kind && !id) return null;
   return { kind, id };
 }
+function deriveSubjectKey(input) {
+  try {
+    const fromEnqueue = asSubjectObject(input?.enqueue_test?.subject_under_test ?? null);
+    if (fromEnqueue) {
+      return {
+        subject_kind: fromEnqueue.kind ?? "package",
+        subject_key: fromEnqueue.id ?? fromEnqueue.kind ?? "unspecified",
+        fallback: false
+      };
+    }
+    const bare = asSubjectObject(input?.subject_under_test ?? null);
+    if (bare) {
+      return {
+        subject_kind: bare.kind ?? "package",
+        subject_key: bare.id ?? bare.kind ?? "unspecified",
+        fallback: false
+      };
+    }
+    const ek = typeof input?.subject_kind === "string" ? input.subject_kind.trim() : "";
+    const ekey = typeof input?.subject_key === "string" ? input.subject_key.trim() : "";
+    if (ekey) {
+      return { subject_kind: ek || "subject", subject_key: ekey, fallback: false };
+    }
+    const subj = input?.subject;
+    if (typeof subj === "string" && subj.trim().length) {
+      return { subject_kind: ek || "subject", subject_key: subj.trim(), fallback: false };
+    }
+    const subjObj = asSubjectObject(subj ?? null);
+    if (subjObj) {
+      return {
+        subject_kind: subjObj.kind ?? "subject",
+        subject_key: subjObj.id ?? subjObj.kind ?? "unspecified",
+        fallback: false
+      };
+    }
+    const rowId = typeof input?.id === "string" ? input.id.trim() : "";
+    if (rowId) return { subject_kind: "handoff", subject_key: rowId, fallback: false };
+  } catch {
+  }
+  return {
+    subject_kind: FALLBACK_SUBJECT_KIND,
+    subject_key: `${stamp()}-${shortId()}`,
+    fallback: true
+  };
+}
 function normalizeRecord(parsed, key, path) {
   try {
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
@@ -23511,6 +23556,116 @@ function migrateLegacy(opts) {
     return { migrated: false, skipped: "unexpected error" };
   }
 }
+function supersede(key, opts) {
+  try {
+    const src = pendingPathFor(key, opts);
+    if (!src) return null;
+    const raw = safeReadFile(src);
+    if (raw === null) return null;
+    const p = paths(opts);
+    if (!ensureDir(p.superseded)) return null;
+    const dest = join(p.superseded, `${key}__${stamp()}-${shortId()}.json`);
+    try {
+      writeFileSync(dest, raw, "utf-8");
+    } catch {
+      return null;
+    }
+    return dest;
+  } catch {
+    return null;
+  }
+}
+function write(input, opts) {
+  let subject = {
+    subject_kind: FALLBACK_SUBJECT_KIND,
+    subject_key: `${stamp()}-${shortId()}`,
+    fallback: true
+  };
+  let key = "";
+  try {
+    subject = deriveSubjectKey(input);
+    key = keyFor(subject);
+    const dest = pendingPathFor(key, opts);
+    if (!dest) {
+      return {
+        ok: false,
+        key,
+        subject_kind: subject.subject_kind,
+        subject_key: subject.subject_key,
+        path: null,
+        superseded: false,
+        fallback: subject.fallback,
+        error: "could not resolve a safe pending path"
+      };
+    }
+    const p = paths(opts);
+    if (!ensureDir(p.pending)) {
+      return {
+        ok: false,
+        key,
+        subject_kind: subject.subject_kind,
+        subject_key: subject.subject_key,
+        path: null,
+        superseded: false,
+        fallback: subject.fallback,
+        error: "could not create the pending directory"
+      };
+    }
+    const supersededPath = supersede(key, opts);
+    const now = (/* @__PURE__ */ new Date()).toISOString();
+    const record = {
+      note_md: typeof input?.note_md === "string" ? input.note_md : "",
+      test_plan: input?.test_plan ?? null,
+      project_path: typeof input?.project_path === "string" ? input.project_path : null,
+      related_memory: Array.isArray(input?.related_memory) ? input.related_memory : [],
+      related_packages: Array.isArray(input?.related_packages) ? input.related_packages : [],
+      created_at: typeof input?.created_at === "string" ? input.created_at : now,
+      id: typeof input?.id === "string" ? input.id : void 0,
+      enqueued_tests: Array.isArray(input?.enqueued_tests) ? input.enqueued_tests : void 0,
+      subject_kind: subject.subject_kind,
+      subject_key: subject.subject_key,
+      subject_label: deriveLabel({ ...subject, note_md: input?.note_md }),
+      key,
+      written_at: typeof input?.written_at === "string" && Number.isFinite(Date.parse(input.written_at)) ? input.written_at : now
+    };
+    let serialized;
+    try {
+      serialized = JSON.stringify(record, null, 2);
+    } catch {
+      serialized = JSON.stringify({ ...record, test_plan: null }, null, 2);
+    }
+    const wrote = atomicWrite(dest, serialized);
+    return {
+      ok: wrote,
+      key,
+      subject_kind: subject.subject_kind,
+      subject_key: subject.subject_key,
+      path: wrote ? dest : null,
+      superseded: supersededPath !== null,
+      supersededPath: supersededPath ?? void 0,
+      fallback: subject.fallback,
+      error: wrote ? void 0 : "could not write the pending file"
+    };
+  } catch (e) {
+    return {
+      ok: false,
+      key: key || keyForSafe(subject),
+      subject_kind: subject.subject_kind,
+      subject_key: subject.subject_key,
+      path: null,
+      superseded: false,
+      fallback: subject.fallback,
+      error: e instanceof Error ? e.message : "unexpected error"
+    };
+  }
+}
+function keyForSafe(subject) {
+  try {
+    return keyFor(subject);
+  } catch {
+    return `${FALLBACK_SUBJECT_KIND}__${shortId()}`;
+  }
+}
 function list(opts) {
   try {
     migrateLegacy(opts);
@@ -23528,6 +23683,112 @@ function list(opts) {
     }
     out.sort((a, b) => String(b.written_at ?? "").localeCompare(String(a.written_at ?? "")));
     return out;
+  } catch {
+    return [];
+  }
+}
+function claim(key, opts) {
+  try {
+    const src = pendingPathFor(key, opts);
+    if (!src) return null;
+    const entry = readEntryFile(src, key);
+    const raw = safeReadFile(src);
+    if (raw === null) return null;
+    const p = paths(opts);
+    if (!ensureDir(p.consumed)) return null;
+    const dest = join(p.consumed, `${key}__${stamp()}-${shortId()}.json`);
+    const moved = safeMove(src, dest);
+    if (!moved) {
+      return null;
+    }
+    if (entry) return { ...entry, path: dest };
+    return null;
+  } catch {
+    return null;
+  }
+}
+function archiveById(rowId, opts) {
+  const out = [];
+  try {
+    if (typeof rowId !== "string" || !rowId.length) return out;
+    for (const entry of list(opts)) {
+      try {
+        if (entry.id !== rowId) continue;
+        const claimed = claim(entry.key, opts);
+        if (claimed) out.push(claimed.path);
+      } catch {
+      }
+    }
+  } catch {
+  }
+  return out;
+}
+function findArchivedHolding(id, key, opts) {
+  try {
+    for (const archive of ["consumed", "superseded"]) {
+      for (const path of listArchive(archive, opts)) {
+        try {
+          if (key && basename(path).startsWith(`${key}__`)) return { archive, path };
+          if (id && readEntryFile(path)?.id === id) return { archive, path };
+        } catch {
+        }
+      }
+    }
+  } catch {
+  }
+  return null;
+}
+function keyForDurableRow(row) {
+  try {
+    const id = typeof row?.id === "string" && row.id.length ? row.id : null;
+    if (!id) return null;
+    const kind = typeof row.subject_kind === "string" && row.subject_kind.length ? row.subject_kind : "handoff";
+    const subjectKey = typeof row.subject_key === "string" && row.subject_key.length ? row.subject_key : id;
+    return keyFor({ subject_kind: kind, subject_key: subjectKey });
+  } catch {
+    return null;
+  }
+}
+function adoptDurableRow(row, opts) {
+  try {
+    if (!row || typeof row !== "object") return null;
+    if (row.status !== "pending") return null;
+    const id = typeof row.id === "string" && row.id.length ? row.id : null;
+    if (!id) return null;
+    const existing = list(opts);
+    if (existing.some((e) => e.id === id)) return null;
+    const kind = typeof row.subject_kind === "string" && row.subject_kind.length ? row.subject_kind : "handoff";
+    const subjectKey = typeof row.subject_key === "string" && row.subject_key.length ? row.subject_key : id;
+    const key = keyFor({ subject_kind: kind, subject_key: subjectKey });
+    const dest = pendingPathFor(key, opts);
+    if (!dest || existsSync(dest) || existing.some((e) => e.key === key)) return null;
+    if (findArchivedHolding(id, key, opts)) return null;
+    const createdAt = typeof row.created_at === "string" && Number.isFinite(Date.parse(row.created_at)) ? row.created_at : (/* @__PURE__ */ new Date()).toISOString();
+    const res = write(
+      {
+        note_md: typeof row.note_md === "string" ? row.note_md : "",
+        test_plan: row.test_plan ?? null,
+        project_path: typeof row.project_path === "string" ? row.project_path : null,
+        related_memory: Array.isArray(row.related_memory) ? row.related_memory : [],
+        related_packages: Array.isArray(row.related_packages) ? row.related_packages : [],
+        created_at: createdAt,
+        id,
+        subject_kind: kind,
+        subject_key: subjectKey,
+        written_at: createdAt
+      },
+      opts
+    );
+    return res.ok ? res : null;
+  } catch {
+    return null;
+  }
+}
+function listArchive(which, opts) {
+  try {
+    const p = paths(opts);
+    const dir = which === "superseded" ? p.superseded : which === "consumed" ? p.consumed : p.legacy;
+    return safeReaddir(dir).filter((n) => /\.json$/i.test(n)).map((n) => join(dir, n));
   } catch {
     return [];
   }
@@ -24495,6 +24756,85 @@ async function collectClaimable(client, orgId) {
   }
   return items.slice(0, MAX_ITEMS);
 }
+var TERMINAL_HANDOFF_STATUSES = Object.freeze(["consumed", "superseded"]);
+async function reconcileHandoffs(client, opts) {
+  const dryRun = opts.dryRun === true;
+  const result = { ok: false, dryRun, archived: [], adopted: [], disagreements: [] };
+  try {
+    const local = list(opts.storeOptions);
+    const localIds = [...new Set(local.map((e) => e.id).filter((id) => !!id))];
+    let byId = [];
+    if (localIds.length > 0) {
+      const r = rows(
+        await client.from("session_handoffs").select("id, status").in("id", localIds).limit(MAX_ITEMS)
+      );
+      if (r === null) return result;
+      byId = r;
+    }
+    let pendingRows = [];
+    if (opts.userId) {
+      const r = rows(
+        await client.from("session_handoffs").select(
+          "id, status, subject_kind, subject_key, note_md, test_plan, project_path, related_memory, related_packages, created_at"
+        ).eq("user_id", opts.userId).eq("status", "pending").order("created_at", { ascending: false }).limit(MAX_ITEMS)
+      );
+      if (r === null) return result;
+      pendingRows = r;
+    } else {
+      result.adoptSkipped = "no user id \u2014 the adopt read would be unscoped";
+    }
+    const statusById = /* @__PURE__ */ new Map();
+    for (const r of byId) {
+      const id = str(r.id);
+      const status = str(r.status);
+      if (id && status) statusById.set(id, status);
+    }
+    for (const e of local) {
+      const status = e.id ? statusById.get(e.id) : void 0;
+      if (!e.id || !status || !TERMINAL_HANDOFF_STATUSES.includes(status)) continue;
+      if (dryRun) {
+        result.archived.push({ id: e.id, key: e.key, status });
+        continue;
+      }
+      if (archiveById(e.id, opts.storeOptions).length > 0) {
+        result.archived.push({ id: e.id, key: e.key, status });
+      }
+    }
+    const held = new Set(localIds);
+    for (const r of pendingRows) {
+      const id = str(r.id);
+      if (!id || held.has(id) || str(r.status) !== "pending") continue;
+      const rowKey = keyForDurableRow(r);
+      const retired = findArchivedHolding(id, rowKey, opts.storeOptions);
+      if (retired) {
+        result.disagreements.push({ id, key: rowKey ?? id, status: "pending", ...retired });
+        continue;
+      }
+      if (dryRun) {
+        result.adopted.push({ id, key: rowKey ?? id, status: "pending" });
+        continue;
+      }
+      const w = adoptDurableRow(r, opts.storeOptions);
+      if (w) result.adopted.push({ id, key: w.key, status: "pending" });
+    }
+    result.ok = true;
+    return result;
+  } catch {
+    return result;
+  }
+}
+function localUserId(authPath = join7(homedir7(), ".cascade", "auth.json")) {
+  try {
+    const auth = JSON.parse(readFileSync6(authPath, "utf8"));
+    const token = typeof auth.access_token === "string" ? auth.access_token : "";
+    const payload = token.split(".")[1];
+    if (!payload) return null;
+    const claims = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    return typeof claims.sub === "string" && claims.sub.length ? claims.sub : null;
+  } catch {
+    return null;
+  }
+}
 async function defaultResolveClient() {
   try {
     loadCascadeEnv();
@@ -24506,7 +24846,11 @@ async function defaultResolveClient() {
       orgId = resolveActiveOrg2().orgId ?? null;
     }
     if (!orgId) return null;
-    return { client: resolved.supabase, orgId };
+    return {
+      client: resolved.supabase,
+      orgId,
+      userId: resolved.userId ?? localUserId()
+    };
   } catch {
     return null;
   }
@@ -24550,6 +24894,9 @@ async function runRefresh(opts = {}) {
         items = null;
       } else {
         await expireStaleQueueRows(resolved.client, resolved.orgId);
+        if (opts.reconcile !== false) {
+          await reconcileHandoffs(resolved.client, { userId: resolved.userId });
+        }
         items = await collectClaimable(resolved.client, resolved.orgId);
       }
     }
@@ -24622,7 +24969,25 @@ var invokedDirectly = (() => {
     return false;
   }
 })();
-if (invokedDirectly) {
+async function runReconcileCli(argv) {
+  try {
+    const resolved = await defaultResolveClient();
+    if (!resolved) return null;
+    return await reconcileHandoffs(resolved.client, {
+      userId: resolved.userId,
+      dryRun: !argv.includes("--apply")
+    });
+  } catch {
+    return null;
+  }
+}
+if (invokedDirectly && process.argv.includes("--reconcile-handoffs")) {
+  runReconcileCli(process.argv).then((r) => {
+    process.stdout.write(`${JSON.stringify(r ?? { ok: false, reason: "no credentials" }, null, 2)}
+`);
+    process.exit(0);
+  }).catch(() => process.exit(0));
+} else if (invokedDirectly) {
   runRefresh().then(() => process.exit(0)).catch(() => {
     process.exit(0);
   });

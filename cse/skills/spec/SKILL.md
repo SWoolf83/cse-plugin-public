@@ -313,9 +313,9 @@ Tasks inside one wave run CONCURRENTLY in the same worktree, so two tasks in the
    ```
    It returns an advisory report:
    ```json
-   { "hasOverlap": false, "skipped": false, "findings": [{ "wave": 3, "artifact": "src/foo.ts", "taskIds": ["...", "..."] }], "tasksScanned": 9, "wavesScanned": 3 }
+   { "clean": false, "hasOverlap": true, "skipped": false, "findings": [{ "wave": 3, "artifact": "src/foo.ts", "taskIds": ["...", "..."] }], "tasksScanned": 9, "wavesScanned": 3 }
    ```
-   Cross-wave reuse of a path is legitimate and is never reported — only repeats INSIDE one wave. The detector never throws: a malformed plan comes back `skipped: true` with a reason rather than an error.
+   Cross-wave reuse of a path is legitimate and is never reported — only repeats INSIDE one wave. The detector never throws: a malformed plan comes back `skipped: true` with a reason rather than an error. **Read `clean`, not `hasOverlap`:** a skipped scan also carries `hasOverlap: false`, so only `clean: true` means the scan ran, compared at least one task's artifact paths, and found no collision. An empty plan, waves with no tasks, or tasks with no artifacts all come back `clean: false` — nothing was checked. A JSON-string plan is parsed, so pass either form.
 
    CSE tools are `cascade_*`-prefixed and may be deferred until searched for. If `cascade_verify` is not in your tool list, reveal it with `cascade_tool_search({ query: "wave overlap artifact collision execution plan" })`. If it is genuinely unavailable, note that the check was skipped and continue — it must never block spec generation.
 
@@ -364,6 +364,19 @@ user still decides. Carry the result into the gate below:
 - **Minor findings only** → mention the count, keep the normal order.
 - **Nothing above minor** → say the review found nothing and proceed.
 
+**Stopping rule — at most 2 plan-checker rounds (finding 0cde8b5d).** An
+adversarial reviewer told to assume failure always finds something, and each
+amendment is new surface for the next round to attack (2026-08-27: round 2
+returned 5 new blockers, 4 of them introduced by round 1's amendments). So:
+
+1. **Only `blocker` findings block.** `major` and `minor` findings are applied
+   if cheap or noted for the executor; they never trigger another round.
+2. **Round 1 has blockers** → amend the spec, then run round 2.
+3. **After round 2, stop reviewing.** Apply its blocker amendments, list any
+   that remain unresolved in the gate question, and proceed to the gate. There
+   is no round 3 — not after a re-presented adjustment either; a user-requested
+   change gets one fresh round only if the review budget has not been spent.
+
 If the subagent is unavailable or errors, say one line ("adversarial review did
 not run") and continue to the gate. **Never silently skip it** — an unrun check
 reported as a clean one is the exact false-pass this pipeline exists to prevent.
@@ -376,7 +389,8 @@ Present the spec summary to the user via AskUserQuestion:
 
 ON "Approve and begin execution": proceed to Phase 4 (persistence happens first in Phase 3).
 ON "I want to adjust something": ask what to change, update the spec, re-present.
-  Re-run the adversarial review on the updated spec before re-presenting.
+  Re-run the adversarial review on the updated spec before re-presenting — within
+  the 2-round budget above; once both rounds are spent, re-present without one.
 ON "Save as draft (no execution)": proceed to Phase 3 only, skip Phases 4-5.
 
 ---
@@ -500,6 +514,7 @@ Discovery (Phases 0-3) has accumulated context that will degrade execution quali
            cp -c -R "$PWD/$1" "$WT/$1" 2>/dev/null || ln -s "$PWD/$1" "$WT/$1" 2>/dev/null
          };
          link_deps node_modules; link_deps cascade-web/node_modules;
+         link_deps harnesses/mcp-servers/cascade-api/node_modules;
          echo "WORKTREE_ROOT=$WT BRANCH=$BR"
    ```
    Capture `WORKTREE_ROOT` and `BRANCH`; set the handoff `cwd` to `WORKTREE_ROOT`. If `git worktree add` fails (e.g. not a git repo), fall back to the main checkout and note in the report that isolation was unavailable.
@@ -546,6 +561,14 @@ Discovery (Phases 0-3) has accumulated context that will degrade execution quali
    THIS repo (cascade-web pins `next dev --webpack` / `next build --webpack`
    because of the substrate-core `extensionAlias` fix, which has no Turbopack
    equivalent), but it would silently block any future Turbopack move.
+
+   **Three dependency trees, not two (finding 1347d2d2).** Without
+   `harnesses/mcp-servers/cascade-api/node_modules`, esbuild resolves the MCP
+   bundle's dependencies from the ROOT tree, so the vendored bundle silently ships
+   different versions (2026-09-08: nested ajv 8.18.0 vs root 8.17.1 — a worktree
+   build downgraded ajv into main and plugin 0.2.61, and the ~130KB size drop read
+   as "committed copies were stale"). If you add a package with its own
+   `node_modules` that a build resolves from, add a `link_deps` line for it here.
 
    **Run the repo's own scripts, not the binaries.** In a worktree use
    `npm run dev` / `npm run build` — never a bare `next dev`, which picks

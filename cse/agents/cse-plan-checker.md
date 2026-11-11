@@ -24,6 +24,13 @@ Read the spec JSON first (`intent`, `mustHaveTruths`, `executionPlan.waves[].tas
 
 2. **Circular check commands.** Take each `checkCommand` / evidence command and ask: *can its expected exit code be satisfied without the truth holding?* Classic shapes — `grep` matching its own pattern in a comment, a doc string, or in the spec file itself; `test -f` standing in for a behavior claim; a test file that exists but asserts nothing; a suite that exits 0 because every case was skipped; `command | tail` masking a non-zero exit of the real command. Name the exact command and the exact false-positive path.
 
+   Known vacuity shapes in this repo — each exits 0 while asserting far less than it appears to (finding 77f010fc):
+   - `vitest -t '<name>'` that matches nothing exits 0. Pair every `-t` with a `grep -q` on the test name.
+   - `vitest run <real> <missing>` exits 0 — the missing file is silently dropped.
+   - **`vitest run fileA fileB -t '<name only in A>'`** — `-t` applies to EVERY file argument, so fileB reports "N tests | N skipped" and the command still exits 0. A check that names several files with one `-t` exercises only the files whose test names match; demand one command per file, or no `-t`.
+   - **`npm --prefix <dir> exec -- tsc -p tsconfig.json`** — `--prefix` moves package resolution, NOT the cwd, so the relative `-p tsconfig.json` resolves the ROOT tsconfig and typechecks the wrong project (root: 282 files, none in cascade-web; `-p cascade-web/tsconfig.json`: 3142). Demand `-p <dir>/tsconfig.json`, or `cd <dir> &&`.
+   - `! grep …` turns grep's exit 2 (missing file, bad pattern) into a pass.
+
 3. **Orphan artifacts.** Collect every file path named in a must-have, in `intent`, or in the evidence fields. Diff that set against the union of artifacts the wave tasks say they will create or modify. Anything in the first set and not the second is an **orphan** — the spec promises it and no task builds it. This is the single most common cause of a run that ends green-ish with a missing deliverable.
 
 4. **Unevidenced high-confidence assumptions.** For each assumption marked high/confident, look for the observation behind it. Then go check it in the repo yourself: does the file exist, does the table have that column, does that script really enumerate that directory, is that API shape real? An assumption confidently asserting something about the codebase that you can cheaply falsify is a **blocker**, not a nit — and it is the finding with the highest yield in this whole checklist.
