@@ -24552,6 +24552,36 @@ async function sweepExpiredQueueRows(client, orgId, rows2, nowMs2 = Date.now()) 
   return result;
 }
 
+// src/daemon/hooks/deferral.ts
+var DATE_ONLY_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
+var DATETIME_RE = /^\d{4}-\d{2}-\d{2}T/;
+function parseDeferredUntil(value) {
+  if (typeof value !== "string") return null;
+  const s = value.trim();
+  const dateOnly = DATE_ONLY_RE.exec(s);
+  if (dateOnly) {
+    const y = Number(dateOnly[1]);
+    const m = Number(dateOnly[2]);
+    const d = Number(dateOnly[3]);
+    const local = new Date(y, m - 1, d);
+    if (local.getFullYear() !== y || local.getMonth() !== m - 1 || local.getDate() !== d) {
+      return null;
+    }
+    return local.getTime();
+  }
+  if (!DATETIME_RE.test(s)) return null;
+  const t = Date.parse(s);
+  return Number.isFinite(t) ? t : null;
+}
+function isDeferredUntilFuture(deferredUntil, now = /* @__PURE__ */ new Date()) {
+  const t = parseDeferredUntil(deferredUntil);
+  return t !== null && t > now.getTime();
+}
+function isDeferredNow(typeData2, now = /* @__PURE__ */ new Date()) {
+  if (!typeData2 || typeof typeData2 !== "object" || Array.isArray(typeData2)) return false;
+  return isDeferredUntilFuture(typeData2.deferred_until, now);
+}
+
 // src/daemon/hooks/claimable-refresh.ts
 var CLAIMABLE_CACHE_FILENAME = "claimable.json";
 var CLAIMABLE_CACHE_ENV = "CASCADE_CLAIMABLE_CACHE";
@@ -24585,6 +24615,41 @@ function oneLineIntent2(input) {
   const chosen = firstLine ?? input.fallback ?? "";
   if (chosen.length <= INTENT_MAX_CHARS) return chosen;
   return `${chosen.slice(0, INTENT_MAX_CHARS - 1).trimEnd()}\u2026`;
+}
+function openReviewFindingsCount(td) {
+  const runs = td && typeof td === "object" && Array.isArray(td.gate_runs) ? td.gate_runs : [];
+  let best = null;
+  let bestT = -Infinity;
+  for (const raw of runs) {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) continue;
+    const run = raw;
+    if (run.category !== "review") continue;
+    const parsed = typeof run.ran_at === "string" ? Date.parse(run.ran_at) : NaN;
+    const t = Number.isFinite(parsed) ? parsed : -Infinity;
+    if (best === null || t >= bestT) {
+      best = run;
+      bestT = t;
+    }
+  }
+  if (!best || !Array.isArray(best.findings)) return 0;
+  let n = 0;
+  for (const f of best.findings) {
+    if (typeof f === "string") {
+      if (f.trim()) n += 1;
+    } else if (f && typeof f === "object" && f.resolved !== true) {
+      n += 1;
+    }
+  }
+  return n;
+}
+function queueRowIntent(td, title, description) {
+  const open = openReviewFindingsCount(td);
+  if (open > 0) {
+    const line = `Fix ${open} review finding${open === 1 ? "" : "s"}${title ? ` \u2014 ${title}` : ""}`;
+    return line.length <= INTENT_MAX_CHARS ? line : `${line.slice(0, INTENT_MAX_CHARS - 1).trimEnd()}\u2026`;
+  }
+  const row = td && typeof td === "object" && !Array.isArray(td) ? td : {};
+  return oneLineIntent2({ commitsBehind: row.commits_behind, description, fallback: "" });
 }
 function resolveCachePath(cachePath) {
   if (typeof cachePath === "string" && cachePath.trim()) return cachePath;
@@ -24661,7 +24726,7 @@ async function expireStaleQueueRows(client, orgId, nowMs2 = Date.now()) {
     return 0;
   }
 }
-async function collectClaimable(client, orgId) {
+async function collectClaimable(client, orgId, now = /* @__PURE__ */ new Date()) {
   let queueRows;
   try {
     queueRows = rows(
@@ -24701,17 +24766,14 @@ async function collectClaimable(client, orgId) {
     const pkg = targetPackageId && byId ? byId.get(targetPackageId) : void 0;
     const td = typeData(pkg);
     const joinAvailable = byId !== null;
+    if (isDeferredNow(td, now)) continue;
     const title = str(pkg?.title);
     const label = title ?? (targetPackageId ? "Queued work item" : str(q.target_bundle_id) ? "Queued bundle" : "Queued item");
     items.push({
       kind: "queue_item",
       key,
       label,
-      intent: oneLineIntent2({
-        commitsBehind: td.commits_behind,
-        description: pkg?.description,
-        fallback: ""
-      }),
+      intent: queueRowIntent(td, title, pkg?.description),
       created_at: str(q.created_at) ?? (/* @__PURE__ */ new Date(0)).toISOString(),
       regenerating: isRegenerating({
         // `undefined` means UNAVAILABLE (the join failed); `null` means the
@@ -24742,6 +24804,7 @@ async function collectClaimable(client, orgId) {
     const importance = str(finding.importance) ?? "normal";
     if (!HIGH_IMPORTANCE.includes(importance)) continue;
     if (str(td.consolidated_into)) continue;
+    if (isDeferredNow(td, now)) continue;
     const title = str(f.title) ?? "Finding";
     items.push({
       kind: "finding",

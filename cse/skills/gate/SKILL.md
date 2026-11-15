@@ -183,6 +183,20 @@ For **each** chosen workflow (that was not short-circuited):
      awkward, perform an equivalent careful correctness review of the diff inline, but prefer the
      real skill. Collect its findings and note which are **high-confidence correctness bugs**
      versus lower-confidence or style/cleanup findings.
+   - **Record the findings as structured data, not just prose.** Capture the reviewed commit and
+     branch:
+     ```
+     Bash(git rev-parse HEAD)               # → head
+     Bash(git rev-parse --abbrev-ref HEAD)  # → branch
+     ```
+     If `--abbrev-ref HEAD` prints the literal `HEAD` (a detached checkout), there is no branch:
+     **omit `branch`** — never pass the string `"HEAD"` as a branch name.
+     Turn each finding into `{path, line, text, severity}` — `path` repo-relative, `line` when
+     known, `text` one or two sentences, `severity` `high` (correctness bug) | `medium` | `low`
+     (style/cleanup). Pass them as `findings`, plus `head` and `branch`, to `record_gate` in 6b.
+     The server sanitises each text, fingerprints it (sha256 of path + normalised text — omit
+     `fingerprint`), keeps at most 50 findings / 16 KB (high severity first; the rest are dropped
+     with a count). A clean review passes `findings=[]`, which still records the head it judged.
 
    ### category `security` (security-review gate)
    - **Detect the diff:** `Bash(git diff HEAD)` (staged + unstaged); if the tree is clean, fall
@@ -271,8 +285,17 @@ mcp__cascade-api__cascade_workflow  mode="record_gate"
   gate_name="<workflow name>"          # e.g. "code-review-gate"
   verdict="pass|fail|uncertain"
   execution_id="<executionId>"          # links the gate_run back to its workflow_executions row
+  head="<git rev-parse HEAD>"           # review: the commit judged
+  branch="<git rev-parse --abbrev-ref HEAD>"   # review: the branch judged
+  findings=[{path, line, text, severity: "high|medium|low"}, ...]   # review: structured findings
   verdict_summary="<ONE LINE — keep it short, and pass it LAST>"
 ```
+
+`head`, `branch` and `findings` are optional (other categories may omit them) but **category
+`review` must pass `head` and `findings`, and `branch` whenever there is one** — on a detached
+HEAD (`git rev-parse --abbrev-ref HEAD` prints `HEAD`) omit `branch` entirely. Do not send
+`fingerprint` either: the server always recomputes it and ignores any client-supplied value. A re-record at a new `head` or with a different findings set is a
+new gate run, never suppressed as a duplicate.
 
 ⚠ **`verdict_summary` goes LAST, and stays to one line.** On 2026-07-29 a multi-paragraph
 `verdict_summary` overflowed its own closing tag and swallowed every parameter that followed it —

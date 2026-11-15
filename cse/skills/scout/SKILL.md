@@ -179,7 +179,14 @@ when installed. It prints one JSON object: `{ ok, source, count, items:[{video_i
 title, published, url, author}] }`. On `ok:false`, react to the stable `error.code`
 (don't retry blindly):
 - `RATE_LIMITED` → back off, try the next source.
-- `CHANNEL_NOT_FOUND` → the channel id is wrong; flag it for the user, skip.
+- `CHANNEL_NOT_FOUND` → the channel id is wrong (the control channel's feed works); flag it for the user, skip.
+- `FEED_UNAVAILABLE` → YouTube's RSS endpoint is down for EVERY channel (recurring since Dec 2025). The adapter
+  already tried the yt-dlp fallback; this code means yt-dlp is missing or failed — `brew install yt-dlp`, or retry later.
+  Do NOT mark_pulled.
+
+**yt-dlp fallback.** When the feed fails, the adapter lists the channel's latest uploads with yt-dlp and returns
+`ok:true` with `source.via: "yt-dlp"`; those items carry `published_approximate: true` (day-granular). The watermark
+filter still applies; an item landing twice is harmless because ingest dedups on URL. `--no-fallback` disables it.
 - `NETWORK_ERROR` / `FETCH_FAILED` → likely a flagged/cloud IP; this must run
   locally (residential IP), the same constraint as `/cse:ingest`. Report and skip.
 

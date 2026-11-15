@@ -15,6 +15,15 @@ constraint as ingest's transcript adapter; cloud-IP harvest is out of scope).
 Mirrors youtube_transcript.py: every failure maps to a stable, machine-readable
 `error.code` so Scout can react (skip, retry, warn) instead of parsing free text.
 
+FALLBACK (2026-11-14): YouTube's RSS endpoint has had recurring outages since
+Dec 2025 where it returns 404 for EVERY channel. When the feed fails, this
+adapter lists the channel's latest uploads with yt-dlp (free, keyless; install
+with `brew install yt-dlp`) and emits the same shape with source.via='yt-dlp'
+and items' published dates marked approximate. If yt-dlp is missing or fails,
+a 404 is diagnosed against a control channel: when the control feed also 404s
+the error is FEED_UNAVAILABLE (YouTube-wide), not CHANNEL_NOT_FOUND.
+Pass --no-fallback to use RSS only.
+
 Usage:
   python3 youtube_rss.py <channel_id | feed-url> [--limit N] [--since ISO8601]
 Exit codes: 0 ok · 2 bad args · 3 fetch/parse error (see JSON error.code)
@@ -25,6 +34,8 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
+import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -32,6 +43,9 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
 FEED_TMPL = "https://www.youtube.com/feeds/videos.xml?channel_id={cid}"
+# A long-lived, always-public channel (Google for Developers) used to tell a
+# YouTube-wide feed outage from a bad channel id.
+CONTROL_CHANNEL_ID = "UC_x5XG1OV2P6uZZ5FSM9Ttw"
 
 # Atom + YouTube/Media Atom namespaces used in the channel feed.
 NS = {
@@ -78,6 +92,56 @@ def parse_iso(ts: str) -> datetime | None:
         return None
 
 
+def feed_status(url: str) -> int | None:
+    """HTTP status of a feed URL (None on network error)."""
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return resp.status
+    except urllib.error.HTTPError as e:
+        return e.code
+    except Exception:
+        return None
+
+
+def ytdlp_items(channel_id: str, limit: int, since_dt):
+    """Latest uploads via yt-dlp (flat listing, approximate dates). None if unavailable/failed."""
+    exe = shutil.which("yt-dlp")
+    if not exe or not channel_id:
+        return None
+    cmd = [exe, "--flat-playlist", "--dump-single-json", "--no-warnings",
+           "--playlist-items", f"1-{max(1, limit)}",
+           "--extractor-args", "youtubetab:approximate_date",
+           f"https://www.youtube.com/channel/{channel_id}/videos"]
+    try:
+        out = subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+        if out.returncode != 0:
+            return None
+        data = json.loads(out.stdout)
+    except Exception:
+        return None
+    title = data.get("channel") or data.get("uploader") or data.get("title")
+    items = []
+    for e in data.get("entries") or []:
+        vid = e.get("id")
+        if not vid:
+            continue
+        ts = e.get("timestamp")
+        published = datetime.fromtimestamp(ts, tz=timezone.utc).isoformat() if isinstance(ts, (int, float)) else None
+        if since_dt is not None and published:
+            if datetime.fromisoformat(published) <= since_dt:
+                continue
+        items.append({
+            "video_id": vid,
+            "title": (e.get("title") or "").strip(),
+            "published": published,
+            "published_approximate": True,
+            "url": f"https://www.youtube.com/watch?v={vid}",
+            "author": title,
+        })
+    return {"channel_title": title, "items": items[: max(0, limit)]}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("channel", help="YouTube channel id (UC...) or feed/channel URL")
@@ -86,6 +150,8 @@ def main():
     ap.add_argument("--since", default=None,
                     help="only items published strictly after this ISO8601 ts "
                          "(the source's last_pulled watermark)")
+    ap.add_argument("--no-fallback", action="store_true",
+                    help="RSS only; do not fall back to yt-dlp when the feed fails")
     args = ap.parse_args()
 
     feed_url = resolve_feed_url(args.channel)
@@ -107,12 +173,30 @@ def main():
         with urllib.request.urlopen(req, timeout=15) as resp:
             raw = resp.read()
     except urllib.error.HTTPError as e:
-        # 404 = bad/unknown channel id; 429 = rate limited; else generic.
-        code = ("CHANNEL_NOT_FOUND" if e.code == 404
-                else "RATE_LIMITED" if e.code == 429
-                else "HTTP_ERROR")
+        cid_m = re.search(r"channel_id=([^&]+)", feed_url)
+        cid = cid_m.group(1) if cid_m else None
+        if not args.no_fallback and e.code != 429:
+            fb = ytdlp_items(cid, args.limit, since_dt)
+            if fb is not None:
+                emit({
+                    "ok": True,
+                    "source": {"kind": "youtube_channel", "channel_id": cid,
+                               "channel_title": fb["channel_title"], "feed_url": feed_url,
+                               "via": "yt-dlp", "feed_http_status": e.code},
+                    "filter": {"since": args.since, "limit": args.limit},
+                    "count": len(fb["items"]),
+                    "items": fb["items"],
+                }, 0)
+        # 404: tell a YouTube-wide feed outage from a bad channel id.
+        if e.code == 404:
+            control = feed_status(FEED_TMPL.format(cid=CONTROL_CHANNEL_ID))
+            code = "FEED_UNAVAILABLE" if control == 404 else "CHANNEL_NOT_FOUND"
+        else:
+            code = "RATE_LIMITED" if e.code == 429 else "HTTP_ERROR"
+        hint = (" YouTube's RSS feed is failing for every channel; install yt-dlp "
+                "(brew install yt-dlp) for the fallback, or retry later.") if code == "FEED_UNAVAILABLE" else ""
         emit({"ok": False, "error": {"code": code,
-              "message": f"HTTP {e.code} fetching feed", "feed_url": feed_url}}, 3)
+              "message": f"HTTP {e.code} fetching feed.{hint}", "feed_url": feed_url}}, 3)
     except urllib.error.URLError as e:
         emit({"ok": False, "error": {"code": "NETWORK_ERROR",
               "message": f"{e.reason}", "feed_url": feed_url}}, 3)
