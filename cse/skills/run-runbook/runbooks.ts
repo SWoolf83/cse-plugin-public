@@ -102,6 +102,45 @@ const REGISTRY = {
       'The Notes app is frontmost and contains a note whose body includes the exact `text`.',
     ],
   },
+  // The two /cse:studio-check tiers. Steps live in cse/skills/studio-check/scenarios.mjs,
+  // whose exported ALLOWED_APPS must equal these allowedApps (test-asserted).
+  'studio-smoke': {
+    slug: 'studio-smoke',
+    title: 'Studio check — smoke tier',
+    paramSchema: {},
+    allowedApps: ['Cascade Desktop'],
+    goal:
+      'In Cascade Desktop, visit every free Creator Studio surface and confirm each renders; create, rename and re-open one throwaway "Harness test" production, then archive it.',
+    guardrails: [
+      'Free actions only: never trigger paid generation (AI image, video, audio, voice, music, upscaling).',
+      'Never sign out — the test login is a real account.',
+      'Always archive the throwaway "Harness test" production this run created, even after a failure.',
+      'Never open, edit or archive any other production.',
+    ],
+    successCriteria: [
+      'Every scenario step was judged pass from the screen at its named location.',
+      'The throwaway production is archived.',
+    ],
+  },
+  'studio-rail': {
+    slug: 'studio-rail',
+    title: 'Studio check — rail tier',
+    paramSchema: {},
+    allowedApps: ['Cascade Desktop'],
+    goal:
+      'In Cascade Desktop, create one throwaway "Harness test" production, start its assistant, and confirm the rail assistant can read the production title back written backwards; then archive it.',
+    guardrails: [
+      'Free actions only: never trigger paid generation (AI image, video, audio, voice, music, upscaling).',
+      'Never sign out — the test login is a real account.',
+      'Never type the production title or nonce into the rail; ask only the scenario question.',
+      'Always archive the throwaway "Harness test" production this run created, even after a failure.',
+      'Never open, edit or archive any other production.',
+    ],
+    successCriteria: [
+      'The reversed nonce is visible in the rail assistant reply.',
+      'The throwaway production is archived.',
+    ],
+  },
 } as const;
 
 /** The frozen public registry. Deep-frozen so it cannot be mutated at runtime. */

@@ -36,7 +36,16 @@ params object. Do not infer or add params the user didn't give.
 ### 2. CHECK THE FEATURE FLAG (fail closed — do this BEFORE anything else)
 
 ```bash
-node -e "const {isRunbookLaneEnabled}=require('${CLAUDE_PLUGIN_ROOT}/skills/run-runbook/feature-flags'); process.exit(isRunbookLaneEnabled()?0:1)"
+node -e "const v=(process.env.CASCADE_RUNBOOKS_ENABLED||'').trim().toLowerCase(); process.exit(v==='1'||v==='true'?0:1)"
+```
+
+(The same rule as `feature-flags.ts` `isRunbookLaneEnabled()`, inlined: bare `node`
+cannot `require` a `.ts` file, so the old `require('…/feature-flags')` threw
+MODULE_NOT_FOUND and the check exited non-zero whether the flag was on or off.)
+
+```bash
+# equivalent, from the studio-check skill:
+node "${CLAUDE_PLUGIN_ROOT}/skills/studio-check/flag.mjs"
 ```
 
 If this exits non-zero, the lane is **disabled**. Report: *"Runbook lane is disabled

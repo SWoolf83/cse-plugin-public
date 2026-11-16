@@ -117,10 +117,22 @@ const TRACK_B_ENV = {
 // ---------------------------------------------------------------------------
 
 describe('runbooks registry', () => {
-  it('ships exactly the two proof runbooks with declared allowedApps', () => {
-    expect(Object.keys(RUNBOOKS).sort()).toEqual(['open-app', 'type-into-notes']);
+  it('ships exactly the two proof runbooks plus the two studio-check tiers, with declared allowedApps', () => {
+    expect(Object.keys(RUNBOOKS).sort()).toEqual([
+      'open-app',
+      'studio-rail',
+      'studio-smoke',
+      'type-into-notes',
+    ]);
     expect(getRunbook('open-app')?.allowedApps).toEqual(['Finder']);
     expect(getRunbook('type-into-notes')?.allowedApps).toEqual(['Notes']);
+    expect(getRunbook('studio-smoke')?.allowedApps).toEqual(['Cascade Desktop']);
+    expect(getRunbook('studio-rail')?.allowedApps).toEqual(['Cascade Desktop']);
+  });
+
+  it('studio-check runbooks take no params and reject any', () => {
+    expect(resolveInvocation('studio-smoke', {}, 'cli', 'max_mcp').ok).toBe(true);
+    expect(resolveInvocation('studio-rail', { appName: 'Finder' }, 'cli', 'max_mcp').ok).toBe(false);
   });
 
   it('is deep-frozen (cannot be mutated at runtime)', () => {

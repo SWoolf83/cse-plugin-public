@@ -1,7 +1,7 @@
 {
   "$schema": "cascade-skill-registry-v1",
   "generatedBy": "scripts/gen-skill-registry.mjs",
-  "count": 85,
+  "count": 86,
   "skills": [
     {
       "name": "alias",
@@ -452,6 +452,12 @@
       "command": "/cse:studio",
       "description": "Studio Runner: design, patch, audition and save presets for Arturia, Helix, Octatrack, Pro 3, Komplete — code first.",
       "when_to_use": "Use when the human wants a preset designed, tweaked, auditioned, saved or organised for a synth, pedal or sampler; wants samples found and chained for the Octatrack; wants a Helix tone edited; wants a Pro 3 program built or sent; or asks what a device's files/MIDI can do. Also for 'set up my session/template' style studio-assistant asks."
+    },
+    {
+      "name": "studio-check",
+      "command": "/cse:studio-check",
+      "description": "Use when you want to test Creator Studio in the installed Cascade Desktop app with computer use and file findings for breaks.",
+      "when_to_use": "Attended, on-demand self-test of the installed Cascade Desktop app. Drives Creator Studio (and its production assistant rail) with the harness computer-use MCP through code-defined scenarios in scenarios.mjs, judges each step from the screen at a named location, stores a step-by-step receipt artifact, files ONE deduplicated finding per new failure and archives findings whose step passes again. Tiers: smoke (every free surface + a throwaway production create/rename/archive) and rail (the rail assistant reads the production title back, reversed). It tests the APP — it never changes real productions, never triggers paid generation, never signs out, and never fixes anything itself. Triggers on 'studio check', 'test the studio', 'smoke test Cascade Desktop', '/cse:studio-check rail'."
     },
     {
       "name": "style-onboard",

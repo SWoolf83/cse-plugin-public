@@ -61745,6 +61745,31 @@ function attestExtension(input) {
   return a;
 }
 
+// packages/substrate-core/build/fleet/fixLoopState.js
+var FIX_LOOP_STOP_REASONS = {
+  PASSED: "passed",
+  NO_IMPROVEMENT: "no improvement",
+  BUDGET_SPENT: "budget spent",
+  HOLD_PATH: "HOLD path",
+  AWAITING_APPROVAL: "awaiting approval",
+  BREAKER_OPEN: "breaker open",
+  NO_OWNER: "no owner",
+  REFS_CHANGED: "refs changed",
+  TARGET_MOVED: "target moved",
+  REVIEW_UNCERTAIN: "review uncertain",
+  BRANCH_NOT_ELIGIBLE: "branch not eligible",
+  BRANCH_CHECKED_OUT_ELSEWHERE: "branch checked out elsewhere",
+  BRANCH_MISSING: "branch missing",
+  HEAD_MOVED: "head moved",
+  CLONE_BUSY: "clone busy",
+  CLONE_TAMPERED: "clone tampered",
+  CONTENT_REJECTED: "content rejected",
+  SANDBOX_UNAVAILABLE: "sandbox unavailable",
+  TIMEOUT: "timeout",
+  ERROR: "error"
+};
+var KNOWN_REASONS = new Set(Object.values(FIX_LOOP_STOP_REASONS));
+
 // packages/substrate-core/build/agentLanes.js
 var DEFAULT_NO_SIGNAL_GRACE_MS = 30 * 60 * 1e3;
 
